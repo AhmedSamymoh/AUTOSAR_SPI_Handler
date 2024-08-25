@@ -31,11 +31,23 @@ typedef struct{
  * @brief Spi_StatusType
  * [SWS_Spi_00373] 
  */
-typedef enum{
-    SPI_UNINIT = 0,
-    SPI_IDLE = 1,
-    SPI_BUSY = 2
-}Spi_StatusType;
+
+// Spi_ConfigType for SPI init 
+typedef enum {
+    SPI_UNINIT, SPI_IDLE, SPI_BUSY
+    }Spi_StatusType;
+
+typedef enum {
+    SPI_JOB_OK, SPI_JOB_PENDING, SPI_JOB_FAILED, SPI_JOB_QUEUED
+    }Spi_JobResultType;
+
+typedef enum {
+    SPI_SEQ_OK, SPI_SEQ_PENDING, SPI_SEQ_FAILED, SPI_SEQ_CANCELED 
+    }Spi_SeqResultType;
+
+typedef enum {
+    SPI_POLLING_MODE, SPI_INTERRUPT_MODE
+    }Spi_AsyncModeType;
 
 /************************************ Section: Macro Declarations ************************************/
 
@@ -87,14 +99,8 @@ typedef enum{
 
 
 /************************************ Section : Global Variables Declarations ************************************/
-uint8 DataBufferType;
-uint8 ChannelType;
-uint8 SequenceType;
-uint8 HWUnitType;
-
-uint16 NumberOfDataType;
-uint16 JobType;
-
+uint8_t Spi_DataBufferType, Spi_ChannelType, Spi_SequenceType, Spi_HWUnitType;
+uint16_t Spi_NumberOfDataType, Spi_JobType;
 
 /************************************ Section : Macro Functions Declarations ************************************/
 
