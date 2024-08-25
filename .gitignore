@@ -1,22 +1,22 @@
-# Ignore build output directories
-Debug/
-Release/
+# # Ignore build output directories
+# Debug/
+# Release/
 
-# Ignore STM32CubeIDE specific files
-.settings/
-.cproject
-.project
-.metadata/
+# # Ignore STM32CubeIDE specific files
+# .settings/
+# .cproject
+# .project
+# .metadata/
 
-# Ignore generated linker scripts (if not modified by you)
-STM32F446RETX_FLASH.ld
-STM32F446RETX_RAM.ld
+# # Ignore generated linker scripts (if not modified by you)
+# STM32F446RETX_FLASH.ld
+# STM32F446RETX_RAM.ld
 
-# Ignore system files
-.DS_Store
-Thumbs.db
+# # Ignore system files
+# .DS_Store
+# Thumbs.db
 
-# Ignore backup and temporary files
-*.bak
-*.swp
-*.tmp
+# # Ignore backup and temporary files
+# *.bak
+# *.swp
+# *.tmp
