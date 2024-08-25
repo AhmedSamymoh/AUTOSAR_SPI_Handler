@@ -99,8 +99,12 @@ typedef enum {
 
 
 /************************************ Section : Global Variables Declarations ************************************/
-uint8_t Spi_DataBufferType, Spi_ChannelType, Spi_SequenceType, Spi_HWUnitType;
-uint16_t Spi_NumberOfDataType, Spi_JobType;
+uint8_t Spi_DataBufferType; 
+uint8_t Spi_ChannelType; 
+uint8_t Spi_SequenceType; 
+uint8_t Spi_HWUnitType;
+uint16_t Spi_NumberOfDataType; 
+uint16_t Spi_JobType;
 
 /************************************ Section : Macro Functions Declarations ************************************/
 
