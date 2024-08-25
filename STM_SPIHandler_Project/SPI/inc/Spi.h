@@ -37,24 +37,6 @@ typedef enum{
     SPI_BUSY = 2
 }Spi_StatusType;
 
-
-// SPI ConfigType for SPI init 
-typedef enum {
-    UNINIT, IDLE, BUSY
-    }StatusType;
-
-typedef enum {
-    OK, PENDING, FAILED, QUEUED
-    }JobResultType;
-
-typedef enum {
-    OK, PENDING, FAILED, CANCELED 
-    }SeqResultType;
-
-typedef enum {
-    POLLING, INTERRUPT
-    }AsyncModeType;
-
 /************************************ Section: Macro Declarations ************************************/
 
 /*
@@ -103,6 +85,7 @@ typedef enum {
 #define SPI_CPHA_HIGH			        1
 
 
+
 /************************************ Section : Global Variables Declarations ************************************/
 // Global variables
 uint8_t DataBufferType, ChannelType, SequenceType, HWUnitType;
@@ -115,7 +98,10 @@ uint16_t NumberOfDataType, JobType;
 #define ENABLE_SPI1_CLOCK()      (RCC_APB2ENR |= RCC_APB2ENR_SPI1EN)
 
 
-void Spi_Init(const Spi_ConfigType* ConfigPtr);
+void Spi_Init(const Spi_ConfigType* ConfigPtr)
+
+
+
 
 
 #endif /* SPI_H */
