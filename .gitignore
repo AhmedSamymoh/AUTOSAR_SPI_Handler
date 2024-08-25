@@ -3,14 +3,15 @@ Debug/
 Release/
 
 # Ignore STM32CubeIDE specific files
-.settings/
-.cproject
-.project
-.metadata/
+STM_SPIHandler_Project/.settings/
+STM_SPIHandler_Project/.cproject
+STM_SPIHandler_Project/.project
+STM_SPIHandler_Project/AUTOSAR/.metadata/
+.vscode/
 
 # Ignore generated linker scripts (if not modified by you)
-STM32F446RETX_FLASH.ld
-STM32F446RETX_RAM.ld
+STM_SPIHandler_Project/STM32F446RETX_FLASH.ld
+STM_SPIHandler_Project/STM32F446RETX_RAM.ld
 
 # Ignore system files
 .DS_Store
