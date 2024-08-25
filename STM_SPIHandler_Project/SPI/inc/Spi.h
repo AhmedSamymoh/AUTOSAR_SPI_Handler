@@ -87,9 +87,13 @@ typedef enum{
 
 
 /************************************ Section : Global Variables Declarations ************************************/
-// Global variables
-uint8_t DataBufferType, ChannelType, SequenceType, HWUnitType;
-uint16_t NumberOfDataType, JobType;
+uint8 DataBufferType;
+uint8 ChannelType;
+uint8 SequenceType;
+uint8 HWUnitType;
+
+uint16 NumberOfDataType;
+uint16 JobType;
 
 
 /************************************ Section : Macro Functions Declarations ************************************/
@@ -98,7 +102,7 @@ uint16_t NumberOfDataType, JobType;
 #define ENABLE_SPI1_CLOCK()      (RCC_APB2ENR |= RCC_APB2ENR_SPI1EN)
 
 
-void Spi_Init(const Spi_ConfigType* ConfigPtr)
+void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
 
