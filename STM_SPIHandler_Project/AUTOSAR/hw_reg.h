@@ -188,3 +188,36 @@
 #define SPI_I2SPR_ODD           8
 #define SPI_I2SPR_MCKOE           9
 
+/*********************************************/
+/*              SPI_I2SCFGR Bits                 */
+/*********************************************/
+#define SPI_I2SCFGR_CHLEN           0
+#define SPI_I2SCFGR_DATLEN          1
+#define SPI_I2SCFGR_DATLEN          2
+#define SPI_I2SCFGR_CKPOL           3
+#define SPI_I2SCFGR_I2SSTD          4
+#define SPI_I2SCFGR_I2SSTD          5
+
+#define SPI_I2SCFGR_PCMSYNC          7
+#define SPI_I2SCFGR_I2SCFG           8
+#define SPI_I2SCFGR_I2SCFG           9
+#define SPI_I2SCFGR_I2SE            10
+#define SPI_I2SCFGR_I2SMOD          11
+#define SPI_I2SCFGR_ASTREN          12
+
+
+
+/*********************************************/
+/*              SPI_I2SPR Bits                 */
+/*********************************************/
+#define SPI_I2SPR_I2SDIV           0
+#define SPI_I2SPR_I2SDIV           1
+#define SPI_I2SPR_I2SDIV           2
+#define SPI_I2SPR_I2SDIV           3
+#define SPI_I2SPR_I2SDIV           4
+#define SPI_I2SPR_I2SDIV           5
+#define SPI_I2SPR_I2SDIV           6
+#define SPI_I2SPR_I2SDIV           7
+
+#define SPI_I2SPR_ODD           8
+#define SPI_I2SPR_MCKOE           9

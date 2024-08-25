@@ -17,6 +17,7 @@
 /************************************ Section : Includes ************************************/
 
 #include "Platform_Types.h"
+#include "hw_reg.h"
 
 /************************************ Section: Data Type Declarations ************************************/
 

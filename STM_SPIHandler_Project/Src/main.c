@@ -17,30 +17,21 @@
  */
 
 #include <stdint.h>
+#include "../SPI/inc/Spi.h"
 
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
 
-/**
- * @brief iujioiojip
- * 
- * @return int 
- */
+Spi_ConfigType spi_1 = {
+    .spiDeviceMode = SPI_DEVICE_MODE_MASTER,
+    .spiBusConfig = SPI_BUS_CONFIG_FULL_DUPLEX,
+    .spiSclkSpeed = SPI_SCLK_SPEED_DIV256,
+    .spiDFF = SPI_DFF_16BITS,
+    .spiCPOL = SPI_CPOL_LOW,
+    .spiCPHA = SPI_CPHA_LOW,
+};
+
 int main(void)
 {
+	Spi_Init(&spi_1);
     /* Loop forever */
 	for(;;);
-}
-
-/**
- * @brief this is a function that adds two numbers
- * 
- * @param a 
- * @param b 
- * @return int 
- */
-int sum(int a, int b)
-{
-    return a + b;
 }
