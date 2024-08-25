@@ -22,8 +22,25 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+/**
+ * @brief iujioiojip
+ * 
+ * @return int 
+ */
 int main(void)
 {
     /* Loop forever */
 	for(;;);
+}
+
+/**
+ * @brief this is a function that adds two numbers
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
+int sum(int a, int b)
+{
+    return a + b;
 }

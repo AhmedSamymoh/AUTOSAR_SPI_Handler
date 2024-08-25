@@ -6,7 +6,7 @@ Release/
 .settings/
 .cproject
 .project
-../.vscode/
+.metadata/
 
 # Ignore generated linker scripts (if not modified by you)
 STM32F446RETX_FLASH.ld
