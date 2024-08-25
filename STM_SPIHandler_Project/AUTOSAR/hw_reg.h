@@ -170,9 +170,6 @@
 #define SPI_I2SCFGR_ASTREN          12
 
 
-
-
-
 /*********************************************/
 /*              SPI_I2SPR Bits                 */
 /*********************************************/
@@ -185,6 +182,6 @@
 #define SPI_I2SPR_I2SDIV           6
 #define SPI_I2SPR_I2SDIV           7
 
-#define SPI_I2SPR_ODD           8
-#define SPI_I2SPR_MCKOE           9
+#define SPI_I2SPR_ODD              8
+#define SPI_I2SPR_MCKOE            9
 
