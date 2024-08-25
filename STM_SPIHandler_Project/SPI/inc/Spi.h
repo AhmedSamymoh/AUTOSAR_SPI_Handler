@@ -14,10 +14,12 @@ typedef enum {
     OK, PENDING, FAILED, QUEUED
     }JobResultType;
 
-typedef enum {
-    OK, PENDING, FAILED, CANCELED 
-    }SeqResultType;
 
 typedef enum {
     POLLING, INTERRUPT
     }AsyncModeType;
+
+typedef enum {
+ SPI_SEQ_OK, SPI_SEQ_PENDING , SPI_SEQ_FAILED, SPI_SEQ_CANCELED
+
+}SeqResultType;
