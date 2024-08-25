@@ -31,11 +31,6 @@ typedef struct{
  * @brief Spi_StatusType
  * [SWS_Spi_00373] 
  */
-typedef enum{
-    SPI_UNINIT = 0,
-    SPI_IDLE = 1,
-    SPI_BUSY = 2
-}Spi_StatusType;
 
 /************************************ Section: Macro Declarations ************************************/
 
