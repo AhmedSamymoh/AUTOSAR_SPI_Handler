@@ -17,6 +17,7 @@
 /************************************ Section : Includes ************************************/
 
 #include "Platform_Types.h"
+#include "hw_reg.h"
 
 /************************************ Section: Data Type Declarations ************************************/
 
@@ -35,11 +36,11 @@ typedef struct {
 } Std_VersionInfoType;
 
 /*Questions*/
-#define vendorID            0xBCBCu    
-#define moduleID            0x01u
-#define sw_major_version    23u
-#define sw_minor_version    11u 
-#define sw_patch_version    
+#define STD_TYPES_SW_vendor_ID        1u    
+#define STD_TYPES_SW_moduleID         1u
+#define STD_TYPES_SW_major_version    1u
+#define STD_TYPES_SW_minor_version    1u 
+#define STD_TYPES_SW_patch_version    1u
 
 /*
 * Std_ReturnType

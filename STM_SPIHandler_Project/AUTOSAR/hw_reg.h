@@ -30,10 +30,10 @@
 /*********************************************/
 /*                  SPI                      */
 /*********************************************/
-#define SPI1_BASE              *((volatile uint32 *) 0x40013000)
-#define SPI2_BASE              *((volatile uint32 *) 0x40003800)
-#define SPI3_BASE              *((volatile uint32 *) 0x40013C00)
-#define SPI4_BASE              *((volatile uint32 *) 0x40013400)
+#define SPI1_BASE              ((volatile uint32 *) 0x40013000)
+#define SPI2_BASE              ((volatile uint32 *) 0x40003800)
+#define SPI3_BASE              ((volatile uint32 *) 0x40013C00)
+#define SPI4_BASE              ((volatile uint32 *) 0x40013400)
 
 /*********************************************/
 /*           Registers offsets               */
@@ -150,6 +150,7 @@
 #define SPI_SR_OVR          6
 #define SPI_SR_BSY          7
 #define SPI_SR_FRE          8
+<<<<<<< HEAD
 
 
 /*********************************************/
@@ -185,3 +186,6 @@
 #define SPI_I2SPR_ODD              8
 #define SPI_I2SPR_MCKOE            9
 
+=======
+/*********************************************/
+>>>>>>> 2b25b951808d7d455ee45e23c1ce88d5c000eaa0

@@ -144,4 +144,8 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
 
+<<<<<<< HEAD
 #endif /* SPI_H */
+=======
+#endif /* SPI_H */
+>>>>>>> 2b25b951808d7d455ee45e23c1ce88d5c000eaa0
