@@ -34,16 +34,25 @@ typedef struct{
 
 
 typedef enum {
-    SPI_JOB_OK, SPI_JOB_PENDING, SPI_JOB_FAILED, SPI_JOB_QUEUED
-    }Spi_JobResultType;
+    SPI_JOB_OK,
+    SPI_JOB_PENDING,
+    SPI_JOB_FAILED,
+    SPI_JOB_QUEUED
+}Spi_JobResultType;
 
 typedef enum {
-    SPI_SEQ_OK, SPI_SEQ_PENDING, SPI_SEQ_FAILED, SPI_SEQ_CANCELED 
-    }Spi_SeqResultType;
+    SPI_SEQ_OK,
+    SPI_SEQ_PENDING,
+    SPI_SEQ_FAILED, 
+    SPI_SEQ_CANCELED 
+}Spi_SeqResultType;
 
 typedef enum {
-    SPI_POLLING_MODE, SPI_INTERRUPT_MODE
-    }Spi_AsyncModeType;
+    SPI_POLLING_MODE,
+    SPI_INTERRUPT_MODE
+}Spi_AsyncModeType;
+
+
 
 /************************************ Section: Macro Declarations ************************************/
 
@@ -93,10 +102,35 @@ typedef enum {
 #define SPI_CPHA_HIGH			        1
 
 
+/*
+ * SPI Module Version Info
+ */
+#define SPI_SW_vendor_ID        1u    
+#define SPI_SW_moduleID         1u
+#define SPI_SW_major_version    1u
+#define SPI_SW_minor_version    1u 
+#define SPI_SW_patch_version    1u
+
+
+
 
 /************************************ Section : Global Variables Declarations ************************************/
-uint8_t Spi_DataBufferType, Spi_ChannelType, Spi_SequenceType, Spi_HWUnitType;
-uint16_t Spi_NumberOfDataType, Spi_JobType;
+uint8 Spi_DataBufferType;
+uint8 Spi_ChannelType;
+uint8 Spi_SequenceType;
+uint8 Spi_HWUnitType;
+
+uint16 Spi_NumberOfDataType;
+uint16 Spi_JobType;
+
+
+Std_VersionInfoType Spi_VersionInfo = {
+    .vendorID = SPI_SW_vendor_ID,
+    .moduleID = SPI_SW_moduleID,
+    .sw_major_version = SPI_SW_major_version,
+    .sw_minor_version = SPI_SW_minor_version,
+    .sw_patch_version = SPI_SW_patch_version
+};
 
 /************************************ Section : Macro Functions Declarations ************************************/
 
