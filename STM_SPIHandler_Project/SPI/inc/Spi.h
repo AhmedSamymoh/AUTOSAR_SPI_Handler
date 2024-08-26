@@ -53,54 +53,67 @@ typedef enum {
 }Spi_AsyncModeType;
 
 
-
-/************************************ Section: Macro Declarations ************************************/
-
 /*
  * Data Frame Format
  */
-#define SPI_DFF_8BITS		            0
-#define SPI_DFF_16BITS		            1
-
+typedef enum {
+    SPI_DFF_8BITS,
+     SPI_DFF_16BITS
+}Spi_DataFrameFormat;
 
 /*
  * Clock Speed
  */
-#define SPI_SCLK_SPEED_DIV2		        0
-#define SPI_SCLK_SPEED_DIV4		        1
-#define SPI_SCLK_SPEED_DIV8		        2
-#define SPI_SCLK_SPEED_DIV16	        3
-#define SPI_SCLK_SPEED_DIV32	        4
-#define SPI_SCLK_SPEED_DIV64	        5
-#define SPI_SCLK_SPEED_DIV128	        6
-#define SPI_SCLK_SPEED_DIV256	        7
+typedef enum {
+    SPI_SCLK_SPEED_DIV2,
+    SPI_SCLK_SPEED_DIV4,
+    SPI_SCLK_SPEED_DIV8,
+    SPI_SCLK_SPEED_DIV16,
+    SPI_SCLK_SPEED_DIV32,
+    SPI_SCLK_SPEED_DIV64,
+    SPI_SCLK_SPEED_DIV128,
+    SPI_SCLK_SPEED_DIV256
+}Spi_ClockSpeed;
 
 
 /*
  * Device Modes
  */
-#define SPI_DEVICE_MODE_MASTER	        1
-#define SPI_DEVICE_MODE_SLAVE	        0
+
+typedef enum {
+    SPI_DEVICE_MODE_SLAVE,
+    SPI_DEVICE_MODE_MASTER
+}Spi_DeviceModes;
 
 /*
  * Bus Configuration
 */
-#define SPI_BUS_CONFIG_FULL_DUPLEX		1
-#define SPI_BUS_CONFIG_HALF_DUPLEX		0
+typedef enum {
+    SPI_BUS_CONFIG_HALF_DUPLEX, 
+    SPI_BUS_CONFIG_FULL_DUPLEX
+}Spi_BusConfiguration;
 
 /*
  * Clock Polarity
  */
-#define SPI_CPOL_LOW			        0
-#define SPI_CPOL_HIGH			        1
 
+typedef enum {
+   SPI_CPOL_LOW, 
+   SPI_CPOL_HIGH
+}Spi_ClockPolarity;
 
 /*
  * Clock Phase
  */
-#define SPI_CPHA_LOW			        0
-#define SPI_CPHA_HIGH			        1
+typedef enum {
+   SPI_CPHA_LOW	, 
+   SPI_CPHA_HIGH
+}Spi_ClockPhase;
 
+
+
+
+/************************************ Section: Macro Declarations ************************************/
 
 /*
  * SPI Module Version Info
@@ -142,10 +155,5 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
 
-
-
-<<<<<<< HEAD
 #endif /* SPI_H */
-=======
-#endif /* SPI_H */
->>>>>>> 2b25b951808d7d455ee45e23c1ce88d5c000eaa0
+
