@@ -91,7 +91,22 @@ volatile uint32 TXCRCR;
 #define SPI_SR_BSY          7
 #define SPI_SR_FRE          8
 
+/*!< Peripheral base address in the alias region */
+#define PERIPH_BASE                 0x40000000U 
+/*!< Peripheral memory map */
+#define APB1PERIPH_BASE             PERIPH_BASE
+#define APB2PERIPH_BASE             (PERIPH_BASE + 0x00010000UL)
+#define AHB1PERIPH_BASE             (PERIPH_BASE + 0x00020000UL)
+#define AHB2PERIPH_BASE             (PERIPH_BASE + 0x10000000UL)
 
+#define RCC_BASE                    (AHB1PERIPH_BASE + 0x3800)
+
+#define RCC_APB2ENR_OFFSET          0x44U        
+
+#define RCC_APB2ENR     			(*((volatile uint32 *) (RCC_BASE + RCC_APB2ENR_OFFSET)))
+#define RCC_APB2ENR_SPI1EN          12U
+#define RCC_APB2ENR_SPI2EN          14U
+#define RCC_APB2ENR_SPI3EN          15U  
 
 /*
 typedef struct{
