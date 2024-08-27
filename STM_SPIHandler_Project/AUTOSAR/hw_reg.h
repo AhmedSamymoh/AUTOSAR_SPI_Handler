@@ -150,10 +150,10 @@ typedef struct{
 
 #define RCC				((RCC_Registers *) RCC_BASE)
 
-#define SPI1            ((SPI_Registers*)0x40013000)
-#define SPI2            ((SPI_Registers*)0x40003800)
-#define SPI3            ((SPI_Registers*)0x40003C00)
-#define SPI4            ((SPI_Registers*)0x40013400)
+#define SPI1            ((SPI_Registers*)SPI1_BASE)
+#define SPI2            ((SPI_Registers*)SPI2_BASE)
+#define SPI3            ((SPI_Registers*)SPI3_BASE)
+#define SPI4            ((SPI_Registers*)SPI4_BASE)
 
 /* ================================================================ */
 /* ================================================================ */
