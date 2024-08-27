@@ -12,25 +12,155 @@
 #ifndef HW_REG_H
 #define HW_REG_H
 
-#include "std_types.h"
+#include "Std_Types.h"
+
+/* ================================================================ */
+/* ====== AHBx and APBx Bus Peripheral Base Addresses ============= */
+/* ================================================================ */
+
+#define PERIPH_BASE			        0x40000000U		/* Peripheral base address in the alias region  */
+#define APB1PERIPH_BASE		        PERIPH_BASE		/* Base address of APB1 peripheral memory */
+#define APB2PERIPH_BASE		        0x40010000U		/* Base address of APB2 peripheral memory */
+#define AHB1PERIPH_BASE		        0x40020000U		/* Base address of AHB1 peripheral memory */
+#define AHB2PERIPH_BASE		        0x50000000U		/* Base address of AHB2 peripheral memory */
 
 
+/* ================================================================ */
+/* ============== Base Addresses for APB1 Peripherals ============= */
+/* ================================================================ */
+
+#define SPI2_BASE			(APB1PERIPH_BASE + 0x3800) /* SPI2 base address   */
+#define SPI3_BASE			(APB1PERIPH_BASE + 0x3C00) /* SPI3 base address   */
+
+/* ================================================================ */
+/* ============== Base Addresses for APB2 Peripherals ============= */
+/* ================================================================ */
+
+#define SPI1_BASE			(APB2PERIPH_BASE + 0x3000) /* SPI1 base address   */
+#define SPI4_BASE			(APB2PERIPH_BASE + 0x3400) /* SPI4 base address   */
+
+
+#define RCC_APB2ENR_OFFSET          0x44U        
+
+#define RCC_APB2ENR     			(*((volatile uint32 *) (RCC_BASE + RCC_APB2ENR_OFFSET)))
+#define RCC_APB2ENR_SPI1EN          12U
+#define RCC_APB2ENR_SPI2EN          14U
+#define RCC_APB2ENR_SPI3EN          15U  
+
+/* ================================================================ */
+/* ============== Base Addresses for AHB1 Peripherals ============= */
+/* ================================================================ */
+
+#define RCC_BASE			(AHB1PERIPH_BASE + 0x3800) /* RCC base address	 					*/
+#define GPIOA_BASE			(AHB1PERIPH_BASE + 0x0000) /* GPIOA Base Address					*/
+#define GPIOB_BASE			(AHB1PERIPH_BASE + 0x0400) /* GPIOB Base Address					*/
+#define GPIOC_BASE			(AHB1PERIPH_BASE + 0x0800) /* GPIOC Base Address					*/
+#define GPIOD_BASE			(AHB1PERIPH_BASE + 0x0C00) /* GPIOD Base Address					*/
+#define GPIOE_BASE			(AHB1PERIPH_BASE + 0x1000) /* GPIOE Base Address					*/
+#define GPIOF_BASE			(AHB1PERIPH_BASE + 0x1400) /* GPIOF Base Address					*/
+#define GPIOG_BASE			(AHB1PERIPH_BASE + 0x1800) /* GPIOG Base Address					*/
+#define GPIOH_BASE			(AHB1PERIPH_BASE + 0x1C00) /* GPIOH Base Address					*/
+
+
+
+/* ================================================================ */
+/* ================= Peripheral Registers RCC  ==================== */
+/* ================================================================ */
+
+typedef struct
+{
+	volatile uint32 CR;				    /* RCC clock control register, 	    							Address offset: 0x00 	*/
+	volatile uint32 PLLCFGR;			/* RCC PLL configuration register, 	    						Address offset: 0x04 	*/
+	volatile uint32 CFGR;				/* RCC clock configuration register, 	   						Address offset: 0x08 	*/
+	volatile uint32 CIR;				/* RCC clock interrupt register, 	    						Address offset: 0x0C 	*/
+	volatile uint32 AHB1RSTR;			/* RCC AHB1 peripheral reset register, 	    					Address offset: 0x10 	*/
+	volatile uint32 AHB2RSTR;			/* RCC AHB2 peripheral reset register, 	    					Address offset: 0x14 	*/
+	volatile uint32 AHB3RSTR;			/* RCC AHB3 peripheral reset register, 	    					Address offset: 0x18 	*/
+	uint32  Reserved_0;	                /* RCC reserved register, 										Address offset: 0x1C 	*/
+	volatile uint32 APB1RSTR;			/* RCC APB1 peripheral reset register, 	    					Address offset: 0x20 	*/
+	volatile uint32 APB2RSTR;			/* RCC APB2 peripheral reset register, 	    					Address offset: 0x24 	*/
+	uint32  Reserved_1[2];              /* RCC reserved register, 										Address offset: 0x28-2C */
+	volatile uint32 AHB1ENR;			/* RCC AHB1 peripheral clock enable register, 	    			Address offset: 0x30 	*/
+	volatile uint32 AHB2ENR;			/* RCC AHB2 peripheral clock enable register, 	    			Address offset: 0x34 	*/
+	volatile uint32 AHB3ENR;			/* RCC AHB3 peripheral clock enable register, 	    			Address offset: 0x38 	*/
+	uint32  Reserved_2;	                /* RCC reserved register, 										Address offset: 0x3C 	*/
+	volatile uint32 APB1ENR;			/* RCC APB1 peripheral clock enable register, 	    			Address offset: 0x40 	*/
+	volatile uint32 APB2ENR;			/* RCC APB2 peripheral clock enable register, 	    			Address offset: 0x44 	*/
+    uint32 Reserved_3[2];               /* RCC reserved register, 										Address offset: 0x48-4C */
+    volatile uint32 AHB1LPENR;		    /* RCC AHB1 peripheral clock enable in low power mode register,	Address offset: 0x50 	*/
+    volatile uint32 AHB2LPENR;		    /* RCC AHB2 peripheral clock enable in low power mode register,	Address offset: 0x54 	*/
+    volatile uint32 AHB3LPENR;		    /* RCC AHB3 peripheral clock enable in low power mode register,	Address offset: 0x58 	*/
+	uint32  Reserved_4;	                /* RCC reserved register, 										Address offset: 0x5C 	*/
+	volatile uint32 APB1LPENR;		    /* RCC APB1 peripheral clock enable in low power mode register,	Address offset: 0x60 	*/
+	volatile uint32 APB2LPENR;		    /* RCC APB2 peripheral clock enable in low power mode register,	Address offset: 0x64 	*/
+	uint32  Reserved_5[2];              /* RCC reserved register, 										Address offset: 0x68-6C */
+	volatile uint32 BDCR;				/* RCC back up domain control register, 						Address offset: 0x70 	*/
+	volatile uint32 CSR;				/* RCC clock control & status register, 						Address offset: 0x74 	*/
+	uint32  Reserved_6[2];              /* RCC reserved register, 										Address offset: 0x78-7C */
+	volatile uint32 SSCGR;			    /* RCC spread spectrum clock generation register, 				Address offset: 0x80 	*/
+	volatile uint32 PLLI2SCFGR;		    /* RCC PLLI2S configuration register, 							Address offset: 0x84 	*/
+	volatile uint32 PLLSAICFGR;		    /* RCC PLL configuration register, 								Address offset: 0x88 	*/
+	volatile uint32 DCKCFGR;			/* RCC dedicated clock configuration register, 					Address offset: 0x8C 	*/
+	volatile uint32 CKGATENR;			/* RCC clock gated enable register, 							Address offset: 0x90 	*/
+}RCC_Registers;
+
+/* ================================================================ */
+/* ================= Peripheral Registers GPIO ==================== */
+/* ================================================================ */
+
+typedef struct
+{
+	uint32 MODER;  		/* GPIO port mode register, 	    			Address offset: 0x00 */
+	uint32 OTYPER; 		/* GPIO port output type register,  			Address offset: 0x04 */
+	uint32 OSPEEDR;  	/* GPIO port output speed register, 			Address offset: 0x08 */
+	uint32 PUPDR; 		/* GPIO port pull-up/down register, 			Address offset: 0x0C */
+	uint32 IDR; 		/* GPIO port input data register,    			Address offset: 0x10 */
+	uint32 ODR; 		/* GPIO port output data register, 	 			Address offset: 0x14 */
+	uint32 BSRR; 		/* GPIO port bit set/reset register, 			Address offset: 0x18 */
+	uint32 LCKR; 		/* GPIO port configuration lock register,		Address offset: 0x1C */
+	uint32 AFR[2];		/* AFR[0]: GPIO alternate function low register,
+						   AFR[1]: GPIO alternate function high register,	Address offset: 0x20-24 */
+}GPIO_Registers;
+
+/* ================================================================ */
+/* ===================         SPI          ======================= */
+/* ================================================================ */
 typedef struct{
-volatile uint32 CR1;
-volatile uint32 CR2;
-volatile uint32 SR;
-volatile uint32 DR;
-volatile uint32 CRCPR;
-volatile uint32 RXCRCR;
-volatile uint32 TXCRCR;
-}SPI_Registers;
+    volatile uint32 CR1;
+    volatile uint32 CR2;
+    volatile uint32 SR;
+    volatile uint32 DR;
+    volatile uint32 CRCPR;
+    volatile uint32 RXCRCR;
+    volatile uint32 TXCRCR;
+} SPI_Registers;
 
+/* ================================================================ */
+/* =================== Peripheral Instants  ======================= */
+/* ================================================================ */
 
-#define SPI1 ((SPI_Registers*)0x40013000)
-#define SPI2 ((SPI_Registers*)0x40003800)
-#define SPI3 ((SPI_Registers*)0x40003C00)
-#define SPI4 ((SPI_Registers*)0x40013400)
+#define GPIOA 			((GPIO_Registers *) GPIOA_BASE)
+#define GPIOB 			((GPIO_Registers *) GPIOB_BASE)
+#define GPIOC 			((GPIO_Registers *) GPIOC_BASE)
+#define GPIOD			((GPIO_Registers *) GPIOD_BASE)
+#define GPIOE 			((GPIO_Registers *) GPIOE_BASE)
+#define GPIOF 			((GPIO_Registers *) GPIOF_BASE)
+#define GPIOG 			((GPIO_Registers *) GPIOG_BASE)
+#define GPIOH 			((GPIO_Registers *) GPIOH_BASE)
 
+#define RCC				((RCC_Registers *) RCC_BASE)
+
+#define SPI1            ((SPI_Registers*)0x40013000)
+#define SPI2            ((SPI_Registers*)0x40003800)
+#define SPI3            ((SPI_Registers*)0x40003C00)
+#define SPI4            ((SPI_Registers*)0x40013400)
+
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
 
 /*********************************************/
 /*              SPI_CR1 Bits                 */
@@ -78,48 +208,6 @@ volatile uint32 TXCRCR;
 #define SPI_SR_BSY          7
 #define SPI_SR_FRE          8
 
-/*********************************************/
-/*              SPI_SR Bits                 */
-/*********************************************/
-#define SPI_SR_RXNE         0
-#define SPI_SR_TXE          1
-#define SPI_SR_CHSIDE       2
-#define SPI_SR_UDR          3
-#define SPI_SR_CRCERR       4
-#define SPI_SR_MODF         5
-#define SPI_SR_OVR          6
-#define SPI_SR_BSY          7
-#define SPI_SR_FRE          8
 
-/*!< Peripheral base address in the alias region */
-#define PERIPH_BASE                 0x40000000U 
-/*!< Peripheral memory map */
-#define APB1PERIPH_BASE             PERIPH_BASE
-#define APB2PERIPH_BASE             (PERIPH_BASE + 0x00010000UL)
-#define AHB1PERIPH_BASE             (PERIPH_BASE + 0x00020000UL)
-#define AHB2PERIPH_BASE             (PERIPH_BASE + 0x10000000UL)
 
-#define RCC_BASE                    (AHB1PERIPH_BASE + 0x3800)
-
-#define RCC_APB2ENR_OFFSET          0x44U        
-
-#define RCC_APB2ENR     			(*((volatile uint32 *) (RCC_BASE + RCC_APB2ENR_OFFSET)))
-#define RCC_APB2ENR_SPI1EN          12U
-#define RCC_APB2ENR_SPI2EN          14U
-#define RCC_APB2ENR_SPI3EN          15U  
-
-/*
-typedef struct{
-
-volatile uint32 CR1;
-volatile uint32 CR2;
-volatile uint32 SR;
-volatile uint32 DR;
-volatile uint32 CRCPR;
-volatile uint32 RXCRCR;
-volatile uint32 TXCRCR;
-volatile uint32 I2SCFGR;
-volatile uint32 I2SPR;
-}SPI_Registers;
-*/
 #endif
