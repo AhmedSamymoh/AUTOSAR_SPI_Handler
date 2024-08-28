@@ -145,6 +145,14 @@ typedef struct {
 Spi_StatusType Status;
 Spi_JobResultType JobResult;   
 Spi_SeqResultType SpiSeqResult;
+
+Spi_DataBufferType SpiDataBuffer;
+Spi_NumberOfDataType SpiNumberOfData;
+Spi_ChannelType SpiChannel;
+Spi_JobType SpiJob;
+Spi_SequenceType SpiSequence;
+Spi_HWunitType SpiHWunit;
+
 Spi_AsyncModeType SpiAsyncMode ;
 }Spi_ConfigType;
 
