@@ -20,8 +20,8 @@
 #include "../SPI/inc/Spi.h"
 
 
-Spi_ConfigType spi_1 = {
-    .spiDeviceMode = SPI_DEVICE_MODE_MASTER,
+Spi_HWUnitConfigType spi_1 = {
+    .spiHWuint = SPI
     .spiBusConfig = SPI_BUS_CONFIG_FULL_DUPLEX,
     .spiSclkSpeed = SPI_SCLK_SPEED_DIV256,
     .spiDFF = SPI_DFF_16BITS,

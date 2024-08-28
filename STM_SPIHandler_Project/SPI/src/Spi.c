@@ -12,10 +12,19 @@
 /********************************************** Section : Includes ********************************************/
 #include "../inc/Spi.h"
 
+
 /**************************************** Section: Data Type Declarations **************************************/
 
-
 /************************************ Section : Global Variables Definations ************************************/
+
+/* Define the current status of the SPI module 
+    Shared variable between APIs 
+*/
+static Spi_StatusType Spi1_Status = SPI_UNINIT;
+static Spi_StatusType Spi2_Status = SPI_UNINIT;
+static Spi_StatusType Spi3_Status = SPI_UNINIT;
+static Spi_StatusType Spi4_Status = SPI_UNINIT;
+
 
 /************************************* Section : Macro Functions Definations ************************************/
 
@@ -46,7 +55,7 @@ void GPIO_Spi_Init(void){
 	/*===================================================================*/
 }
 
-void Spi_Init(const Spi_ConfigType* ConfigPtr)
+void Spi_Init(const Spi_HWUnitConfigType* ConfigPtr)
 {
 	/* GPIO Port Enabling SPI1 To be alternative pin*/
 	GPIO_Spi_Init();
@@ -103,6 +112,76 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 	SPI1->DR = 0xFFFF; // Dummy data to clear RXNE flag
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief This service returns the status of the specified SPI Hardware microcontroller 
+ * peripheral.
+ * Spi_GetHWUnitStatus : [SWS_Spi_00186]
+ * 
+ * @param HWUnit 
+ * @return Spi_StatusType : SPI_UNINIT, SPI_IDLE, SPI_BUSY
+ */
+Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
+	switch (HWUnit)
+	{
+		case Spi_HWUnit_SPI1:
+			if (READ_BIT( (SPI1->CR1) , SPI_CR1_SPE) == 0){
+				return SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+			}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 0) {
+				return SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+			}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 1) {	
+				return SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+			}else {
+				/* Nothing */
+			}
+			break;
+		
+		case Spi_HWUnit_SPI2:
+			if (READ_BIT( (SPI2->CR1) , SPI_CR1_SPE) == 0){
+				return SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+			}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 0) {
+				return SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+			}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 1) {	
+				return SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+			}else {
+				/* Nothing */
+			}
+			break;
+		
+		case Spi_HWUnit_SPI3:
+			if (READ_BIT( (SPI3->CR1) , SPI_CR1_SPE) == 0){
+				return SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+			}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 0) {
+				return SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+			}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 1) {	
+				return SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+			}else {
+				/* Nothing */
+			}
+			break;
+		
+		case Spi_HWUnit_SPI4:
+			if (READ_BIT( (SPI4->CR1) , SPI_CR1_SPE) == 0){
+				return SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+			}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 0) {
+				return SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+			}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 1) {	
+				return SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+			}else {
+				/* Nothing */
+			}
+			break;
+		
+		default:
+			break;
+	}
+
+}
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**

@@ -17,20 +17,27 @@
 #include "../../AUTOSAR/Std_Types.h"
 #include "Spi_Cfg.h"        
 
+
 /**************************************** Section: Data Type Declarations **************************************/
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 /**
  * @brief   Spi_HWUnitType
  * [SWS_Spi_00381]
  * Specifies the identification (ID) for a SPI Hardware microcontroller peripheral (unit).
  * SPI1_HW_UNIT / SPI2_HW_UNIT / SPI3_HW_UNIT / SPI4_HW_UNIT
  */
-typedef uint8       Spi_HWunitType; 
+typedef uint8       Spi_HWUnitType; 
+
+/*
+ * SPI Hardware Units
+ */
+#define Spi_HWUnit_SPI1                 (Spi_HWUnitType)1u
+#define Spi_HWUnit_SPI2                 (Spi_HWUnitType)2u
+#define Spi_HWUnit_SPI3                 (Spi_HWUnitType)3u
+#define Spi_HWUnit_SPI4                 (Spi_HWUnitType)4u
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -39,6 +46,26 @@ typedef uint8       Spi_HWunitType;
  * Specifies the identification (ID) for a Job.
  */
 typedef uint16      Spi_JobType;     
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief     Spi_DataBufferType
+ * [SWS_Spi_00376]
+ * Type of application data buffer elements.
+ * Usage 0:  only Internal Buffers. (8 or 16 bits for SPIx_DR) 
+ * Usage 1:  only External Buffers. (9, 17 or 5 Bits.. User defined )
+ * Usage 2:  both buffers types : Internal and External Buffers.
+ * Spi_DataBufferType = 8 / 16 > SPI1_CR1_DFF = 0/1
+ */
+typedef uint8       Spi_DataBufferType;     
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief      Spi_NumberOfDataType
+ * [SWS_Spi_00377]
+ * Type for defining the number of data elements to send and / or receive by Channel
+ */
+typedef uint16      Spi_NumberOfDataType;     
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -82,15 +109,39 @@ typedef enum {
 }Spi_SeqResultType;            
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+/**
+* @brief   The enumeration containing the designated values for buffer types (internal or external).
+*
+*/
+typedef enum
+{
+    InternalBuffer = 0,     /**< @brief The Channel is configured using Internal Buffer. */
+    ExternalBuffer          /**< @brief The Channel is configured using External Buffer. */
+} Spi_BufferType;   
+
+////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct{
-	Spi_DeviceModes      spiDeviceMode;   /*Device Mode (Master or Slave)*/
+    Spi_HWUnitType       spiHWuint;       /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
 	Spi_BusConfiguration spiBusConfig;    /*Bus Configuration (Full Duplex or Half Duplex)*/
 	Spi_ClockSpeed       spiSclkSpeed;    /*Clock Speed*/
 	Spi_DataFrameFormat  spiDFF;          /*Data Frame Format*/
 	Spi_ClockPolarity    spiCPOL;         /*Clock Polarity*/
 	Spi_ClockPhase       spiCPHA;         /*Clock Phase*/
-} Spi_ConfigType;
+    Spi_CS_Port          spiCSPort;       /*Chip Select Port*/
+    Spi_CS_Pin           spiCSPin;        /*Chip Select Pin*/
+} Spi_HWUnitConfigType;
+
+typedef struct
+{
+    Spi_BufferType BufferType;   /* Buffer Type InternalBuffer/ExternalBuffer. */
+    uint8 FrameSize;             /** Data frame size. */   
+    boolean Lsb;                 /** Bite order (MSB/LSB). */
+    uint32 DefaultTransmitValue; /* Default Transmit Value. */
+    Spi_NumberOfDataType Length; /* Data length. */
+    Spi_StatusType Status;       /* channel internal state. */
+} Spi_ChannelConfigType;
+
 
 // typedef struct 
 // {
@@ -121,14 +172,11 @@ typedef struct{
 
 
 
+
 /************************************ Section : Global Variables Definations ************************************/
-uint8 Spi_DataBufferType;
+
 uint8 Spi_ChannelType;
 uint8 Spi_SequenceType;
-uint8 Spi_HWUnitType;
-
-uint16 Spi_NumberOfDataType;
-
 
 Std_VersionInfoType Spi_VersionInfo = {
     .vendorID = SPI_SW_vendor_ID,
@@ -144,16 +192,45 @@ Std_VersionInfoType Spi_VersionInfo = {
 
 
 /**
- *  - Spi_Init
- *  - [SWS_Spi_00184]
+ * 
  */
-void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 /**
- *  - Spi_GetVersionInfo
- *  - [SWS_Spi_00184]
+ * @brief 
+ * Spi_Init : [SWS_Spi_00184]
+ * 
+ * @param ConfigPtr 
+ */
+void Spi_Init(const Spi_HWUnitConfigType* ConfigPtr);
+
+
+
+/**
+ * @brief This service returns the version information of this module.
+ * Spi_GetVersionInfo : [SWS_Spi_00184]
+ * 
+ * @param VersionInfo 
  */
 void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
+
+
+/**
+ * @brief This service returns the status of the specified SPI Hardware microcontroller 
+ * peripheral.
+ * Spi_GetHWUnitStatus : [SWS_Spi_00186]
+ * 
+ * @param HWUnit 
+ * @return Spi_StatusType : SPI_UNINIT, SPI_IDLE, SPI_BUSY
+ */
+Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit);
+
+
+
+
+
+
+void Spi_Ipw_Init(const Spi_HWunitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
+
 
 
 #endif /* SPI_H */

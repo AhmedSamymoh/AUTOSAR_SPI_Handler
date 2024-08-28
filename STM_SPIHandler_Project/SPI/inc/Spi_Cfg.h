@@ -42,7 +42,6 @@ typedef enum {
     SPI_SCLK_SPEED_DIV256
 }Spi_ClockSpeed;
 
-
 /*
  * Device Modes
  */
@@ -86,16 +85,17 @@ typedef enum {
     SPI_INTERRUPT_MODE
 }Spi_AsyncModeType;
 
+/*
+ * CS Port
+ */
+typedef uint8 Spi_CS_Port;
 
 
-typedef struct{
-	Spi_DeviceModes      spiDeviceMode;   /*Device Mode (Master or Slave)*/
-	Spi_BusConfiguration spiBusConfig;    /*Bus Configuration (Full Duplex or Half Duplex)*/
-	Spi_ClockSpeed       spiSclkSpeed;    /*Clock Speed*/
-	Spi_DataFrameFormat  spiDFF;          /*Data Frame Format*/
-	Spi_ClockPolarity    spiCPOL;         /*Clock Polarity*/
-	Spi_ClockPhase       spiCPHA;         /*Clock Phase*/
-} Spi_Config;
+/*
+ * CS Pin
+ */
+typedef uint8 Spi_CS_Pin;
+
 
 
 
