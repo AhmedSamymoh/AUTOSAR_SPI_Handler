@@ -16,6 +16,11 @@
 #define PORTA 1
 #define PORTB 2
 #define PORTC 3
+#define PORTE 4 
+#define PORTF 5
+#define PORTG 6
+#define PORTH 7
+
 
 #define PIN0 0
 #define PIN1 1
