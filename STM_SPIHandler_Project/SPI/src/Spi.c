@@ -57,15 +57,16 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 	/* Configure SPI Device Mode SPI_CR1_MSTR = 1 for Master Mode */
 	SET_BIT(SPI1->CR1, SPI_CR1_MSTR );
 
-	/*SPI_CR1_LSBFIRST = 0 for MSB first*/
-	CLR_BIT( SPI1->CR1 , SPI_CR1_LSBF );
-
 	/* SSM=1, SSi=1 -> Software Slave Management Setting SSI, > to avoid MODF Error*/
 	SET_BIT( SPI1->CR1 , SPI_CR1_SSM );
 	SET_BIT( SPI1->CR1 , SPI_CR1_SSI );
 
 	/* Configure SPI Bus Configuration SPI_CR1_BIDIMODE = 0 for Full Duplex */
 	CLR_BIT(SPI1->CR1, SPI_CR1_BIDIMODE);
+
+
+    /*SPI_CR1_LSBFIRST = 0 for MSB first*/
+	CLR_BIT( SPI1->CR1 , SPI_CR1_LSBF );
 
 	SPI1->CR2 = 0 ;
 

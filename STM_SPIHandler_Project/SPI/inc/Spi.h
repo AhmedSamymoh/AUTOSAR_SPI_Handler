@@ -97,13 +97,12 @@ typedef struct{
 //     Spi_JobType SpiJobId;                           // Job ID used with APIs
 //     uint8 JobPriority;                              // Job Priority ranging from 0 (Lowest) to 3 (Highest) 
 //     Spi_ChannelType *ChnlLinkPtrPhysical;           // Ptr to channels asscociated with the job 
-// 		Spi_HWunitType  SpiHwUnit;                      // SP1 / SPI2 HW unit
+//     Spi_HWunitType  SpiHwUnit;                      // SP1 / SPI2 HW unit
 //     Spi_ClkPolType SpiClkPol;                       // SPI_CLK_POL_LOW / SPI_CLK_POL_HIGH
 //     Spi_ClkPhaseType SpiClkPhase;                   // SPI_CLK_PHASE_FIRST / SPI_CLK_PHASE_SECOND
 //     Spi_BaudRateType SpiBaudRate;                   // SPIBAUD_RATE_CLK_DIVx
 //     Spi_CS_Pin SpiCSPin;                            // DIO_CHANNEL_xx
 //     boolean SpiCsOn;                                // TRUE = Chip Select Functionality ON (HW handling)
-//  //   void (*SpiEndJobNotification_ptr)(void);        // Ptr to call back function       
 // }Spi_JobConfigType;
 
 
