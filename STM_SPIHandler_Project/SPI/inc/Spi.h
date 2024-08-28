@@ -17,8 +17,8 @@
 #include "../../AUTOSAR/Std_Types.h"
 #include "Spi_Cfg.h"        
 
-/**************************************** Section: Data Type Declarations **************************************/
 
+/************************************ Section : Global Variables Definations ************************************/
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -39,6 +39,50 @@ typedef uint8       Spi_HWunitType;
  * Specifies the identification (ID) for a Job.
  */
 typedef uint16      Spi_JobType;     
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief    Spi_DataBufferType
+ * [SWS_Spi_00379]
+ * Specifies the identification (ID) for a Job.
+ */
+typedef uint8 Spi_DataBufferType;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief    Spi_ChannelType
+ * [SWS_Spi_00379]
+ * Specifies the identification (ID) for a Job.
+ */
+typedef uint8 Spi_ChannelType;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief    Spi_SequenceType
+ * [SWS_Spi_00379]
+ * Specifies the identification (ID) for a Job.
+ */
+typedef uint8 Spi_SequenceType;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief    Spi_NumberOfDataType
+ * [SWS_Spi_00379]
+ * Specifies the identification (ID) for a Job.
+ */
+
+typedef uint16 Spi_NumberOfDataType;
+
+
+
+
+
+/**************************************** Section: Data Type Declarations **************************************/
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -81,16 +125,28 @@ typedef enum {
     SPI_SEQ_CANCELED            
 }Spi_SeqResultType;            
 
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct{
-	Spi_DeviceModes      spiDeviceMode;   /*Device Mode (Master or Slave)*/
-	Spi_BusConfiguration spiBusConfig;    /*Bus Configuration (Full Duplex or Half Duplex)*/
-	Spi_ClockSpeed       spiSclkSpeed;    /*Clock Speed*/
-	Spi_DataFrameFormat  spiDFF;          /*Data Frame Format*/
-	Spi_ClockPolarity    spiCPOL;         /*Clock Polarity*/
-	Spi_ClockPhase       spiCPHA;         /*Clock Phase*/
-} Spi_ConfigType;
+/**
+ * @brief  Spi_AsyncModeType
+ * [SWS_Spi_00375]
+ * This type defines a range of specific Sequences status for SPI Handler/Driver.
+ */
+typedef enum {
+    SPI_POLLING_MODE,
+    SPI_INTERRUPT_MODE
+}Spi_AsyncModeType;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+typedef struct {
+Spi_StatusType Status;
+Spi_JobResultType JobResult;   
+Spi_SeqResultType SpiSeqResult;
+Spi_AsyncModeType SpiAsyncMode ;
+}
 
 // typedef struct 
 // {
@@ -126,7 +182,6 @@ uint8 Spi_DataBufferType;
 uint8 Spi_ChannelType;
 uint8 Spi_SequenceType;
 uint8 Spi_HWUnitType;
-
 uint16 Spi_NumberOfDataType;
 
 
