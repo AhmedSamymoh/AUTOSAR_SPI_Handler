@@ -67,8 +67,6 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 	/* Configure SPI Bus Configuration SPI_CR1_BIDIMODE = 0 for Full Duplex */
 	CLR_BIT(SPI1->CR1, SPI_CR1_BIDIMODE);
 
-    
-    /
 	SPI1->CR2 = 0 ;
 
 	/* Configure SPI Clock Polarity */
@@ -100,9 +98,7 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 	/* Enable SPI1 */
 	SET_BIT(SPI1->CR1, SPI_CR1_SPE); // SPI_CR1_SPE = 1 to enable SPI
-
-
-
+    
 	SPI1->DR = 0xFFFF; // Dummy data to clear RXNE flag
 }
 
