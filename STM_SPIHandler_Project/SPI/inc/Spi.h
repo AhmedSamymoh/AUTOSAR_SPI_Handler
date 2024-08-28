@@ -146,7 +146,7 @@ Spi_StatusType Status;
 Spi_JobResultType JobResult;   
 Spi_SeqResultType SpiSeqResult;
 Spi_AsyncModeType SpiAsyncMode ;
-}
+}Spi_ConfigType;
 
 // typedef struct 
 // {
