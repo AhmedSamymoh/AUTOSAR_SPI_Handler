@@ -45,7 +45,8 @@
 
 /*************************************************Global variables***********************************************/
 typedef SPI_SlaveSelect SlaveSelect;
-
+typedef uint8	Spi_SlavePort;
+typedef uint8	Spi_SlavePin;
 
 /*******************************************************1*****************************************************/
 
@@ -135,6 +136,11 @@ typedef struct{
 	Spi_BusConfiguration spiBusConfig;    /*Bus Configuration (Full Duplex or Half Duplex)*/
 	Spi_ClockPolarity    spiCPOL;         /*Clock Polarity*/
 	Spi_ClockPhase       spiCPHA;         /*Clock Phase*/
+
+//slave configuration
+	Spi_SlavePort        port;
+	Spi_SlavePin	     pin; 
+
 } Spi_Config;
 
 
