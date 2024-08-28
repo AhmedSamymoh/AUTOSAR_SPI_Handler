@@ -27,61 +27,83 @@
  * 
  * @param ConfigPtr 
  */
+void GPIO_Spi_Init(void){
+
+	/*===================================================================*/
+	// Set PA5, PA6, and PA7 to alternate function mode (AF5 for SPI1)
+	GPIOA->MODER &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) | (0x3UL << (18U)) ); // Clear mode bits
+	GPIOA->MODER |= ( (0x2UL << (10U)) | (0x2UL << (12U)) | (0x2UL << (14U)) | (0x2UL << (18U)) ); // Set to alternate function
+
+	// Set alternate function to AF5 (SPI1)
+	GPIOA->AFR[0] &= ~((0xF << (4 * 4)) | (0xF << (5 * 4)) | (0xF << (6 * 4)) | (0xF << (7 * 4))); // Clear AFR bits
+	GPIOA->AFR[0] |= (5 << (4 * 4)) | (5 << (5 * 4)) | (5 << (6 * 4)) | (5 << (7 * 4)); // Set AF5 for PA5, PA6, PA7
+
+	// Set PA5, PA6, and PA7 to very high speed
+	GPIOA->OSPEEDR |= (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) | (0x3UL << (18U));
+
+	// Set PA5, PA6, and PA7 to no pull-up/pull-down
+	GPIOA->PUPDR &= ~((0x3UL << (4U)) | (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)));
+	/*===================================================================*/
+}
+
 void Spi_Init(const Spi_ConfigType* ConfigPtr)
 {
-    /* Enable SPI1 Clock */
-    ENABLE_SPI1_CLOCK();
+	/* GPIO Port Enabling SPI1 To be alternative pin*/
+	GPIO_Spi_Init();
 
-    /* GPIO Port Enabling SPI1 To be alternative pin*/
+	/* Reset SPI1 Configuration */
+	SPI1->CR1 = 0;
 
-    /* Reset SPI1 Configuration */
-    SPI1_CR1 = 0;
+	/* Configure SPI Device Mode SPI_CR1_MSTR = 1 for Master Mode */
+	SET_BIT(SPI1->CR1, SPI_CR1_MSTR );
 
-    /* Configure SPI Device Mode SPI_CR1_MSTR = 1 for Master Mode */
-    SET_BIT(SPI1_CR1, 2);
+	/*SPI_CR1_LSBFIRST = 0 for MSB first*/
+	CLR_BIT( SPI1->CR1 , SPI_CR1_LSBF );
 
-    /*SPI_CR1_LSBFIRST = 0 for MSB first*/
-    CLR_BIT( SPI1_CR1 , 7 );
+	/* SSM=1, SSi=1 -> Software Slave Management Setting SSI, > to avoid MODF Error*/
+	SET_BIT( SPI1->CR1 , SPI_CR1_SSM );
+	SET_BIT( SPI1->CR1 , SPI_CR1_SSI );
 
-    /*SPI_CR1_SSM = 0 for Hardware Slave Management*/
-    CLR_BIT( SPI1_CR1 , 9 );
+	/* Configure SPI Bus Configuration SPI_CR1_BIDIMODE = 0 for Full Duplex */
+	CLR_BIT(SPI1->CR1, SPI_CR1_BIDIMODE);
 
-    /* Configure SPI Bus Configuration SPI_CR1_BIDIMODE = 0 for Full Duplex */
-    CLR_BIT(SPI1_CR1, 15);
+    
+    /
+	SPI1->CR2 = 0 ;
 
-    SPI1_CR2 = 0 ;
+	/* Configure SPI Clock Polarity */
+	if (ConfigPtr->spiCPOL == SPI_CPOL_LOW){
+		CLR_BIT(SPI1->CR1, SPI_CR1_CPOL); /* 0: CK to 0 when idle */
+	}else{
+		SET_BIT(SPI1->CR1, SPI_CR1_CPOL); /* 1: CK to 1 when idle */
+	}
 
-    /* Configure SPI Clock Polarity */
-    if (ConfigPtr->spiCPOL == SPI_CPOL_LOW){
-        CLR_BIT(SPI1_CR1, 1); // SPI_CR1_CPOL = 1
-    }else{
-        SET_BIT(SPI1_CR1, 1); // SPI_CR1_CPOL = 0
-    }
+	/* Configure SPI Clock Phase */
+	if (ConfigPtr->spiCPHA == SPI_CPHA_LOW){
+		CLR_BIT(SPI1->CR1, SPI_CR1_CPHA); /* 0: The first clock transition is the first data capture edge*/
+	}else{
+		SET_BIT(SPI1->CR1, SPI_CR1_CPHA); /* 1: The second clock transition is the first data capture edge */
+	}
 
-    /* Configure SPI Clock Phase */
-    if (ConfigPtr->spiCPHA == SPI_CPHA_LOW){
-        CLR_BIT(SPI1_CR1, 0); // SPI1_CR1_CPHA = 0
-    }else{
-        SET_BIT(SPI1_CR1, 0); // SPI1_CR1_CPHA = 1
-    }
+	/* Configure SPI Clock Speed */
+	/* Clear the bits for clock speed <Mask bits 5:3> */
+	SPI1->CR1 &= ~(0x7U << SPI_CR1_BR0);
+	/* BR[2:0] bits for Baud Rate */
+	SPI1->CR1 |= (ConfigPtr->spiSclkSpeed << SPI_CR1_BR0);
 
-    /* Configure SPI Clock Speed */
-    /* Clear the bits for clock speed <Mask bits 5:3> */
-    SPI1_CR1 &= ~(0x7U << 3);
-    /* BR[2:0] bits for Baud Rate */
-    SPI1_CR1 |= (ConfigPtr->spiSclkSpeed << 3);
+	/* Configure Data Frame Format SPI_CR1_DFF = 1 for 16-bit data frame */
+	if (ConfigPtr->spiDFF == SPI_DFF_16BITS){
+		SET_BIT(SPI1->CR1, SPI_CR1_DFF);
+	}else{
+		CLR_BIT(SPI1->CR1, SPI_CR1_DFF);
+	}
 
-    /* Configure Data Frame Format SPI_CR1_DFF = 1 for 16-bit data frame */
-    if (ConfigPtr->spiDFF == SPI_DFF_16BITS){
-        SET_BIT(SPI1_CR1, 11);
-    }else{
-        CLR_BIT(SPI1_CR1, 11);
-    }
+	/* Enable SPI1 */
+	SET_BIT(SPI1->CR1, SPI_CR1_SPE); // SPI_CR1_SPE = 1 to enable SPI
 
-    /* Enable SPI1 */
-    SET_BIT(SPI1_CR1, 6); // SPI_CR1_SPE = 1 to enable SPI
 
-    SPI1_DR = 0xFFFF; // Dummy data to clear RXNE flag
+
+	SPI1->DR = 0xFFFF; // Dummy data to clear RXNE flag
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

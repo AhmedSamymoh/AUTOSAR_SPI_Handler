@@ -18,14 +18,6 @@
 
 /**************************************** Section: Data Type Declarations **************************************/
 
-typedef struct{
-	uint8 spiDeviceMode;    /*Device Mode (Master or Slave)*/
-	uint8 spiBusConfig;     /*Bus Configuration (Full Duplex or Half Duplex)*/
-	uint8 spiSclkSpeed;     /*Clock Speed*/
-	uint8 spiDFF;           /*Data Frame Format*/
-	uint8 spiCPOL;          /*Clock Polarity*/
-	uint8 spiCPHA;          /*Clock Phase*/
-}Spi_ConfigType;
 ////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @brief Spi_StatusType
@@ -131,6 +123,17 @@ typedef enum {
    SPI_CPHA_HIGH
 }Spi_ClockPhase;
 
+
+
+
+typedef struct{
+	Spi_DeviceModes spiDeviceMode;         /*Device Mode (Master or Slave)*/
+	Spi_BusConfiguration spiBusConfig;     /*Bus Configuration (Full Duplex or Half Duplex)*/
+	Spi_ClockSpeed spiSclkSpeed;           /*Clock Speed*/
+	Spi_DataFrameFormat spiDFF;            /*Data Frame Format*/
+	Spi_ClockPolarity spiCPOL;             /*Clock Polarity*/
+	Spi_ClockPhase spiCPHA;                /*Clock Phase*/
+}Spi_ConfigType;
 
 
 
