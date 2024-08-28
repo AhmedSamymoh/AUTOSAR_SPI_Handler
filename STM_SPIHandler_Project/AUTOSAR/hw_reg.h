@@ -39,6 +39,33 @@
 #define SPI1_BASE			(APB2PERIPH_BASE + 0x3000) /* SPI1 base address   */
 #define SPI4_BASE			(APB2PERIPH_BASE + 0x3400) /* SPI4 base address   */
 
+#include "Std_Types.h"
+
+/* ================================================================ */
+/* ====== AHBx and APBx Bus Peripheral Base Addresses ============= */
+/* ================================================================ */
+
+#define PERIPH_BASE			        0x40000000U		/* Peripheral base address in the alias region  */
+#define APB1PERIPH_BASE		        PERIPH_BASE		/* Base address of APB1 peripheral memory */
+#define APB2PERIPH_BASE		        0x40010000U		/* Base address of APB2 peripheral memory */
+#define AHB1PERIPH_BASE		        0x40020000U		/* Base address of AHB1 peripheral memory */
+#define AHB2PERIPH_BASE		        0x50000000U		/* Base address of AHB2 peripheral memory */
+
+
+/* ================================================================ */
+/* ============== Base Addresses for APB1 Peripherals ============= */
+/* ================================================================ */
+
+#define SPI2_BASE			(APB1PERIPH_BASE + 0x3800) /* SPI2 base address   */
+#define SPI3_BASE			(APB1PERIPH_BASE + 0x3C00) /* SPI3 base address   */
+
+/* ================================================================ */
+/* ============== Base Addresses for APB2 Peripherals ============= */
+/* ================================================================ */
+
+#define SPI1_BASE			(APB2PERIPH_BASE + 0x3000) /* SPI1 base address   */
+#define SPI4_BASE			(APB2PERIPH_BASE + 0x3400) /* SPI4 base address   */
+
 
 #define RCC_APB2ENR_SPI1EN          12U
 #define RCC_APB2ENR_SPI4EN          13U
@@ -137,22 +164,27 @@ typedef struct{
 /* =================== Peripheral Instants  ======================= */
 /* ================================================================ */
 
-#define GPIOA 			    ((GPIO_Registers *) GPIOA_BASE)
-#define GPIOB 			    ((GPIO_Registers *) GPIOB_BASE)
-#define GPIOC 			    ((GPIO_Registers *) GPIOC_BASE)
-#define GPIOD			    ((GPIO_Registers *) GPIOD_BASE)
-#define GPIOE 			    ((GPIO_Registers *) GPIOE_BASE)
-#define GPIOF 			    ((GPIO_Registers *) GPIOF_BASE)
-#define GPIOG 			    ((GPIO_Registers *) GPIOG_BASE)
-#define GPIOH 			    ((GPIO_Registers *) GPIOH_BASE)
+#define GPIOA 			((GPIO_Registers *) GPIOA_BASE)
+#define GPIOB 			((GPIO_Registers *) GPIOB_BASE)
+#define GPIOC 			((GPIO_Registers *) GPIOC_BASE)
+#define GPIOD			((GPIO_Registers *) GPIOD_BASE)
+#define GPIOE 			((GPIO_Registers *) GPIOE_BASE)
+#define GPIOF 			((GPIO_Registers *) GPIOF_BASE)
+#define GPIOG 			((GPIO_Registers *) GPIOG_BASE)
+#define GPIOH 			((GPIO_Registers *) GPIOH_BASE)
 
-#define RCC				    ((RCC_Registers *) RCC_BASE)
+#define RCC				((RCC_Registers *) RCC_BASE)
 
-#define SPI1                ((SPI_Registers*) 0x40013000)
-#define SPI2                ((SPI_Registers*) 0x40003800)
-#define SPI3                ((SPI_Registers*) 0x40003C00)
-#define SPI4                ((SPI_Registers*) 0x40013400)
+#define SPI1            ((SPI_Registers*)SPI1_BASE)
+#define SPI2            ((SPI_Registers*)SPI2_BASE)
+#define SPI3            ((SPI_Registers*)SPI3_BASE)
+#define SPI4            ((SPI_Registers*)SPI4_BASE)
 
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
 /* ================================================================ */
 /* ==============          Clock Enable           ================= */
 /* ================================================================ */
