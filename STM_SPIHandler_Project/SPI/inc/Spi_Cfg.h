@@ -12,14 +12,21 @@
 #ifndef SPI_CFG_H /* File guard */
 #define SPI_CFG_H
 
-
-
-
 /********************************************** Section : Includes ********************************************/
 
 #include "../../AUTOSAR/Std_Types.h"
 
 /**************************************** Section: Data Type Declarations **************************************/
+
+
+
+/*************************************************Global variables***********************************************/
+typedef SPI_SlaveSelect SlaveSelect;
+
+
+/*******************************************************1*****************************************************/
+
+
 /*
  * Data Frame Format
  */
@@ -27,6 +34,8 @@ typedef enum {
     SPI_DFF_8BITS,
      SPI_DFF_16BITS
 }Spi_DataFrameFormat;
+
+/********************************************************2****************************************************/
 
 /*
  * Clock Speed
@@ -43,6 +52,9 @@ typedef enum {
 }Spi_ClockSpeed;
 
 
+/*******************************************************3*****************************************************/
+
+
 /*
  * Device Modes
  */
@@ -52,6 +64,10 @@ typedef enum {
     SPI_DEVICE_MODE_MASTER
 }Spi_DeviceModes;
 
+
+/*******************************************************4*****************************************************/
+
+
 /*
  * Bus Configuration
 */
@@ -60,14 +76,20 @@ typedef enum {
     SPI_BUS_CONFIG_FULL_DUPLEX
 }Spi_BusConfiguration;
 
+
+/*******************************************************5*****************************************************/
+
+
 /*
  * Clock Polarity
  */
-
 typedef enum {
    SPI_CPOL_LOW, 
    SPI_CPOL_HIGH
 }Spi_ClockPolarity;
+
+
+/******************************************************6******************************************************/
 
 /*
  * Clock Phase
@@ -77,46 +99,22 @@ typedef enum {
    SPI_CPHA_HIGH
 }Spi_ClockPhase;
 
-
-/*
- * Async Mode
- */
-typedef enum {
-    SPI_POLLING_MODE,
-    SPI_INTERRUPT_MODE
-}Spi_AsyncModeType;
+/************************************************************************************************************/
 
 
+
+/**********************************************Struct Declaration****************************************************/
 
 typedef struct{
+	Spi_DataFrameFormat  spiDFF;          /*Data Frame Format*/
+	Spi_ClockSpeed       spiSclkSpeed;    /*Clock Speed*/
 	Spi_DeviceModes      spiDeviceMode;   /*Device Mode (Master or Slave)*/
 	Spi_BusConfiguration spiBusConfig;    /*Bus Configuration (Full Duplex or Half Duplex)*/
-	Spi_ClockSpeed       spiSclkSpeed;    /*Clock Speed*/
-	Spi_DataFrameFormat  spiDFF;          /*Data Frame Format*/
 	Spi_ClockPolarity    spiCPOL;         /*Clock Polarity*/
 	Spi_ClockPhase       spiCPHA;         /*Clock Phase*/
 } Spi_Config;
 
 
-
-
-/************************************ Section: Macro Declarations ************************************/
-
-
-
-
-
-/************************************ Section : Global Variables Definations ************************************/
-
-/************************************* Section : Macro Functions Definations ************************************/
-
-
-#define ENABLE_SPI1_CLOCK()      (RCC_APB2ENR |= (1 << RCC_APB2ENR_SPI1EN))
-
-
-
-
-/*************************************** Section : Functions Declarations ***************************************/
 
 
 #endif /* SPI_H */
