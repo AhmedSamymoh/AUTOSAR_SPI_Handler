@@ -141,8 +141,6 @@ Std_VersionInfoType Spi_VersionInfo = {
 
 /************************************* Section : Macro Functions Definations ************************************/
 
-
-
 /*************************************** Section : Functions Declarations ***************************************/
 
 
