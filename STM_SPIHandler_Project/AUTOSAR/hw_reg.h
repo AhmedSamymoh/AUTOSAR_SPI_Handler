@@ -39,13 +39,38 @@
 #define SPI1_BASE			(APB2PERIPH_BASE + 0x3000) /* SPI1 base address   */
 #define SPI4_BASE			(APB2PERIPH_BASE + 0x3400) /* SPI4 base address   */
 
+#include "Std_Types.h"
 
-#define RCC_APB2ENR_OFFSET          0x44U        
+/* ================================================================ */
+/* ====== AHBx and APBx Bus Peripheral Base Addresses ============= */
+/* ================================================================ */
 
-#define RCC_APB2ENR     			(*((volatile uint32 *) (RCC_BASE + RCC_APB2ENR_OFFSET)))
+#define PERIPH_BASE			        0x40000000U		/* Peripheral base address in the alias region  */
+#define APB1PERIPH_BASE		        PERIPH_BASE		/* Base address of APB1 peripheral memory */
+#define APB2PERIPH_BASE		        0x40010000U		/* Base address of APB2 peripheral memory */
+#define AHB1PERIPH_BASE		        0x40020000U		/* Base address of AHB1 peripheral memory */
+#define AHB2PERIPH_BASE		        0x50000000U		/* Base address of AHB2 peripheral memory */
+
+
+/* ================================================================ */
+/* ============== Base Addresses for APB1 Peripherals ============= */
+/* ================================================================ */
+
+#define SPI2_BASE			(APB1PERIPH_BASE + 0x3800) /* SPI2 base address   */
+#define SPI3_BASE			(APB1PERIPH_BASE + 0x3C00) /* SPI3 base address   */
+
+/* ================================================================ */
+/* ============== Base Addresses for APB2 Peripherals ============= */
+/* ================================================================ */
+
+#define SPI1_BASE			(APB2PERIPH_BASE + 0x3000) /* SPI1 base address   */
+#define SPI4_BASE			(APB2PERIPH_BASE + 0x3400) /* SPI4 base address   */
+
+
 #define RCC_APB2ENR_SPI1EN          12U
-#define RCC_APB2ENR_SPI2EN          14U
-#define RCC_APB2ENR_SPI3EN          15U  
+#define RCC_APB2ENR_SPI4EN          13U
+#define RCC_APB1ENR_SPI2EN          14U
+#define RCC_APB1ENR_SPI3EN          15U  
 
 /* ================================================================ */
 /* ============== Base Addresses for AHB1 Peripherals ============= */
@@ -154,6 +179,29 @@ typedef struct{
 #define SPI2            ((SPI_Registers*)SPI2_BASE)
 #define SPI3            ((SPI_Registers*)SPI3_BASE)
 #define SPI4            ((SPI_Registers*)SPI4_BASE)
+
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ================================================================ */
+/* ==============          Clock Enable           ================= */
+/* ================================================================ */
+
+/* ============ GPIOx peripherals ============ */
+#define GPIOA_PCLK_EN()		( RCC->AHB1ENR |= (1 << 0) ) /* GPIOA peripheral clock enabled */
+#define GPIOB_PCLK_EN()		( RCC->AHB1ENR |= (1 << 1) ) /* GPIOB peripheral clock enabled */
+#define GPIOC_PCLK_EN()		( RCC->AHB1ENR |= (1 << 2) ) /* GPIOC peripheral clock enabled */
+#define GPIOD_PCLK_EN()		( RCC->AHB1ENR |= (1 << 3) ) /* GPIOD peripheral clock enabled */
+#define GPIOE_PCLK_EN()		( RCC->AHB1ENR |= (1 << 4) ) /* GPIOE peripheral clock enabled */
+#define GPIOF_PCLK_EN()		( RCC->AHB1ENR |= (1 << 5) ) /* GPIOF peripheral clock enabled */
+#define GPIOG_PCLK_EN()		( RCC->AHB1ENR |= (1 << 6) ) /* GPIOG peripheral clock enabled */
+#define GPIOH_PCLK_EN()		( RCC->AHB1ENR |= (1 << 7) ) /* GPIOH peripheral clock enabled */
+
+#define SPI1_PCLK_EN()      ( RCC->APB2ENR |= (1 << RCC_APB2ENR_SPI1EN))
+#define SPI4_PCLK_EN()      ( RCC->APB1ENR |= (1 << RCC_APB2ENR_SPI4EN))
+
 
 /* ================================================================ */
 /* ================================================================ */
