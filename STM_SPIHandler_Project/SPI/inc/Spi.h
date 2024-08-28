@@ -38,6 +38,7 @@ typedef uint8       Spi_HWUnitType;
 #define Spi_HWUnit_SPI3                 (Spi_HWUnitType)3u
 #define Spi_HWUnit_SPI4                 (Spi_HWUnitType)4u
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -115,14 +116,13 @@ typedef enum {
 */
 typedef enum
 {
-    InternalBuffer = 0,     /**< @brief The Channel is configured using Internal Buffer. */
-    ExternalBuffer          /**< @brief The Channel is configured using External Buffer. */
+    InternalBuffer = 0,     /* Configured using Internal Buffer. */
+    ExternalBuffer          /* Configured using External Buffer. */
 } Spi_BufferType;   
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct{
-    Spi_HWUnitType       spiHWuint;       /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
 	Spi_BusConfiguration spiBusConfig;    /*Bus Configuration (Full Duplex or Half Duplex)*/
 	Spi_ClockSpeed       spiSclkSpeed;    /*Clock Speed*/
 	Spi_DataFrameFormat  spiDFF;          /*Data Frame Format*/
@@ -134,12 +134,13 @@ typedef struct{
 
 typedef struct
 {
-    Spi_BufferType BufferType;   /* Buffer Type InternalBuffer/ExternalBuffer. */
-    uint8 FrameSize;             /** Data frame size. */   
-    boolean Lsb;                 /** Bite order (MSB/LSB). */
-    uint32 DefaultTransmitValue; /* Default Transmit Value. */
-    Spi_NumberOfDataType Length; /* Data length. */
-    Spi_StatusType Status;       /* channel internal state. */
+    Spi_HWUnitType       spiHWuint;       /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
+    Spi_BufferType BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
+    uint8 FrameSize;                      /** Data frame size. */   
+    boolean Lsb;                          /** Bite order (MSB/LSB). */
+    uint32 DefaultTransmitValue;          /* Default Transmit Value. */
+    Spi_NumberOfDataType Length;          /* Data length. */
+    Spi_StatusType Status;                /* channel internal state. */
 } Spi_ChannelConfigType;
 
 
@@ -229,7 +230,7 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit);
 
 
 
-void Spi_Ipw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
+void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
 
 
 

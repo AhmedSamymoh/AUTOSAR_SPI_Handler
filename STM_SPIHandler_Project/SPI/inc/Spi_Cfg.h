@@ -104,9 +104,10 @@ typedef uint8 Spi_CS_Pin;
 
 
 /************************************ Section: Macro Declarations ************************************/
-#define PORTA 1
-#define PORTB 2
-#define PORTC 3
+#define PORTA 0
+#define PORTB 1
+#define PORTC 2
+#define PORTD 3
 #define PORTE 4 
 #define PORTF 5
 #define PORTG 6
@@ -134,12 +135,11 @@ typedef uint8 Spi_CS_Pin;
 /************************************* Section : Macro Functions Definations ************************************/
 
 
-#define ENABLE_SPI1_CLOCK()      (RCC_APB2ENR |= (1 << RCC_APB2ENR_SPI1EN))
-
-
 
 
 /*************************************** Section : Functions Declarations ***************************************/
+void System_Init(void);
+void GPIO_SPI_SlaveSelect (uint8 port, uint8 pin);
 
 
 #endif /* SPI_H */

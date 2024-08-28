@@ -21,16 +21,18 @@
 
 
 Spi_HWUnitConfigType spi_1 = {
-    .spiHWuint = SPI
     .spiBusConfig = SPI_BUS_CONFIG_FULL_DUPLEX,
     .spiSclkSpeed = SPI_SCLK_SPEED_DIV256,
     .spiDFF = SPI_DFF_16BITS,
     .spiCPOL = SPI_CPOL_LOW,
     .spiCPHA = SPI_CPHA_LOW,
+    .spiCSPort = PORTA,
+    .spiCSPin = PIN10
 };
 
 int main(void)
 {
+    System_Init();
 	Spi_Init(&spi_1);
     /* Loop forever */
 	for(;;);
