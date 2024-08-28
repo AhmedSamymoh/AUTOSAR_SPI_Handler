@@ -149,7 +149,7 @@ Std_VersionInfoType Spi_VersionInfo = {
 /************************************ Section : Macro Functions Declarations ************************************/
 
 
-#define ENABLE_SPI1_CLOCK()      (RCC_APB2ENR |= RCC_APB2ENR_SPI1EN)
+
 
 
 void Spi_Init(const Spi_ConfigType* ConfigPtr);
