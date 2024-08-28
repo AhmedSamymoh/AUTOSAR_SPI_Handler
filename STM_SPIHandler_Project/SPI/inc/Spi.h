@@ -229,7 +229,7 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit);
 
 
 
-void Spi_Ipw_Init(const Spi_HWunitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
+void Spi_Ipw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
 
 
 
