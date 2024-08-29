@@ -30,15 +30,6 @@
  */
 typedef uint8       Spi_HWUnitType; 
 
-/*
- * SPI Hardware Units
- */
-#define Spi_HWUnit_SPI1                 (Spi_HWUnitType)1u
-#define Spi_HWUnit_SPI2                 (Spi_HWUnitType)2u
-#define Spi_HWUnit_SPI3                 (Spi_HWUnitType)3u
-#define Spi_HWUnit_SPI4                 (Spi_HWUnitType)4u
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -146,8 +137,8 @@ typedef struct
 
 // typedef struct 
 // {
-//     Spi_JobType SpiJobId;                           // Job ID used with APIs
-//     uint8 JobPriority;                              // Job Priority ranging from 0 (Lowest) to 3 (Highest) 
+    Spi_JobType SpiJobId;                           // Job ID used with APIs
+    uint8 JobPriority;                              // Job Priority ranging from 0 (Lowest) to 3 (Highest) 
 //     Spi_ChannelType *ChnlLinkPtrPhysical;           // Ptr to channels asscociated with the job 
 //     Spi_HWunitType  SpiHwUnit;                      // SP1 / SPI2 HW unit
 //     Spi_ClkPolType SpiClkPol;                       // SPI_CLK_POL_LOW / SPI_CLK_POL_HIGH
@@ -170,7 +161,14 @@ typedef struct
 #define SPI_SW_patch_version            1u
 
 
-
+/*
+ * SPI Hardware Units 
+ * @Spi_HWUnitType
+ */
+#define Spi_HWUnit_SPI1                 (Spi_HWUnitType)1u
+#define Spi_HWUnit_SPI2                 (Spi_HWUnitType)2u
+#define Spi_HWUnit_SPI3                 (Spi_HWUnitType)3u
+#define Spi_HWUnit_SPI4                 (Spi_HWUnitType)4u
 
 
 
@@ -191,11 +189,6 @@ Std_VersionInfoType Spi_VersionInfo = {
 
 /*************************************** Section : Functions Declarations ***************************************/
 
-
-/**
- * 
- */
-
 /**
  * @brief 
  * Spi_Init : [SWS_Spi_00184]
@@ -204,15 +197,6 @@ Std_VersionInfoType Spi_VersionInfo = {
  */
 void Spi_Init(const Spi_HWUnitConfigType* ConfigPtr);
 
-
-
-/**
- * @brief This service returns the version information of this module.
- * Spi_GetVersionInfo : [SWS_Spi_00184]
- * 
- * @param VersionInfo 
- */
-void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 
 
 /**
@@ -226,13 +210,23 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit);
 
 
+/**
+ * @brief This service returns the version information of this module.
+ * Spi_GetVersionInfo : [SWS_Spi_00184]
+ * 
+ * @param VersionInfo 
+ */
+void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 
 
 
-
-void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
-
-
+// /**
+//  * @brief Should be called from here or from Spi_Init() function
+//  * 
+//  * @param HWUnitId 
+//  * @param HWUnit 
+//  */
+// void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
 
 #endif /* SPI_H */
 

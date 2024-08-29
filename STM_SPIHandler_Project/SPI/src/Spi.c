@@ -19,6 +19,7 @@
 
 /* Define the current status of the SPI module 
     Shared variable between APIs 
+	Defined By Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit)
 */
 static Spi_StatusType Spi1_Status = SPI_UNINIT;
 static Spi_StatusType Spi2_Status = SPI_UNINIT;
@@ -27,6 +28,19 @@ static Spi_StatusType Spi4_Status = SPI_UNINIT;
 
 
 /**************************************** Section : Functions Definations ***************************************/
+
+
+/****************************************************************************************************************/
+/******************************************* Section : Local Functions ******************************************/
+/****************************************************************************************************************/
+static void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
+static void Spi_GPIO_Init(void);
+static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_ReturnType Level);
+
+
+
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,22 +71,9 @@ void GPIO_Spi_Init(void){
 
 void Spi_Init(const Spi_HWUnitConfigType* ConfigPtr)
 {
-	/* GPIO Port Enabling SPI1 To be alternative pin*/
-	GPIO_Spi_Init();
-
 	// Spi_hw_Init
 
-	// switch (ConfigPtr->spiHWuint)
-	// {
-	// case Spi_HWUnit_SPI1:
-	// 	/* code */
-	// 	break;
-	
-	// default:
-	// 	break;
-	// }
-
-	
+	// GPIO_Spi_Init
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +103,8 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 			}else {
 				/* Nothing */
 			}
+			
+			Spi1_Status = Spi_Status;
 			break;
 		
 		case Spi_HWUnit_SPI2:
@@ -114,6 +117,8 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 			}else {
 				/* Nothing */
 			}
+
+			Spi2_Status = Spi_Status;
 			break;
 		
 		case Spi_HWUnit_SPI3:
@@ -126,6 +131,8 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 			}else {
 				/* Nothing */
 			}
+
+			Spi3_Status = Spi_Status;
 			break;
 		
 		case Spi_HWUnit_SPI4:
@@ -138,6 +145,8 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 			}else {
 				/* Nothing */
 			}
+			
+			Spi4_Status = Spi_Status;
 			break;
 		
 		default:
@@ -174,6 +183,10 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo)
 
 
 
+/****************************************************************************************************************/
+/******************************************* Section : Local Functions ******************************************/
+/****************************************************************************************************************/
+
 
 /**
  * @brief Should be called from here or from Spi_Init() function
@@ -182,8 +195,12 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo)
  * @param HWUnit 
  */
 void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit){
+	/* Enable GPIOA Clock */
+	GPIOA_PCLK_EN();
+
 	/* Enable SPI1 Clock */
 	SPI1_PCLK_EN();
+
 	/* GPIO Port Enabling SPI1 To be alternative pin*/
 	GPIO_Spi_Init(); // <<<<< Should be Modelarized
 
@@ -416,3 +433,93 @@ void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWU
 
 
 
+
+
+/**
+ * @brief Spi_ChipSelect_Write : Service to set a level of a channel.
+ * 
+ * @param CS_Pin Pin of the Chip Select Pin (PIN0, ... PIN15)
+ * @param CS_Port Port of the Chip Select Pin (PORTA,... PORTH)
+ * @param Level Value to be written (STD_HIGH , STD_LOW)
+ */
+static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_ReturnType Level)
+{
+    if ( (CS_Port >= PORTA && CS_Port <= PORTH )&& ( CS_Pin >= PIN0 && CS_Pin <= PIN15) && (Level == STD_HIGH || Level == STD_LOW))
+    {
+        /* 
+        * USE BSRR register to provide atomic channel access 
+        */
+        switch (CS_Port)
+		{
+			case PORTA:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOA->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOA->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+
+			case PORTB:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOB->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOB->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+
+			case PORTC:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOC->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOC->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+
+			case PORTD:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOD->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOD->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+				
+			case PORTE:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOE->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOE->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+
+			case PORTF:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOF->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOF->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+
+			case PORTG:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOG->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOG->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+
+			case PORTH:
+				if (Level == STD_HIGH){
+					SET_BIT((GPIOH->BSRR), CS_Pin); // Set Channel
+				}else if (Level == STD_LOW){
+					SET_BIT((GPIOH->BSRR), (CS_Pin + 16)); // Reset Channel
+				}else{/*Nothing*/}
+				break;
+			
+			default:
+				break;
+		}
+	}
+	else{
+		return; // Exit the function
+	}
+}
