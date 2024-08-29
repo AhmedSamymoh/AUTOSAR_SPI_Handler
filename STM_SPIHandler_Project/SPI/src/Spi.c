@@ -12,7 +12,6 @@
 /********************************************** Section : Includes ********************************************/
 #include "../inc/Spi.h"
 
-
 /**************************************** Section: Data Type Declarations **************************************/
 
 /************************************* Section : Global Variables Definations **********************************/
@@ -50,24 +49,196 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
  * 
  * @param ConfigPtr 
  */
-void GPIO_Spi_Init(void){
 
+
+
+void GPIO_Spi_Init(Spi_HWUnitType Spi_select ,uint8 port ){
+
+	switch(Spi_select){
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		case Spi_HWUnit_SPI1:
+		if (port==PORTA)
+{
 	/*===================================================================*/
 	// Set PA5, PA6, and PA7 to alternate function mode (AF5 for SPI1)
-	GPIOA->MODER &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) | (0x3UL << (18U)) ); // Clear mode bits
-	GPIOA->MODER |= ( (0x2UL << (10U)) | (0x2UL << (12U)) | (0x2UL << (14U)) | (0x2UL << (18U)) ); // Set to alternate function
+	GPIOA->MODER &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) ); // Clear mode bits
+	GPIOA->MODER |= ( (0x2UL << (10U)) | (0x2UL << (12U)) | (0x2UL << (14U))  ); // Set to alternate function
 
 	// Set alternate function to AF5 (SPI1)
-	GPIOA->AFR[0] &= ~((0xF << (4 * 4)) | (0xF << (5 * 4)) | (0xF << (6 * 4)) | (0xF << (7 * 4))); // Clear AFR bits
-	GPIOA->AFR[0] |= (5 << (4 * 4)) | (5 << (5 * 4)) | (5 << (6 * 4)) | (5 << (7 * 4)); // Set AF5 for PA5, PA6, PA7
+	GPIOA->AFR[0] &= ~(  (0xF << (5 * 4)) | (0xF << (6 * 4)) | (0xF << (7 * 4))); // Clear AFR bits
+	GPIOA->AFR[0] |=  (5 << (5 * 4)) | (5 << (6 * 4)) | (5 << (7 * 4)); // Set AF5 for PA5, PA6, PA7
 
 	// Set PA5, PA6, and PA7 to very high speed
-	GPIOA->OSPEEDR |= (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) | (0x3UL << (18U));
+	GPIOA->OSPEEDR |= (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U));
 
 	// Set PA5, PA6, and PA7 to no pull-up/pull-down
-	GPIOA->PUPDR &= ~((0x3UL << (4U)) | (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)));
+	GPIOA->PUPDR &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)));
 	/*===================================================================*/
 }
+
+		else if (port==PORTB)
+{
+	/*===================================================================*/
+	// Set PB3, PB4, and PB5 to alternate function mode (AF5 for SPI1)
+	GPIOB->MODER &= ~( (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U))  ); // Clear mode bits
+	GPIOB->MODER |= ( (0x2UL << (6U)) | (0x2UL << (8U)) | (0x2UL << (10U)) ); // Set to alternate function
+
+	// Set alternate function to AF5 (SPI1)
+	GPIOB->AFR[0] &= ~( (0xF << (3 * 4)) | (0xF << (4 * 4)) | (0xF << (5 * 4))); // Clear AFR bits
+	GPIOB->AFR[0] |=  (5 << (3 * 4)) | (5 << (4 * 4)) | (5 << (5 * 4)); // Set AF5 for PB3, PB4, PB5
+
+	// Set PB3, PB4, and PB5 to very high speed
+	GPIOB->OSPEEDR |= (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) ;
+
+	// Set PB3, PB4, and PB5 to no pull-up/pull-down
+	GPIOB->PUPDR &= ~((0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) );
+	/*===================================================================*/
+}
+	break;
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+case Spi_HWUnit_SPI2:
+if (port==PORTB){
+	/*===================================================================*/
+	// Set PB13, PB14, and PB15 to alternate function mode (AF5 for SPI2)
+	GPIOB->MODER &= ~( (0x3UL << (26U)) | (0x3UL << (28U)) | (0x3UL << (30U))  ); // Clear mode bits
+	GPIOB->MODER |= ( (0x2UL << (26U)) | (0x2UL << (28U)) | (0x2UL << (30U)) ); // Set to alternate function
+
+	// Set alternate function to AF5 (SPI2)
+	GPIOB->AFR[1] &= ~( (0xF << (5 * 4)) | (0xF << (6 * 4)) | (0xF << (7 * 4))); // Clear AFR bits
+	GPIOB->AFR[1] |=  (5 << (5 * 4)) | (5 << (6 * 4)) | (5 << (7 * 4)); // Set AF5 for PB3, PB4, PB5
+
+	// Set PB13, PB14, and PB15 to very high speed
+	GPIOB->OSPEEDR |= (0x3UL << (26U)) | (0x3UL << (28U)) | (0x3UL << (30U)) ;
+
+	// Set PB13, PB14, and PB15 to no pull-up/pull-down
+	GPIOB->PUPDR &= ~((0x3UL << (26U)) | (0x3UL << (28U)) | (0x3UL << (30U)) );
+	/*===================================================================*/
+}
+else if (port==PORTC){
+	/*===================================================================*/
+	// Set PC2, PC3, PC7 to alternate function mode (AF5 for SPI2)
+GPIOC->MODER &= ~( (0x3UL << (4U)) | (0x3UL << (6U)) | (0x3UL << (14U))  ); // Clear mode bits
+	GPIOC->MODER |= ( (0x2UL << (4U)) | (0x2UL << (6U)) | (0x2UL << (14U)) ); // Set to alternate function
+
+	// Set alternate function to AF5 (SPI2)
+	GPIOC->AFR[1] &= ~( (0xF << (2 * 4)) | (0xF << (3 * 4)) | (0xF << (7 * 4))); // Clear AFR bits
+	GPIOC->AFR[1] |=  (5 << (2 * 4)) | (5 << (3 * 4)) | (5 << (7 * 4)); // Set AF5 for PC2, PC3, PC7
+
+	// Set PC2, PC3, PC7 to very high speed
+	GPIOC->OSPEEDR |= (0x3UL << (4U)) | (0x3UL << (6U)) | (0x3UL << (14U)) ;
+
+	// Set PC2, PC3, PC7 to no pull-up/pull-down
+	GPIOC->PUPDR &= ~((0x3UL << (4U)) | (0x3UL << (6U)) | (0x3UL << (14U)) );
+	/*===================================================================*/
+}
+
+	break;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+case Spi_HWUnit_SPI3:
+if (port==PORTB){
+	/*===================================================================*/
+// Set PB3, PB4, and PB5 to alternate function mode (AF6 for SPI3)
+	GPIOB->MODER &= ~( (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U))  ); // Clear mode bits
+	GPIOB->MODER |= ( (0x2UL << (6U)) | (0x2UL << (8U)) | (0x2UL << (10U)) ); // Set to alternate function
+
+	// Set alternate function to AF5 (SPI1)
+	GPIOC->AFR[0] &= ~((0xF << (3 * 4)) | (0xF << (4 * 4)) | (0xF << (5 * 4)) | (0xF << (12 * 4))); // Clear AFR bits
+	GPIOC->AFR[0] |= (6 << (3 * 4)) | (6 << (4 * 4)) | (6 << (5 * 4)); // Set AF6 for PB3, PB4, PB5
+
+	// Set PB3, PB4, and PB5 to very high speed
+	GPIOC->OSPEEDR |= (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) ;
+
+	// Set PB3, PB4, and PB5 to no pull-up/pull-down
+	GPIOC->PUPDR &= ~((0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) );
+	/*===================================================================*/
+}
+	else if (port==PORTC){
+
+
+	/*===================================================================*/
+	// Set PC10, PC11, PC12 to alternate function mode (AF6 for SPI3)
+GPIOC->MODER &= ~( (0x3UL << (20U)) | (0x3UL << (22U)) | (0x3UL << (24U))  ); // Clear mode bits
+	GPIOC->MODER |= ( (0x2UL << (20U)) | (0x2UL << (22U)) | (0x2UL << (24U)) ); // Set to alternate function
+
+	// Set alternate function to AF6 (SPI3)
+	GPIOC->AFR[1] &= ~( (0xF << (2 * 4)) | (0xF << (3 * 4)) | (0xF << (4 * 4))); // Clear AFR bits
+	GPIOC->AFR[1] |=  (6 << (2 * 4)) | (6 << (3 * 4)) | (6 << (4 * 4)); // Set AF5 for PC10, PC11, PC12
+
+	// Set PC2, PC3, PC7 to very high speed
+	GPIOC->OSPEEDR |= (0x3UL << (20U)) | (0x3UL << (22U)) | (0x3UL << (24U)) ;
+
+	// Set PC2, PC3, PC7 to no pull-up/pull-down
+	GPIOC->PUPDR &= ~((0x3UL << (20U)) | (0x3UL << (22U)) | (0x3UL << (24U)) );
+	/*===================================================================*/
+	}
+	
+	break;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+case Spi_HWUnit_SPI4:
+if (port==PORTE){
+
+	/*===================================================================*/
+	// Set PE2, PE5, and PE6 to alternate function mode (AF5 for SPI4)
+GPIOE->MODER &= ~( (0x3UL << (4U)) | (0x3UL << (10U)) | (0x3UL << (12U))  ); // Clear mode bits
+	GPIOE->MODER |= ( (0x2UL << (4U)) | (0x2UL << (10U)) | (0x2UL << (12U)) ); // Set to alternate function
+
+	// Set alternate function to AF5 (SPI4)
+	GPIOE->AFR[0] &= ~( (0xF << (2 * 4)) | (0xF << (5 * 4)) | (0xF << (6 * 4))); // Clear AFR bits
+	GPIOE->AFR[0] |=  (5 << (2 * 4)) | (5 << (3 * 4)) | (5 << (4 * 4)); // Set AF5 for PE2, PE5, and PE6
+
+	// Set PE2, PE5, and PE6 to very high speed
+	GPIOE->OSPEEDR |= (0x3UL << (4U)) | (0x3UL << (10U)) | (0x3UL << (12U)) ;
+
+	// Set PE2, PE5, and PE6 to no pull-up/pull-down
+	GPIOE->PUPDR &= ~((0x3UL << (4U)) | (0x3UL << (10U)) | (0x3UL << (12U)) );
+	/*===================================================================*/
+}
+
+else if (port==PORTG){
+
+	/*===================================================================*/
+	// Set PG11, PG12, and PG13 to alternate function mode (AF6 for SPI4)
+GPIOG->MODER &= ~( (0x3UL << (22U)) | (0x3UL << (24U)) | (0x3UL << (26U))  ); // Clear mode bits
+	GPIOG->MODER |= ( (0x2UL << (22U)) | (0x2UL << (24U)) | (0x2UL << (26U)) ); // Set to alternate function
+
+	// Set alternate function to AF6 (SPI3)
+	GPIOG->AFR[1] &= ~( (0xF << (3 * 4)) | (0xF << (4 * 4)) | (0xF << (5 * 4))); // Clear AFR bits
+	GPIOG->AFR[1] |=  (6 << (3 * 4)) | (6 << (4 * 4)) | (6 << (5 * 4)); // Set AF6 for PG11, PG12, and PG13
+
+	// Set PG11, PG12, and PG13 to very high speed
+	GPIOG->OSPEEDR |= (0x3UL << (22U)) | (0x3UL << (24U)) | (0x3UL << (26U)) ;
+
+	// Set PG11, PG12, and PG13 to no pull-up/pull-down
+	GPIOG->PUPDR &= ~((0x3UL << (22U)) | (0x3UL << (24U)) | (0x3UL << (26U)) );
+	/*===================================================================*/
+	
+}
+	break;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
+}
+
+
+
+
+
+
 
 void Spi_Init(const Spi_HWUnitConfigType* ConfigPtr)
 {
@@ -181,8 +352,6 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo)
 }
 
 
-
-
 /****************************************************************************************************************/
 /******************************************* Section : Local Functions ******************************************/
 /****************************************************************************************************************/
@@ -202,7 +371,7 @@ void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWU
 	SPI1_PCLK_EN();
 
 	/* GPIO Port Enabling SPI1 To be alternative pin*/
-	GPIO_Spi_Init(); // <<<<< Should be Modelarized
+	GPIO_Spi_Init( Spi_HWUnit_SPI4 , PORTG); // <<<<< Should be Modelarized
 
 	GPIO_SPI_SlaveSelect(HWUnit->spiCSPort, HWUnit->spiCSPin);
 
