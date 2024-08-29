@@ -12,12 +12,18 @@
 #ifndef SPI_CFG_H /* File guard */
 #define SPI_CFG_H
 
-
-
-
 /********************************************** Section : Includes ********************************************/
-
 #include "../../AUTOSAR/Std_Types.h"
+
+
+
+/**************************************************************************************************************/
+/***************************************** Section : User Configurations **************************************/
+/**************************************************************************************************************/
+#define SPI_Channel_1               1u
+#define SPI_Channel_2               2u
+#define SPI_Channel_3               3u
+
 
 /**************************************** Section: Data Type Declarations **************************************/
 
@@ -28,7 +34,7 @@
  */
 typedef enum {
     SPI_DFF_8BITS,
-     SPI_DFF_16BITS
+    SPI_DFF_16BITS
 }Spi_DataFrameFormat;
 
 /*
@@ -45,22 +51,8 @@ typedef enum {
     SPI_SCLK_SPEED_DIV256
 }Spi_ClockSpeed;
 
-/*
- * Device Modes
- */
 
-typedef enum {
-    SPI_DEVICE_MODE_SLAVE,
-    SPI_DEVICE_MODE_MASTER
-}Spi_DeviceModes;
 
-/*
- * Bus Configuration
-*/
-typedef enum {
-    SPI_BUS_CONFIG_HALF_DUPLEX, 
-    SPI_BUS_CONFIG_FULL_DUPLEX
-}Spi_BusConfiguration;
 
 /*
  * Clock Polarity
@@ -104,6 +96,22 @@ typedef uint8 Spi_CS_Pin;
 
 
 /************************************ Section: Macro Declarations ************************************/
+
+
+/*
+ * Device Modes
+ * [SWS_Spi_00040] The SPI Handler/Driver handles only the Master mode.
+ */
+#define SPI_DEVICE_MODE_MASTER         1u
+
+/*
+ * Bus Configuration
+ * [SWS_Spi_00050] ⌈The SPI Handler/Driver only supports full-duplex mode.
+ */
+#define SPI_BUS_CONFIG_FULL_DUPLEX     1u
+
+
+
 #define PORTA 0
 #define PORTB 1
 #define PORTC 2
@@ -130,6 +138,9 @@ typedef uint8 Spi_CS_Pin;
 #define PIN13 13
 #define PIN14 14
 #define PIN15 15
+
+
+
 /************************************ Section : Global Variables Definations ************************************/
 
 /************************************* Section : Macro Functions Definations ************************************/
@@ -139,7 +150,7 @@ typedef uint8 Spi_CS_Pin;
 
 /*************************************** Section : Functions Declarations ***************************************/
 void System_Init(void);
-void GPIO_SPI_SlaveSelect (uint8 port, uint8 pin);
+void GPIO_SPI_SlaveSelect_Init (uint8 port, uint8 pin);
 
 
 #endif /* SPI_H */

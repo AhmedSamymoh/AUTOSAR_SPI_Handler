@@ -40,6 +40,7 @@ void GPIO_SPI_SlaveSelect (uint8 port, uint8 pin){
 
 	switch(port){
 			case PORTA:
+			
 				// Set PIN to  General purpose output mode
 				GPIOA->MODER &= ~( (0x3UL << ((pin*2))) | ( 0x3UL << (((pin*2)+1)) ) );
 				GPIOA->MODER |=  (1 << ((pin*2)));

@@ -33,11 +33,26 @@ typedef uint8       Spi_HWUnitType;
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @brief    Spi_ChannelType
+ * [SWS_Spi_00378]
+ * Specifies the identification (ID) for a Channel.
+ */
+typedef uint8       Spi_ChannelType;   
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
  * @brief    Spi_JobType
  * [SWS_Spi_00379]
  * Specifies the identification (ID) for a Job.
  */
 typedef uint16      Spi_JobType;     
+////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief    Spi_SequenceType
+ * [SWS_Spi_00380]
+ * Specifies the identification (ID) for a sequence of jobs.
+ */
+typedef uint8       Spi_SequenceType;     
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -60,6 +75,7 @@ typedef uint8       Spi_DataBufferType;
 typedef uint16      Spi_NumberOfDataType;     
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * @brief Spi_StatusType
  * [SWS_Spi_00373] 
@@ -113,40 +129,69 @@ typedef enum
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @brief  
+ * 
+ */
 typedef struct{
-	Spi_BusConfiguration spiBusConfig;    /*Bus Configuration (Full Duplex or Half Duplex)*/
-	Spi_ClockSpeed       spiSclkSpeed;    /*Clock Speed*/
-	Spi_DataFrameFormat  spiDFF;          /*Data Frame Format*/
-	Spi_ClockPolarity    spiCPOL;         /*Clock Polarity*/
-	Spi_ClockPhase       spiCPHA;         /*Clock Phase*/
-    Spi_CS_Port          spiCSPort;       /*Chip Select Port*/
-    Spi_CS_Pin           spiCSPin;        /*Chip Select Pin*/
+    /* SpiPrescaller Clock Speed                SPI_SCLK_SPEED_DIV2 : SPI_SCLK_SPEED_DIV256 */
+    Spi_ClockSpeed       SpiPrescaller;         
+    /* Clock Polarity                           SPI_CPOL_LOW : SPI_CPOL_HIGH */
+	Spi_ClockPolarity    spiCPOL;
+    /* Clock Phase                              SPI_CPHA_LOW : SPI_CPHA_HIGH */               
+	Spi_ClockPhase       spiCPHA;               
+    /*Chip Select Port                          PORTA : PORTH */
+    Spi_CS_Port          spiCSPort;             
+    /*Chip Select Pin                           PIN0 : PIN15 */
+    Spi_CS_Pin           spiCSPin;              
 } Spi_HWUnitConfigType;
+
 
 typedef struct
 {
-    Spi_HWUnitType       spiHWuint;       /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
-    Spi_BufferType BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
-    uint8 FrameSize;                      /** Data frame size. */   
-    boolean Lsb;                          /** Bite order (MSB/LSB). */
-    uint32 DefaultTransmitValue;          /* Default Transmit Value. */
-    Spi_NumberOfDataType Length;          /* Data length. */
-    Spi_StatusType Status;                /* channel internal state. */
+    Spi_ChannelType      SpiChannelId;          /* Channel ID used with APIs */
+    Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
+    Spi_DataFrameFormat  spiDFF;                /* Data Frame Format: SPI_DFF_8BITS : SPI_DFF_16BITS */
+    uint32               DefaultTransmitValue; /* Default Transmit Value. */ 
+    Spi_NumberOfDataType Length;                /* size of . */
+    Spi_StatusType       Status;                /* channel internal state. */
+
 } Spi_ChannelConfigType;
 
 
-// typedef struct 
-// {
-    Spi_JobType SpiJobId;                           // Job ID used with APIs
-    uint8 JobPriority;                              // Job Priority ranging from 0 (Lowest) to 3 (Highest) 
-//     Spi_ChannelType *ChnlLinkPtrPhysical;           // Ptr to channels asscociated with the job 
-//     Spi_HWunitType  SpiHwUnit;                      // SP1 / SPI2 HW unit
-//     Spi_ClkPolType SpiClkPol;                       // SPI_CLK_POL_LOW / SPI_CLK_POL_HIGH
-//     Spi_ClkPhaseType SpiClkPhase;                   // SPI_CLK_PHASE_FIRST / SPI_CLK_PHASE_SECOND
-//     Spi_BaudRateType SpiBaudRate;                   // SPIBAUD_RATE_CLK_DIVx
-//     Spi_CS_Pin SpiCSPin;                            // DIO_CHANNEL_xx
-//     boolean SpiCsOn;                                // TRUE = Chip Select Functionality ON (HW handling)
-// }Spi_JobConfigType;
+typedef struct 
+{   
+    Spi_JobType           SpiJobId;             /* Job ID used with APIs */
+    Spi_HWUnitType        spiHWUint;            /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
+    uint8                 JobPriority;          /* Job Priority ranging from 0 (Lowest) to 3 (Highest)*/ 
+    Spi_ChannelConfigType *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
+    Spi_HWUnitConfigType  *SpiHWUnitConfig;     /* Pointer to HW unit configuration */  
+}Spi_JobConfigType;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+typedef struct 
+{
+    Spi_JobConfigType     *JobLinkPtr;           /* Ptr to jobs IDs asscociated with the Sequence*/
+    Spi_JobType           NoOfJobs;			     /* Number of Jobs configured */
+    Spi_SequenceType      SpiSeqId;              /* Sequence ID used with APIs */ 
+}Spi_SeqConfigType;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef struct Spi_ConfigType
+{
+    /* Number of Channels configured */
+    Spi_ChannelType NoOfChannels;
+    
+    /* pointer to job configuration */
+    Spi_JobConfigType * Spi_JobConfigPtr; 
+   
+    /* Pointer to channel configuration  */
+    Spi_ChannelConfigType * Spi_ChannelConfigPtr ;   
+
+}Spi_ConfigType;
+
+
 
 
 /************************************ Section: Macro Declarations ************************************/
@@ -174,9 +219,6 @@ typedef struct
 
 /************************************ Section : Global Variables Definations ************************************/
 
-uint8 Spi_ChannelType;
-uint8 Spi_SequenceType;
-
 Std_VersionInfoType Spi_VersionInfo = {
     .vendorID = SPI_SW_vendor_ID,
     .moduleID = SPI_SW_moduleID,
@@ -195,12 +237,13 @@ Std_VersionInfoType Spi_VersionInfo = {
  * 
  * @param ConfigPtr 
  */
-void Spi_Init(const Spi_HWUnitConfigType* ConfigPtr);
+void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
 
 /**
- * @brief This service returns the status of the specified SPI Hardware microcontroller 
+ * @brief This service returns the status of the specified SPI Har
+ * dware microcontroller 
  * peripheral.
  * Spi_GetHWUnitStatus : [SWS_Spi_00186]
  * 
