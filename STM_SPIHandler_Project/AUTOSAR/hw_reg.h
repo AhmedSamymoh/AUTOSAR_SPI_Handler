@@ -200,7 +200,10 @@ typedef struct{
 #define GPIOH_PCLK_EN()		( RCC->AHB1ENR |= (1 << 7) ) /* GPIOH peripheral clock enabled */
 
 #define SPI1_PCLK_EN()      ( RCC->APB2ENR |= (1 << RCC_APB2ENR_SPI1EN))
-#define SPI4_PCLK_EN()      ( RCC->APB1ENR |= (1 << RCC_APB2ENR_SPI4EN))
+#define SPI4_PCLK_EN()      ( RCC->APB2ENR |= (1 << RCC_APB2ENR_SPI4EN))
+#define SPI2_PCLK_EN()      ( RCC->APB1ENR |= (1 << RCC_APB1ENR_SPI2EN))
+#define SPI3_PCLK_EN()      ( RCC->APB1ENR |= (1 << RCC_APB1ENR_SPI3EN))
+
 
 
 /* ================================================================ */

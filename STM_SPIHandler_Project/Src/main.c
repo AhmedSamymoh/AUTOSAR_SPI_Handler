@@ -20,20 +20,43 @@
 #include "../SPI/inc/Spi.h"
 
 
-Spi_HWUnitConfigType spi_1 = {
-    .spiBusConfig = SPI_BUS_CONFIG_FULL_DUPLEX,
-    .spiSclkSpeed = SPI_SCLK_SPEED_DIV256,
-    .spiDFF = SPI_DFF_16BITS,
-    .spiCPOL = SPI_CPOL_LOW,
-    .spiCPHA = SPI_CPHA_LOW,
-    .spiCSPort = PORTA,
-    .spiCSPin = PIN10
-};
 
+
+Spi_HWUnitConfigType hwUnitConfig = {
+    .SpiPrescaller = SPI_SCLK_SPEED_DIV256,   
+    .spiCPOL = SPI_CPOL_LOW,       
+    .spiCPHA = SPI_CPHA_LOW, 
+    .spiCSPort = PORTA,       
+    .spiCSPin = PIN10         
+};
+Spi_ChannelConfigType channels[]= {
+    {
+        .SpiChannelId = SPI_Channel_1,
+        .BufferType = InternalBuffer,
+        .spiDFF = SPI_DFF_16BITS,
+        .DefaultTransmitValue = 0xAAAA,
+        .Length = 20,
+        .Status = SPI_IDLE
+    }
+};
+Spi_JobConfigType jobConfig[] = {
+    {
+        .SpiJobId = 1,
+        .JobPriority = 1,
+        .ChannelsPtr = channels,
+        .spiHWUint = Spi_HWUnit_SPI1,
+        .SpiHWUnitConfig = &hwUnitConfig
+    }
+};
+Spi_ConfigType spiConfig = {
+    .NoOfChannels = sizeof(channels)/sizeof(Spi_ChannelConfigType),
+    .Spi_JobConfigPtr = jobConfig,
+    .Spi_ChannelConfigPtr = channels
+};
 int main(void)
 {
     System_Init();
-	Spi_Init(&spi_1);
+	Spi_Init(&spiConfig);
     /* Loop forever */
 	for(;;);
 }
