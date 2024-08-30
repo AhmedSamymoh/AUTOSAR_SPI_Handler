@@ -240,7 +240,7 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 	GPIOA_PCLK_EN();
 
 	/* GPIO Port Enabling SPI1 To be alternative pin*/
-	GPIO_Spi_Init(); // <<<<< Should be Modelarized
+	GPIO_Spi_Init(HWUnitId, HWUnit->spiCSPort);
 
 	Spi_ChipSelect_Init(HWUnit->spiCSPort, HWUnit->spiCSPin);
 
