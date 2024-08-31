@@ -61,6 +61,7 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 			/* Initialize the SPI Hardware Unit */
 			Spi_lhw_Init(Spi_HWUnit_SPI1, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
+			Spi1_Status = SPI_IDLE;
 			
 			break;
 		case Spi_HWUnit_SPI2:
@@ -79,6 +80,8 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 			/* Initialize the SPI Hardware Unit */
 			Spi_lhw_Init(Spi_HWUnit_SPI2, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
 
+			Spi2_Status = SPI_IDLE;
+
 			break;
 		
 		case Spi_HWUnit_SPI3:
@@ -96,6 +99,8 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 			/* Initialize the SPI Hardware Unit */
 			Spi_lhw_Init(Spi_HWUnit_SPI3, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
 
+			Spi3_Status = SPI_IDLE;
+
 			break;
 
 		case Spi_HWUnit_SPI4:
@@ -112,6 +117,8 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 			/* Initialize the SPI Hardware Unit */
 			Spi_lhw_Init(Spi_HWUnit_SPI4, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
+
+			Spi4_Status = SPI_IDLE;
 
 			break;
 		
