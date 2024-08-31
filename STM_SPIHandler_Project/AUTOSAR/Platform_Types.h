@@ -56,8 +56,13 @@ CPU_TYPE_8, CPU_TYPE_16, CPU_TYPE_32 or CPU_TYPE_64
 /******************/
 #define CPU_BYTE_ORDER       LSB_FIRST
 /******************/
-#define HIGH_BYTE_FIRST            0
-#define LOW_BYTE_FIRST            1
+#define HIGH_BYTE_FIRST      0
+#define LOW_BYTE_FIRST       1
+
+
+#define TRUE                 1 
+#define FALSE                0    
+
 
 /************************************ Section: Data Type Declarations ************************************/
 

@@ -263,13 +263,6 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 
 
 
-// /**
-//  * @brief Should be called from here or from Spi_Init() function
-//  * 
-//  * @param HWUnitId 
-//  * @param HWUnit 
-//  */
-// void Spi_hw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit);
 
 #endif /* SPI_H */
 
