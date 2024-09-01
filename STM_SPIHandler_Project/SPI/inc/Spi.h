@@ -225,6 +225,8 @@ typedef struct Spi_ConfigType
 #define SPI_E_PARAM_UNIT                ((uint8)0x0Eu)
 /* API SPI_Init service called while the SPI driver has been already initialized */
 #define SPI_E_ALREADY_INITIALIZED       ((uint8)0x4Au)
+/* API service used without module initialization */
+#define SPI_E_UNINIT                    ((uint8)0x1Au)
 /* API service called with wrong lenghth for EB */
 #define SPI_E_PARAM_LENGTH              ((uint8)0x0Du)
 

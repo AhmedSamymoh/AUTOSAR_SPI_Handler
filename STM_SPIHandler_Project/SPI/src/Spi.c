@@ -34,7 +34,7 @@ static Spi_StatusType Spi4_Status = SPI_UNINIT;
 /******************************************* Section : Local Functions ******************************************/
 /****************************************************************************************************************/
 static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit );
-void GPIO_Spi_Init(Spi_HWUnitType Spi_select ,uint8 port);
+static void GPIO_Spi_Init(Spi_HWUnitType Spi_select ,uint8 port);
 static void Spi_ChipSelect_Init(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port );
 static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_ReturnType Level);
 
@@ -47,6 +47,7 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 	if (ConfigPtr == NULL_PTR)
 	{
 		/*Det_ReportError*/
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_PARAM_POINTER);
 	}
 	else
 	{
@@ -78,6 +79,10 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 						a de-initialization before by executing a Spi_DeInit().
 
 						Spi_DeInit() */ 
+					
+					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
+
 				}
 								
 				break;
@@ -109,6 +114,9 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 						a de-initialization before by executing a Spi_DeInit().
 
 					    Spi_DeInit() */ 
+					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
+
 				}
 
 				break;
@@ -139,6 +147,8 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 						a de-initialization before by executing a Spi_DeInit().
 
 					    Spi_DeInit() */ 
+					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
 				}
 
 
@@ -171,6 +181,8 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 						a de-initialization before by executing a Spi_DeInit().
 
 					    Spi_DeInit() */ 
+					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
 				}
 
 				break;
@@ -198,6 +210,7 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
  * @return Spi_StatusType : SPI_UNINIT, SPI_IDLE, SPI_BUSY
  */
 Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
+	
 	uint8 Spi_Status = 0;
 
 	if(HWUnit < Spi_HWUnit_SPI1 || HWUnit > Spi_HWUnit_SPI4)
@@ -209,53 +222,73 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 		switch (HWUnit)
 		{
 			case Spi_HWUnit_SPI1:
-				if (READ_BIT( (SPI1->CR1) , SPI_CR1_SPE) == 0){
-					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-				}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 0) {
-					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-				}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 1) {	
-					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-				}else {
-					/* Nothing */
+				if (Spi1_Status == SPI_UNINIT){ /*Peripheral disabled */
+					/*Det_ReportError with API service used without module initialization */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_GET_HW_UNIT_STATUS_SID, SPI_E_UNINIT );
+				}else{
+					if (READ_BIT( (SPI1->CR1) , SPI_CR1_SPE) == 0){
+						Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+					}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 0) {
+						Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+					}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 1) {	
+						Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+					}else {
+						/* Nothing */
+					}	
 				}
 
 				break;
 			
 			case Spi_HWUnit_SPI2:
-				if (READ_BIT( (SPI2->CR1) , SPI_CR1_SPE) == 0){
-					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-				}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 0) {
-					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-				}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 1) {	
-					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-				}else {
-					/* Nothing */
+				if (Spi2_Status == SPI_UNINIT){ /*Peripheral disabled */
+					/*Det_ReportError with API service used without module initialization */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_GET_HW_UNIT_STATUS_SID, SPI_E_UNINIT);
+				}else{
+					if (READ_BIT( (SPI2->CR1) , SPI_CR1_SPE) == 0){
+						Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+					}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 0) {
+						Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+					}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 1) {	
+						Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+					}else {
+						/* Nothing */
+					}
 				}
-
+			
 				break;
 			
 			case Spi_HWUnit_SPI3:
-				if (READ_BIT( (SPI3->CR1) , SPI_CR1_SPE) == 0){
-					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-				}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 0) {
-					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-				}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 1) {	
-					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-				}else {
-					/* Nothing */
+				if (Spi3_Status == SPI_UNINIT){ /*Peripheral disabled */
+					/*Det_ReportError with API service used without module initialization */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_GET_HW_UNIT_STATUS_SID, SPI_E_UNINIT);
+				}else{
+					if (READ_BIT( (SPI3->CR1) , SPI_CR1_SPE) == 0){
+						Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+					}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 0) {
+						Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+					}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 1) {	
+						Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+					}else {
+						/* Nothing */
+					}
 				}
-
+				
 				break;
 			
 			case Spi_HWUnit_SPI4:
-				if (READ_BIT( (SPI4->CR1) , SPI_CR1_SPE) == 0){
-					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-				}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 0) {
-					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-				}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 1) {	
-					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-				}else {
-					/* Nothing */
+				if (Spi4_Status == SPI_UNINIT){ /*Peripheral disabled */
+					/*Det_ReportError with API service used without module initialization */
+					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_GET_HW_UNIT_STATUS_SID, SPI_E_UNINIT);
+				}else{
+					if (READ_BIT( (SPI4->CR1) , SPI_CR1_SPE) == 0){
+						Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+					}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 0) {
+						Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+					}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 1) {	
+						Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+					}else {
+						/* Nothing */
+					}
 				}
 
 				break;
@@ -281,7 +314,8 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo)
 
     if (VersionInfo == NULL_PTR)
     {
-        /*Det_ReportError*/
+        /*Det_ReportError with API service used without module initialization */
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_GET_VERSION_INFO_SID, SPI_E_PARAM_POINTER);
     }
     else
     {
@@ -361,8 +395,10 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			/* Enable SPI1 */
 			SET_BIT(SPI1->CR1, SPI_CR1_SPE); // SPI_CR1_SPE = 1 to enable SPI
 
+			/* Set SPI1 status to SPI_IDLE after initialization 
+			* for avoiding Duplecated Initialization */ 
+			Spi1_Status = SPI_IDLE;
 
-			
 			break;
 
 		case Spi_HWUnit_SPI2:
