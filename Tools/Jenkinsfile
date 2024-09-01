@@ -113,8 +113,9 @@ pipeline {
                                 echo "============================================================================================="
                                 echo "building the Gtest project"
                                 sh '''
-                                    cd /UnitTesting/Gtest/
+                                    
                                     cmake UnitTesting/Gtest/CMakeLists.txt
+                                    cd /UnitTesting/Gtest/
                                     make
                                     ./Spi || true
                                 '''
