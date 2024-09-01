@@ -87,13 +87,16 @@ pipeline {
                             steps {
                                 echo "============================================================================================="
                                 echo "Creating code coverage..."
-                                dir('/Tools/CodeCoverage') {
-                                    sh 'gcc -fprofile-arcs -ftest-coverage -o coverage main.c ../../STM_SPIHandler_Project/SPI/src/Spi.c'
-                                    sh './coverage'
-                                    sh 'gcov -b -o . coverage-main.gcda'
-                                    sh 'gcov -b -o . coverage-Spi.gcda'
-                                    sh 'lcov --capture --directory . --output-file coverage.info'
-                                    sh 'genhtml coverage.info --output-directory out'
+                                sh '''
+                                    cd 
+                                    gcc -fprofile-arcs -ftest-coverage -o coverage main.c ../../STM_SPIHandler_Project/SPI/src/Spi.c
+                                    // gcc -fprofile-arcs -ftest-coverage -o coverage main.c ../../STM_SPIHandler_Project/SPI/src/Spi.c
+                                    ./coverage
+                                    gcov -b -o . coverage-main.gcda
+                                    gcov -b -o . coverage-Spi.gcda
+                                    lcov --capture --directory . --output-file coverage.info
+                                    genhtml coverage.info --output-directory out
+                                '''
                                 }
                                 echo "============================================================================================="
                                 echo "Generating code coverage report..."
