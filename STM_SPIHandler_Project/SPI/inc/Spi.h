@@ -242,6 +242,11 @@ typedef struct Spi_ConfigType
 #define SPI_DEINIT_SID                  ((uint8)0x01u)
 
 /**
+ * @brief Service ID for Spi_WriteIB 
+ */
+#define SPI_WRITE_IB_SID                ((uint8)0x02u)
+
+/**
  * @brief Service ID for Spi_GetVersionInfo 
  */
 #define SPI_GET_VERSION_INFO_SID        ((uint8)0x09u)
@@ -275,6 +280,14 @@ Std_VersionInfoType Spi_VersionInfo = {
 void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
+/**
+ * @brief 
+ * 
+ * @param Channel 
+ * @param DataBufferPtr 
+ * @return Std_ReturnType 
+ */
+Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* DataBufferPtr);
 
 /**
  * @brief This service returns the status of the specified SPI Har
