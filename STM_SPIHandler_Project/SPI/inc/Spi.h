@@ -15,7 +15,8 @@
 /********************************************** Section : Includes ********************************************/
 
 #include "../../AUTOSAR/Std_Types.h"
-#include "Spi_Cfg.h"        
+#include "Spi_Cfg.h"  
+#include "../../AUTOSAR/det.h"      
 
 
 /**************************************** Section: Data Type Declarations **************************************/
@@ -152,7 +153,7 @@ typedef struct
     Spi_ChannelType      SpiChannelId;          /* Channel ID used with APIs */
     Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
     Spi_DataFrameFormat  spiDFF;                /* Data Frame Format: SPI_DFF_8BITS : SPI_DFF_16BITS */
-    uint32               DefaultTransmitValue; /* Default Transmit Value. */ 
+    uint32               DefaultTransmitValue;  /* Default Transmit Value. */ 
     Spi_NumberOfDataType Length;                /* size of . */
     Spi_StatusType       Status;                /* channel internal state. */
 
@@ -191,11 +192,8 @@ typedef struct Spi_ConfigType
 
 }Spi_ConfigType;
 
-
-
-
 /************************************ Section: Macro Declarations ************************************/
-
+                                                                                    
 /*
  * SPI Module Version Info
  */
@@ -215,6 +213,41 @@ typedef struct Spi_ConfigType
 #define Spi_HWUnit_SPI3                 (Spi_HWUnitType)3u
 #define Spi_HWUnit_SPI4                 (Spi_HWUnitType)4u
 
+
+
+/*
+ * Spi_ErrorCodes_define
+ * [SWS_Spi_91001]
+ */
+/* APIs called with an unexpected value for the pointer */
+#define SPI_E_PARAM_POINTER             ((uint8)0x10u)
+/* API service called with wrong hardware unit */
+#define SPI_E_PARAM_UNIT                ((uint8)0x0Eu)
+/* API SPI_Init service called while the SPI driver has been already initialized */
+#define SPI_E_ALREADY_INITIALIZED       ((uint8)0x4Au)
+/* API service called with wrong lenghth for EB */
+#define SPI_E_PARAM_LENGTH              ((uint8)0x0Du)
+
+
+/**
+ * @brief Service ID for Spi_Init 
+ */
+#define SPI_INIT_SID                    ((uint8)0x00u)
+
+/**
+ * @brief Service ID for Spi_DeInit 
+ */
+#define SPI_DEINIT_SID                  ((uint8)0x01u)
+
+/**
+ * @brief Service ID for Spi_GetVersionInfo 
+ */
+#define SPI_GET_VERSION_INFO_SID        ((uint8)0x09u)
+
+/**
+ * @brief Service ID for Spi_GetHWUnitStatus 
+ */
+#define SPI_GET_HW_UNIT_STATUS_SID      ((uint8)0x0bu)
 
 
 /************************************ Section : Global Variables Definations ************************************/

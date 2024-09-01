@@ -42,91 +42,147 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-
 void Spi_Init(const Spi_ConfigType* ConfigPtr)
 {
-	switch (ConfigPtr->Spi_JobConfigPtr->spiHWUint)
+	if (ConfigPtr == NULL_PTR)
 	{
-		case Spi_HWUnit_SPI1:
-			/* Enable SPI1 Clock */
-			SPI1_PCLK_EN();
-			/* Set Default Transmit Value */
-			SPI1->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-			/* Set Data Frame Format */
-			if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-				SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-			}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-				CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-			}else{/* Nothing */}
-
-			/* Initialize the SPI Hardware Unit */
-			Spi_lhw_Init(Spi_HWUnit_SPI1, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
-			Spi1_Status = SPI_IDLE;
-			
-			break;
-		case Spi_HWUnit_SPI2:
-			/* Enable SPI2 Clock */
-			SPI2_PCLK_EN();
-			/* Set Default Transmit Value */
-			SPI2->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-			/* Set Data Frame Format */
-			if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-				SET_BIT(SPI2->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-			}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-				CLR_BIT(SPI2->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-			}else{/* Nothing */}
-
-			
-			/* Initialize the SPI Hardware Unit */
-			Spi_lhw_Init(Spi_HWUnit_SPI2, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
-
-			Spi2_Status = SPI_IDLE;
-
-			break;
-		
-		case Spi_HWUnit_SPI3:
-			/* Enable SPI3 Clock */
-			SPI3_PCLK_EN();
-			/* Set Default Transmit Value */
-			SPI3->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-			/* Set Data Frame Format */
-			if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-				SET_BIT(SPI3->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-			}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-				CLR_BIT(SPI3->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-			}else{/* Nothing */}
-
-			/* Initialize the SPI Hardware Unit */
-			Spi_lhw_Init(Spi_HWUnit_SPI3, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
-
-			Spi3_Status = SPI_IDLE;
-
-			break;
-
-		case Spi_HWUnit_SPI4:
-			/* Enable SPI4 Clock */
-			SPI4_PCLK_EN();
-			/* Set Default Transmit Value */
-			SPI4->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-			/* Set Data Frame Format */
-			if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-				SET_BIT(SPI4->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-			}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-				CLR_BIT(SPI4->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-			}else{/* Nothing */}
-
-			/* Initialize the SPI Hardware Unit */
-			Spi_lhw_Init(Spi_HWUnit_SPI4, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
-
-			Spi4_Status = SPI_IDLE;
-
-			break;
-		
-		default:
-			break;
+		/*Det_ReportError*/
 	}
+	else
+	{
+		switch (ConfigPtr->Spi_JobConfigPtr->spiHWUint)
+		{
+			case Spi_HWUnit_SPI1:
+				if (Spi1_Status == SPI_UNINIT)
+				{
+					/* Enable SPI1 Clock */
+					SPI1_PCLK_EN();
+					/* Set Default Transmit Value */
+					SPI1->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
+					/* Set Data Frame Format */
+					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
+						SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
+						CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+					}else{/* Nothing */}
 
-}
+					/* Initialize the SPI Hardware Unit */
+					Spi_lhw_Init(Spi_HWUnit_SPI1, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
+					
+					/* Set SPI1 status to SPI_IDLE after initialization 
+					* for avoiding Duplecated Initialization */ 
+					Spi1_Status = SPI_IDLE;
+			
+				}else{
+					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
+						a de-initialization before by executing a Spi_DeInit().
+
+						Spi_DeInit() */ 
+				}
+								
+				break;
+
+			case Spi_HWUnit_SPI2:
+				if (Spi2_Status == SPI_UNINIT)
+				{
+					/* Enable SPI2 Clock */
+					SPI2_PCLK_EN();
+					/* Set Default Transmit Value */
+					SPI2->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
+					/* Set Data Frame Format */
+					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
+						SET_BIT(SPI2->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
+						CLR_BIT(SPI2->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+					}else{/* Nothing */}
+
+					
+					/* Initialize the SPI Hardware Unit */
+					Spi_lhw_Init(Spi_HWUnit_SPI2, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
+
+					/* Set SPI2 status to SPI_IDLE after initialization 
+					* for avoiding Duplecated Initialization */ 
+					Spi2_Status = SPI_IDLE;
+
+				}else{
+					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
+						a de-initialization before by executing a Spi_DeInit().
+
+					    Spi_DeInit() */ 
+				}
+
+				break;
+			
+			case Spi_HWUnit_SPI3:
+				if (Spi3_Status == SPI_UNINIT)
+				{
+					/* Enable SPI3 Clock */
+					SPI3_PCLK_EN();
+					/* Set Default Transmit Value */
+					SPI3->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
+					/* Set Data Frame Format */
+					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
+						SET_BIT(SPI3->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
+						CLR_BIT(SPI3->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+					}else{/* Nothing */}
+
+					/* Initialize the SPI Hardware Unit */
+					Spi_lhw_Init(Spi_HWUnit_SPI3, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
+
+					/* Set SPI3 status to SPI_IDLE after initialization 
+					 * for avoiding Duplecated Initialization */ 
+					Spi3_Status = SPI_IDLE;
+
+				}else{
+					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
+						a de-initialization before by executing a Spi_DeInit().
+
+					    Spi_DeInit() */ 
+				}
+
+
+
+				break;
+
+			case Spi_HWUnit_SPI4:
+				if (Spi2_Status == SPI_UNINIT)
+				{				
+					/* Enable SPI4 Clock */
+					SPI4_PCLK_EN();
+					/* Set Default Transmit Value */
+					SPI4->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
+					/* Set Data Frame Format */
+					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
+						SET_BIT(SPI4->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
+						CLR_BIT(SPI4->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+					}else{/* Nothing */}
+
+					/* Initialize the SPI Hardware Unit */
+					Spi_lhw_Init(Spi_HWUnit_SPI4, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
+
+					/* Set SPI4 status to SPI_IDLE after initialization 
+					 * for avoiding Duplecated Initialization */ 
+					Spi4_Status = SPI_IDLE;
+
+				}else{
+					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
+						a de-initialization before by executing a Spi_DeInit().
+
+					    Spi_DeInit() */ 
+				}
+
+				break;
+			
+			default:
+				break;
+
+		}
+
+	}
+	
+}		
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -143,63 +199,72 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
  */
 Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 	uint8 Spi_Status = 0;
-	switch (HWUnit)
+
+	if(HWUnit < Spi_HWUnit_SPI1 || HWUnit > Spi_HWUnit_SPI4)
 	{
-		case Spi_HWUnit_SPI1:
-			if (READ_BIT( (SPI1->CR1) , SPI_CR1_SPE) == 0){
-				Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-			}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 0) {
-				Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-			}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 1) {	
-				Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-			}else {
-				/* Nothing */
-			}
-
-			break;
+		/*Det_ReportError with wrong hardware unit */
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_GET_HW_UNIT_STATUS_SID, SPI_E_PARAM_UNIT);
+	}else{
 		
-		case Spi_HWUnit_SPI2:
-			if (READ_BIT( (SPI2->CR1) , SPI_CR1_SPE) == 0){
-				Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-			}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 0) {
-				Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-			}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 1) {	
-				Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-			}else {
-				/* Nothing */
-			}
+		switch (HWUnit)
+		{
+			case Spi_HWUnit_SPI1:
+				if (READ_BIT( (SPI1->CR1) , SPI_CR1_SPE) == 0){
+					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+				}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 0) {
+					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+				}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 1) {	
+					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+				}else {
+					/* Nothing */
+				}
 
-			break;
-		
-		case Spi_HWUnit_SPI3:
-			if (READ_BIT( (SPI3->CR1) , SPI_CR1_SPE) == 0){
-				Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-			}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 0) {
-				Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-			}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 1) {	
-				Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-			}else {
-				/* Nothing */
-			}
+				break;
+			
+			case Spi_HWUnit_SPI2:
+				if (READ_BIT( (SPI2->CR1) , SPI_CR1_SPE) == 0){
+					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+				}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 0) {
+					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+				}else if ( READ_BIT( (SPI2->SR) , SPI_SR_BSY) == 1) {	
+					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+				}else {
+					/* Nothing */
+				}
 
-			break;
-		
-		case Spi_HWUnit_SPI4:
-			if (READ_BIT( (SPI4->CR1) , SPI_CR1_SPE) == 0){
-				Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
-			}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 0) {
-				Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
-			}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 1) {	
-				Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
-			}else {
-				/* Nothing */
-			}
+				break;
+			
+			case Spi_HWUnit_SPI3:
+				if (READ_BIT( (SPI3->CR1) , SPI_CR1_SPE) == 0){
+					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+				}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 0) {
+					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+				}else if ( READ_BIT( (SPI3->SR) , SPI_SR_BSY) == 1) {	
+					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+				}else {
+					/* Nothing */
+				}
 
-			break;
-		
-		default:
-			break;
+				break;
+			
+			case Spi_HWUnit_SPI4:
+				if (READ_BIT( (SPI4->CR1) , SPI_CR1_SPE) == 0){
+					Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+				}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 0) {
+					Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+				}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 1) {	
+					Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+				}else {
+					/* Nothing */
+				}
+
+				break;
+			
+			default:
+				break;
+		}
 	}
+	
 	return Spi_Status;
 }
 
@@ -296,10 +361,7 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			/* Enable SPI1 */
 			SET_BIT(SPI1->CR1, SPI_CR1_SPE); // SPI_CR1_SPE = 1 to enable SPI
 
-			/* Set SPI1 status to SPI_IDLE after initialization 
-			* for avoiding Duplecated Initialization */ 
-			Spi1_Status = SPI_IDLE;
-			
+
 			
 			break;
 
