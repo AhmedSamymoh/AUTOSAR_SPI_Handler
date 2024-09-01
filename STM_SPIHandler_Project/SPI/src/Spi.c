@@ -199,8 +199,6 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
 /**
  * @brief This service returns the status of the specified SPI Hardware microcontroller 
  * peripheral.
@@ -574,65 +572,65 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
 		{
 			case PORTA:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOA->BSRR), CS_Pin); // Set Channel
+					GPIOA->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOA->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOA->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 
 			case PORTB:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOB->BSRR), CS_Pin); // Set Channel
+					GPIOB->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOB->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOB->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 
 			case PORTC:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOC->BSRR), CS_Pin); // Set Channel
+					GPIOC->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOC->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOC->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 
 			case PORTD:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOD->BSRR), CS_Pin); // Set Channel
+					GPIOD->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOD->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOD->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 				
 			case PORTE:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOE->BSRR), CS_Pin); // Set Channel
+					GPIOE->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOE->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOE->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 
 			case PORTF:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOF->BSRR), CS_Pin); // Set Channel
+					GPIOF->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOF->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOF->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 
 			case PORTG:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOG->BSRR), CS_Pin); // Set Channel
+					GPIOG->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOG->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOG->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 
 			case PORTH:
 				if (Level == STD_HIGH){
-					SET_BIT((GPIOH->BSRR), CS_Pin); // Set Channel
+					GPIOH->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					SET_BIT((GPIOH->BSRR), (CS_Pin + 16)); // Reset Channel
+					GPIOH->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 			
