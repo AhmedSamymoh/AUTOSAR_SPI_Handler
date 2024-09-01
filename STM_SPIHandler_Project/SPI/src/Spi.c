@@ -128,7 +128,127 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+/**
+ * @brief 
+ * 
+ *
+ *      -> Disable the SPI Peripheral Clocks:
+ *       For each SPI hardware unit (e.g., SPI1, SPI2, etc.), you should disable the peripheral clock.
+ *       
+ *       -> Reset SPI Control Registers:
+ *       Reset the control registers (e.g., CR1, CR2, etc.) to their default values.
+ *       
+ *       
+ *       -> Clear the Driver Status:
+ *       Update the status of the SPI driver to indicate that the SPI peripheral is no longer initialized or in use.
+ *       
+ *       
+ *       -> Return the Appropriate Status:
+ *       If the de-initialization process is successful, return E_OK.
+ *       If the de-initialization cannot be completed (e.g., if the SPI was not initialized), return E_NOT_OK.
+ * 
+ * @return Std_ReturnType 
+ */
+
+Std_ReturnType Spi_DeInit (void){
+
+	Std_ReturnType retStatus = E_OK;
+
+
+	#if Spi1_Status == SPI_IDLE
+		/* Disable SPI1 Clock */
+		SPI1_PCLK_DI();
+		/* Reset SPI1 Control Registers */
+		SPI1->CR1 = 0;
+		SPI1->CR2 = 0;
+		SPI1->SR = 0;
+		/* Set the status to uninitialized */
+		Spi1_Status = SPI_UNINIT;
+
+	#else 
+	retStatus == E_NOT_OK
+	#endif
+
+
+
+
+
+	#if Spi2_Status == SPI_IDLE
+		/* Disable SPI2 Clock */
+		SPI2_PCLK_DI();
+		/* Reset SPI2 Control Registers */
+		SPI2->CR1 = 0;
+		SPI2->CR2 = 0;
+		SPI2->SR = 0;
+		/* Set the status to uninitialized */
+		Spi2_Status = SPI_UNINIT;
+
+	#else
+	retStatus == E_NOT_OK
+	#endif
+
+
+
+
+	#if Spi3_Status == SPI_IDLE
+		/* Disable SPI3 Clock */
+		SPI3_PCLK_DI();
+		/* Reset SPI3 Control Registers */
+		SPI3->CR1 = 0;
+		SPI3->CR2 = 0;
+		SPI3->SR = 0;
+		/* Set the status to uninitialized */
+		Spi3_Status = SPI_UNINIT;
+	#else
+	retStatus == E_NOT_OK
+	#endif
+
+
+
+
+	#if Spi4_Status == SPI_IDLE
+		/* Disable SPI4 Clock */
+		SPI4_PCLK_DI();
+		/* Reset SPI4 Control Registers */
+		SPI4->CR1 = 0;
+		SPI4->CR2 = 0;
+		SPI4->SR = 0;
+		/* Set the status to uninitialized */
+		Spi4_Status = SPI_UNINIT;
+	#else
+	retStatus == E_NOT_OK
+	#endif
+
+
+
+ 	return retStatus;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -207,7 +327,8 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 /**
  * @brief This service returns the version information of this module.
  *  - Service ID [hex] 0x09
- *  - Spi_GetVersionInfo
+ *  - 
+ * 
  *  - [SWS_Spi_00184]
  * @param VersionInfo 
  */
