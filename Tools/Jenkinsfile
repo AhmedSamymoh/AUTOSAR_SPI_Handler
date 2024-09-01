@@ -71,8 +71,7 @@ pipeline {
                                     }else if(env.BRANCH_NAME == 'main') {
                                         echo "Running Static Code Analysis..."
                                         sh'''
-                                        cd /Tools/MisraC_Static_Code_Analysis/
-                                        ./Misra_src_check.sh ../../STM_SPIHandler_Project/SPI/src/Spi.c
+                                        /var/jenkins_home/MisraC/Misra_src_check.sh STM_SPIHandler_Project/SPI/src/Spi.c
                                         '''
 
                                     }else{
