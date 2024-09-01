@@ -229,6 +229,8 @@ typedef struct Spi_ConfigType
 #define SPI_E_UNINIT                    ((uint8)0x1Au)
 /* API service called with wrong lenghth for EB */
 #define SPI_E_PARAM_LENGTH              ((uint8)0x0Du)
+/* API service called with wrong channel */
+#define SPI_E_PARAM_CHANNEL             ((uint8)0x0Fu)
 
 
 /**
@@ -240,6 +242,11 @@ typedef struct Spi_ConfigType
  * @brief Service ID for Spi_DeInit 
  */
 #define SPI_DEINIT_SID                  ((uint8)0x01u)
+
+/**
+ * @brief Service ID for Spi_WriteIB 
+ */
+#define SPI_WRITE_IB_SID                ((uint8)0x02u)
 
 /**
  * @brief Service ID for Spi_GetVersionInfo 
@@ -268,13 +275,23 @@ Std_VersionInfoType Spi_VersionInfo = {
 
 /**
  * @brief 
- * Spi_Init : [SWS_Spi_00184]
+ * [SWS_Spi_00184]
  * 
  * @param ConfigPtr 
  */
 void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
+/**
+ * @brief  Service for writing one or more data to an IB SPI Handler/Driver Channel specified by parameter
+ *         [SWS_Spi_00177]  
+ * @param  Channel Channel ID.
+ * @param  DataBufferPtr Pointer to source data buffer.
+ * @return Std_ReturnType :
+ * 	          E_OK: Spi_WriteIB command has been accepted 
+ *            E_NOT_OK: Spi_WriteIB command has not been accepted
+ */
+Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* DataBufferPtr);
 
 /**
  * @brief This service returns the status of the specified SPI Har
