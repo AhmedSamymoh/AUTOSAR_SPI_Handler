@@ -14,14 +14,67 @@
 /********************************************** Section : Includes ********************************************/
 
 #include "../../AUTOSAR/Std_Types.h"
-#include "../inc/Spi_Cfg.h"        
+#include "../inc/Spi_Cfg.h"      
 
+#include <stdint.h>
+
+
+/***************************************** Section : User Configurations **************************************/
+Spi_ChannelType SPI_job1_channels[] = {SPI_Channel_1, SPI_Channel_2};
+
+
+Spi_HWUnitConfigType hwUnitConfig = {
+    .SpiPrescaller = SPI_SCLK_SPEED_DIV256,   
+    .spiCPOL = SPI_CPOL_LOW,       
+    .spiCPHA = SPI_CPHA_LOW, 
+    .spiCSPort = PORTA,       
+    .spiCSPin = PIN10         
+};
+
+Spi_ChannelConfigType channels[]= {
+    {
+        .SpiChannelId = SPI_Channel_1,
+        .BufferType = InternalBuffer,
+        .spiDFF = SPI_DFF_16BITS,
+        .DefaultTransmitValue = 0xAAAA,
+        .Length = 20,
+        .Status = SPI_IDLE
+    },
+    {
+        .SpiChannelId = SPI_Channel_2,
+        .BufferType = InternalBuffer,
+        .spiDFF = SPI_DFF_8BITS,
+        .DefaultTransmitValue = 0x55,
+        .Length = 10,
+        .Status = SPI_IDLE
+    }
+};
+
+Spi_JobConfigType jobConfig[] = {
+    {
+        .SpiJobId = 1,
+        .JobPriority = 1,
+        .ChannelsPtr = SPI_job1_channels,
+		.NoOfChannels = sizeof(SPI_job1_channels)/sizeof(Spi_ChannelType),
+        .spiHWUint = Spi_HWUnit_SPI1,
+        .SpiHWUnitConfig = &hwUnitConfig
+    }
+};
+
+Spi_ConfigType Spi_Config = {
+    .Spi_JobConfigPtr = &jobConfig[0],
+    .Spi_ChannelConfigPtr = &channels[0]
+};
+
+
+Spi_ConfigType * Spi_Config_Ptr = &Spi_Config;
 
 /**
  * @brief system initialization for mcu clock
  *  using RCC_CR register for using HSI clock source
  */
 void System_Init(void){
+	int hw = Spi_Config_Ptr->Spi_ChannelConfigPtr[1].DefaultTransmitValue;
 
 	RCC->CFGR = 0x00000000;
 	RCC->CR &= 0xFEF6FFFF;

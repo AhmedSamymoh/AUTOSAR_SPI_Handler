@@ -11,7 +11,12 @@
 
 /********************************************** Section : Includes ********************************************/
 #include "../inc/Spi.h"
+#include "../inc/Spi_Cfg.h"  
 
+extern Spi_HWUnitConfigType hwUnitConfig;
+extern Spi_ChannelConfigType channels[];
+extern Spi_JobConfigType jobConfig[];
+extern Spi_ConfigType Spi_ConfigPtr;
 
 /**************************************** Section: Data Type Declarations **************************************/
 
@@ -25,9 +30,6 @@ static Spi_StatusType Spi1_Status = SPI_UNINIT;
 static Spi_StatusType Spi2_Status = SPI_UNINIT;
 static Spi_StatusType Spi3_Status = SPI_UNINIT;
 static Spi_StatusType Spi4_Status = SPI_UNINIT;
-
-/* ptr to a copy of the configutation struct confgured by the user */
-static const Spi_ConfigType * Spi_ConfigPtr ;
 
 /**************************************** Section : Functions Definations ***************************************/
 
@@ -46,10 +48,6 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
 
 void Spi_Init(const Spi_ConfigType* ConfigPtr)
 {
-
-	/* Copy Config ptr */
-	Spi_ConfigPtr = ConfigPtr;
-
 	if (ConfigPtr == NULL_PTR)
 	{
 		/*Det_ReportError*/
@@ -64,15 +62,16 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 				{
 					/* Enable SPI1 Clock */
 					SPI1_PCLK_EN();
-					/* Set Default Transmit Value */
-					SPI1->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-					/* Set Data Frame Format */
-					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-						SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-						CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-					}else{/* Nothing */}
-
+					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
+					{
+						/* Set Default Transmit Value */
+						SPI1->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
+						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
+							SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
+							CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+						}else{/* Nothing */}
+					}
 					/* Initialize the SPI Hardware Unit */
 					Spi_lhw_Init(Spi_HWUnit_SPI1, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
 					
@@ -98,15 +97,16 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 				{
 					/* Enable SPI2 Clock */
 					SPI2_PCLK_EN();
-					/* Set Default Transmit Value */
-					SPI2->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-					/* Set Data Frame Format */
-					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-						SET_BIT(SPI2->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-						CLR_BIT(SPI2->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-					}else{/* Nothing */}
-
+					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
+					{
+						/* Set Default Transmit Value */
+						SPI2->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
+						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
+							SET_BIT(SPI2->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
+							CLR_BIT(SPI2->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+						}else{/* Nothing */}
+					}
 					
 					/* Initialize the SPI Hardware Unit */
 					Spi_lhw_Init(Spi_HWUnit_SPI2, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
@@ -122,7 +122,6 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 					    Spi_DeInit() */ 
 					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
 					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
-
 				}
 
 				break;
@@ -132,14 +131,16 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 				{
 					/* Enable SPI3 Clock */
 					SPI3_PCLK_EN();
-					/* Set Default Transmit Value */
-					SPI3->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-					/* Set Data Frame Format */
-					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-						SET_BIT(SPI3->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-						CLR_BIT(SPI3->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-					}else{/* Nothing */}
+					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
+					{
+						/* Set Default Transmit Value */
+						SPI3->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
+						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
+							SET_BIT(SPI3->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
+							CLR_BIT(SPI3->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+						}else{/* Nothing */}
+					}
 
 					/* Initialize the SPI Hardware Unit */
 					Spi_lhw_Init(Spi_HWUnit_SPI3, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
@@ -166,14 +167,16 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 				{				
 					/* Enable SPI4 Clock */
 					SPI4_PCLK_EN();
-					/* Set Default Transmit Value */
-					SPI4->DR = ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].DefaultTransmitValue;
-					/* Set Data Frame Format */
-					if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_16BITS){
-						SET_BIT(SPI4->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-					}else if (ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[ConfigPtr->NoOfChannels].spiDFF == SPI_DFF_8BITS){
-						CLR_BIT(SPI4->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-					}else{/* Nothing */}
+					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
+					{
+						/* Set Default Transmit Value */
+						SPI4->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
+						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
+							SET_BIT(SPI4->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
+							CLR_BIT(SPI4->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+						}else{/* Nothing */}
+					}
 
 					/* Initialize the SPI Hardware Unit */
 					Spi_lhw_Init(Spi_HWUnit_SPI4, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
@@ -227,12 +230,12 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_CHANNEL);
 
-	}else if (Spi_ConfigPtr == NULL_PTR){
+	}else if (Spi_Config_Ptr == NULL_PTR){
 
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_UNINIT);
 	
-	}else if (Spi_ConfigPtr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_ConfigPtr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
+	}else if (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
 
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_UNIT);
@@ -240,9 +243,9 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 	}else{
 
 		/* Set the channel status to SPI_BUSY */
-		Spi_ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[Channel].Status = SPI_BUSY;
+		Spi_Config_Ptr->Spi_JobConfigPtr->ChannelsPtr[Channel].Status = SPI_BUSY;
 
-		switch (Spi_ConfigPtr->Spi_JobConfigPtr->spiHWUint)
+		switch (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint)
 		{
 			case Spi_HWUnit_SPI1:
 				/* Write the data to the Data Register */
@@ -272,7 +275,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		}
 
 		/* Set the channel status to SPI_IDLE */
-		Spi_ConfigPtr->Spi_JobConfigPtr->ChannelsPtr[Channel].Status = SPI_IDLE;
+		Spi_Config_Ptr->Spi_JobConfigPtr->ChannelsPtr[Channel].Status = SPI_IDLE;
 
 	}
 

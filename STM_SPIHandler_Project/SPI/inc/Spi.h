@@ -165,7 +165,8 @@ typedef struct
     Spi_JobType           SpiJobId;             /* Job ID used with APIs */
     Spi_HWUnitType        spiHWUint;            /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
     uint8                 JobPriority;          /* Job Priority ranging from 0 (Lowest) to 3 (Highest)*/ 
-    Spi_ChannelConfigType *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
+    Spi_ChannelType       *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
+    Spi_ChannelType       NoOfChannels;         /* Number of Channels configured asscociated with the job*/
     Spi_HWUnitConfigType  *SpiHWUnitConfig;     /* Pointer to HW unit configuration */  
 }Spi_JobConfigType;
 
@@ -181,16 +182,13 @@ typedef struct
 
 typedef struct Spi_ConfigType
 {
-    /* Number of Channels configured */
-    Spi_ChannelType NoOfChannels;
-    
     /* pointer to job configuration */
     Spi_JobConfigType * Spi_JobConfigPtr; 
    
     /* Pointer to channel configuration  */
     Spi_ChannelConfigType * Spi_ChannelConfigPtr ;   
 
-}Spi_ConfigType;
+} Spi_ConfigType;
 
 /************************************ Section: Macro Declarations ************************************/
                                                                                     
@@ -268,6 +266,10 @@ Std_VersionInfoType Spi_VersionInfo = {
     .sw_minor_version = SPI_SW_minor_version,
     .sw_patch_version = SPI_SW_patch_version
 };
+extern Spi_HWUnitConfigType hwUnitConfig;
+extern Spi_ChannelConfigType channels[];
+extern Spi_JobConfigType jobConfig[];
+extern Spi_ConfigType spiConfig;
 
 /************************************* Section : Macro Functions Definations ************************************/
 

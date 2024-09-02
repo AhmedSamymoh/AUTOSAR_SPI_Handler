@@ -14,6 +14,7 @@
 
 /********************************************** Section : Includes ********************************************/
 #include "../../AUTOSAR/Std_Types.h"
+#include "Spi.h"
 
 
 
@@ -137,12 +138,22 @@ typedef uint8 Spi_CS_Pin;
 #define PIN11 11
 #define PIN12 12
 #define PIN13 13
+/**
+ * nOT USED, BUT hw PIN AND SHOULD BE HERE
+ * 
+ */
 #define PIN14 14
 #define PIN15 15
 
 
 
 /************************************ Section : Global Variables Definations ************************************/
+
+extern Spi_HWUnitConfigType hwUnitConfig;
+extern Spi_ChannelConfigType channels[];
+extern Spi_JobConfigType jobConfig[];
+extern Spi_ConfigType * Spi_Config_Ptr;
+extern Spi_ConfigType Spi_Config;
 
 /************************************* Section : Macro Functions Definations ************************************/
 
