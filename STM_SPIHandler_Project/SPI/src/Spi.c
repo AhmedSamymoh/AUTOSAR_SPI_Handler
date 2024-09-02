@@ -834,7 +834,7 @@ static void Spi_ChipSelect_Init(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port ){
  * @param Spi_select 
  * @param port 
  */
-void GPIO_Spi_Init(Spi_HWUnitType Spi_select ,uint8 port){
+void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 	switch(Spi_select){
 		case Spi_HWUnit_SPI1:
 			if (port==PORTA)
@@ -918,7 +918,7 @@ void GPIO_Spi_Init(Spi_HWUnitType Spi_select ,uint8 port){
 				GPIOB->MODER |= ( (0x2UL << (6U)) | (0x2UL << (8U)) | (0x2UL << (10U)) ); // Set to alternate function
 
 				// Set alternate function to AF5 (SPI1)
-				GPIOC->AFR[0] &= ~((0xF << (3 * 4)) | (0xF << (4 * 4)) | (0xF << (5 * 4)) | (0xF << (12 * 4))); // Clear AFR bits
+				GPIOC->AFR[0] &= ~((0xF << (3 * 4)) | (0xF << (4 * 4)) | (0xF << (5 * 4)) ); // Clear AFR bits
 				GPIOC->AFR[0] |= (6 << (3 * 4)) | (6 << (4 * 4)) | (6 << (5 * 4)); // Set AF6 for PB3, PB4, PB5
 
 				// Set PB3, PB4, and PB5 to very high speed
