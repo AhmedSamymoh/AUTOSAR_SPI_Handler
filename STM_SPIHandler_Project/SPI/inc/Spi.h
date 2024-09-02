@@ -286,11 +286,21 @@ Std_VersionInfoType Spi_VersionInfo = {
 
 /*************************************** Section : Functions Declarations ***************************************/
 
+
 /**
- * @brief 
- * [SWS_Spi_00184]
+ * @brief Initializes the SPI driver. [SWS_Spi_00184]
+ *
+ * This function initializes the SPI driver according `Spi_ConfigType` structure. It is 
+ * responsible for setting up the SPI channels, jobs, and hardware units as specified in the 
+ * configuration. The function checks whether the driver has already been initialized and 
+ * reports errors if there are issues with re-initialization or invalid pointers.
  * 
- * @param ConfigPtr 
+ * @param ConfigPtr Pointer to the SPI configuration structure.
+ *                  If NULL, an error is reported.
+ *
+ * @return None.
+ *
+ * @note Re-initialization requires prior de-initialization.
  */
 void Spi_Init(const Spi_ConfigType* ConfigPtr);
 

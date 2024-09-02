@@ -111,6 +111,10 @@ typedef uint8 Spi_CS_Pin;
  */
 #define SPI_BUS_CONFIG_FULL_DUPLEX     1u
 
+#define SPI1_PORT PORTA
+#define SPI2_PORT PORTB
+#define SPI3_PORT PORTC
+#define SPI4_PORT PORTE
 
 
 #define PORTA 0

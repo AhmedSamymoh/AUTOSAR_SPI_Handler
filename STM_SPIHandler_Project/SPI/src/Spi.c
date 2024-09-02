@@ -38,13 +38,29 @@ static Spi_StatusType Spi4_Status = SPI_UNINIT;
 /******************************************* Section : Local Functions ******************************************/
 /****************************************************************************************************************/
 static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit );
-static void GPIO_Spi_Init(Spi_HWUnitType Spi_select ,uint8 port);
+static void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port);
 static void Spi_ChipSelect_Init(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port );
 static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_ReturnType Level);
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////.
+
+/**
+ * @brief Initializes the SPI driver. [SWS_Spi_00184]
+ *
+ * This function initializes the SPI driver according `Spi_ConfigType` structure. It is 
+ * responsible for setting up the SPI channels, jobs, and hardware units as specified in the 
+ * configuration. The function checks whether the driver has already been initialized and 
+ * reports errors if there are issues with re-initialization or invalid pointers.
+ * 
+ * @param ConfigPtr Pointer to the SPI configuration structure.
+ *                  If NULL, an error is reported.
+ *
+ * @return None.
+ *
+ * @note Re-initialization requires prior de-initialization.
+ */
 void Spi_Init(const Spi_ConfigType* ConfigPtr)
 {
 	if (ConfigPtr == NULL_PTR)
@@ -56,176 +72,33 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 	{
 		for (uint8 Jobs_Index = 0; Jobs_Index < ConfigPtr->Spi_SeqConfigPtr->NoOfJobs; Jobs_Index++)
 		{
-			switch (ConfigPtr->Spi_SeqConfigPtr->JobLinkPtr[Jobs_Index].spiHWUint)
+			for (uint8 channels_index = 0; channels_index < (ConfigPtr->Spi_JobConfigPtr->NoOfChannels) ; channels_index++)
 			{
-				case Spi_HWUnit_SPI1:
-			}
-		
-		switch (ConfigPtr->Spi)
-		{
-		}
-	}
-}
-
-
-void Spi_Init(const Spi_ConfigType* ConfigPtr)
-{
-	if (ConfigPtr == NULL_PTR)
-	{
-		/*Det_ReportError*/
-		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_PARAM_POINTER);
-	}
-	else
-	{
-		switch (ConfigPtr->Spi_JobConfigPtr->spiHWUint)
-		{
-			case Spi_HWUnit_SPI1:
 				if (Spi1_Status == SPI_UNINIT)
 				{
-					/* Enable SPI1 Clock */
-					SPI1_PCLK_EN();
-					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
-					{
-						/* Set Default Transmit Value */
-						SPI1->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
-						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
-							SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
-							CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-						}else{/* Nothing */}
-					}
-					/* Initialize the SPI Hardware Unit */
-					Spi_lhw_Init(Spi_HWUnit_SPI1, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
+					/* Initialization of the Chip Select Pin */
+					Spi_ChipSelect_Init(ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiCSPort, ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiCSPort);
 					
-					/* Set SPI1 status to SPI_IDLE after initialization 
-					* for avoiding Duplecated Initialization */ 
-					Spi1_Status = SPI_IDLE;
-			
+					/* Set SPI1 status to SPI_IDLE after initialization for avoiding Duplecated Initialization */ 
+					ConfigPtr->Spi_ChannelConfigPtr[channels_index].Status = SPI_IDLE;
 				}else{
 					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
 						a de-initialization before by executing a Spi_DeInit().
 
 						Spi_DeInit() */ 
-					
+				
 					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
 					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
+				}	
+			}
 
-				}
-								
-				break;
-
-			case Spi_HWUnit_SPI2:
-				if (Spi2_Status == SPI_UNINIT)
-				{
-					/* Enable SPI2 Clock */
-					SPI2_PCLK_EN();
-					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
-					{
-						/* Set Default Transmit Value */
-						SPI2->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
-						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
-							SET_BIT(SPI2->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
-							CLR_BIT(SPI2->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-						}else{/* Nothing */}
-					}
-					
-					/* Initialize the SPI Hardware Unit */
-					Spi_lhw_Init(Spi_HWUnit_SPI2, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
-
-					/* Set SPI2 status to SPI_IDLE after initialization 
-					* for avoiding Duplecated Initialization */ 
-					Spi2_Status = SPI_IDLE;
-
-				}else{
-					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
-						a de-initialization before by executing a Spi_DeInit().
-
-					    Spi_DeInit() */ 
-					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
-					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
-				}
-
-				break;
+			/* Initialize the SPI Hardware Unit */
+			Spi_lhw_Init(Spi_HWUnit_SPI1, (ConfigPtr->Spi_JobConfigPtr[Jobs_Index].SpiHWUnitConfig) );
 			
-			case Spi_HWUnit_SPI3:
-				if (Spi3_Status == SPI_UNINIT)
-				{
-					/* Enable SPI3 Clock */
-					SPI3_PCLK_EN();
-					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
-					{
-						/* Set Default Transmit Value */
-						SPI3->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
-						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
-							SET_BIT(SPI3->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
-							CLR_BIT(SPI3->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-						}else{/* Nothing */}
-					}
-
-					/* Initialize the SPI Hardware Unit */
-					Spi_lhw_Init(Spi_HWUnit_SPI3, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
-
-					/* Set SPI3 status to SPI_IDLE after initialization 
-					 * for avoiding Duplecated Initialization */ 
-					Spi3_Status = SPI_IDLE;
-
-				}else{
-					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
-						a de-initialization before by executing a Spi_DeInit().
-
-					    Spi_DeInit() */ 
-					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
-					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
-				}
-
-
-
-				break;
-
-			case Spi_HWUnit_SPI4:
-				if (Spi2_Status == SPI_UNINIT)
-				{				
-					/* Enable SPI4 Clock */
-					SPI4_PCLK_EN();
-					for (uint8 channels_index = 0; channels_index < ConfigPtr->Spi_JobConfigPtr->NoOfChannels; channels_index++)
-					{
-						/* Set Default Transmit Value */
-						SPI4->DR = ConfigPtr->Spi_ChannelConfigPtr[channels_index].DefaultTransmitValue;
-						if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_16BITS){
-							SET_BIT(SPI4->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
-						}else if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiDFF == SPI_DFF_8BITS){
-							CLR_BIT(SPI4->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
-						}else{/* Nothing */}
-					}
-
-					/* Initialize the SPI Hardware Unit */
-					Spi_lhw_Init(Spi_HWUnit_SPI4, (ConfigPtr->Spi_JobConfigPtr->SpiHWUnitConfig) );
-
-					/* Set SPI4 status to SPI_IDLE after initialization 
-					 * for avoiding Duplecated Initialization */ 
-					Spi4_Status = SPI_IDLE;
-
-				}else{
-					/*	A re-initialization of a SPI Handler/Driver by executing the Spi_Init() function requires 
-						a de-initialization before by executing a Spi_DeInit().
-
-					    Spi_DeInit() */ 
-					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
-					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
-				}
-
-				break;
-			
-			default:
-				break;
-
 		}
-
 	}
-	
-}		
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -446,17 +319,16 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo)
  * @param HWUnit 
  */
 static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit ){
-	/* Enable GPIOA Clock */
-	GPIOA_PCLK_EN();
-
-	/* GPIO Port Enabling SPI1 To be alternative pin*/
-	GPIO_Spi_Init(HWUnitId, HWUnit->spiCSPort);
-
-	Spi_ChipSelect_Init(HWUnit->spiCSPort, HWUnit->spiCSPin);
 
 	switch (HWUnitId)
 	{
 		case Spi_HWUnit_SPI1:
+			/* GPIO Port Enabling SPI1 To be alternative pin*/
+			Spi_GPIO_Init(HWUnitId, SPI1_PORT);
+
+			/* Enable SPI1 Clock */
+			SPI1_PCLK_EN();
+
 			/* Reset SPI1 Configuration */
 			SPI1->CR1 = 0;
 
@@ -490,6 +362,15 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 				SET_BIT(SPI1->CR1, SPI_CR1_CPHA); /* 1: The second clock transition is the first data capture edge */
 			}
 
+			if (HWUnit->spiDFF == SPI_DFF_16BITS){
+				SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+			}else if (HWUnit->spiDFF == SPI_DFF_8BITS){
+				CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+			}else{/* Nothing */}
+
+			/* Set Default Transmit Value */
+			SPI1->DR = HWUnit->DefaultTransmitValue;
+
 			/* Configure SPI Clock Speed */
 			/* Clear the bits for clock speed <Mask bits 5:3> */
 			SPI1->CR1 &= ~(0x7U << SPI_CR1_BR0);
@@ -506,6 +387,12 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			break;
 
 		case Spi_HWUnit_SPI2:
+			/* GPIO Port Enabling SPI2 To be alternative pin*/
+			Spi_GPIO_Init(HWUnitId, SPI2_PORT);
+			
+			/* Enable SPI2 Clock */
+			SPI2_PCLK_EN();
+
 			/* Reset SPI2 Configuration */
 			SPI2->CR1 = 0;
 
@@ -537,6 +424,15 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			}else{
 				SET_BIT(SPI2->CR1, SPI_CR1_CPHA); /* 1: The second clock transition is the first data capture edge */
 			}
+			
+			if (HWUnit->spiDFF == SPI_DFF_16BITS){
+				SET_BIT(SPI2->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+			}else if (HWUnit->spiDFF == SPI_DFF_8BITS){
+				CLR_BIT(SPI2->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+			}else{/* Nothing */}
+
+			/* Set Default Transmit Value */
+			SPI2->DR = HWUnit->DefaultTransmitValue;
 
 			/* Configure SPI Clock Speed */
 			/* Clear the bits for clock speed <Mask bits 5:3> */
@@ -554,6 +450,12 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			break;
 		
 		case Spi_HWUnit_SPI3:
+			/* GPIO Port Enabling SPI3 To be alternative pin*/
+			Spi_GPIO_Init(HWUnitId, SPI3_PORT);
+
+			/* Enable SPI3 Clock */
+			SPI3_PCLK_EN();
+
 			/* Reset SPI3 Configuration */
 			SPI3->CR1 = 0;
 
@@ -585,6 +487,16 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			}else{
 				SET_BIT(SPI3->CR1, SPI_CR1_CPHA); /* 1: The second clock transition is the first data capture edge */
 			}
+				
+			if (HWUnit->spiDFF == SPI_DFF_16BITS){
+				SET_BIT(SPI3->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+			}else if (HWUnit->spiDFF == SPI_DFF_8BITS){
+				CLR_BIT(SPI3->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+			}else{/* Nothing */}
+
+			/* Set Default Transmit Value */
+			SPI3->DR = HWUnit->DefaultTransmitValue;
+
 
 			/* Configure SPI Clock Speed */
 			/* Clear the bits for clock speed <Mask bits 5:3> */
@@ -602,6 +514,12 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			break;	
 		
 		case Spi_HWUnit_SPI4:
+			/* GPIO Port Enabling SPI3 To be alternative pin*/
+			Spi_GPIO_Init(HWUnitId, SPI4_PORT);
+
+			/* Enable SPI3 Clock */
+			SPI4_PCLK_EN();
+
 			/* Reset SPI1 Configuration */
 			SPI4->CR1 = 0;
 
@@ -634,6 +552,16 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			}else{
 				SET_BIT(SPI4->CR1, SPI_CR1_CPHA); /* 1: The second clock transition is the first data capture edge */
 			}
+						
+			if (HWUnit->spiDFF == SPI_DFF_16BITS){
+				SET_BIT(SPI3->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+			}else if (HWUnit->spiDFF == SPI_DFF_8BITS){
+				CLR_BIT(SPI3->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+			}else{/* Nothing */}
+
+			/* Set Default Transmit Value */
+			SPI3->DR = HWUnit->DefaultTransmitValue;
+
 
 			/* Configure SPI Clock Speed */
 			/* Clear the bits for clock speed <Mask bits 5:3> */
@@ -864,6 +792,9 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 		case Spi_HWUnit_SPI1:
 			if (port==PORTA)
 			{
+				/* Enable GPIOA Clock */
+				GPIOA_PCLK_EN();
+
 				/*===================================================================*/
 				// Set PA5, PA6, and PA7 to alternate function mode (AF5 for SPI1)
 				GPIOA->MODER &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) ); // Clear mode bits
@@ -880,6 +811,7 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 				GPIOA->PUPDR &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)));
 				/*===================================================================*/
 			}else if (port==PORTB){
+				GPIOB_PCLK_EN();
 				/*===================================================================*/
 				// Set PB3, PB4, and PB5 to alternate function mode (AF5 for SPI1)
 				GPIOB->MODER &= ~( (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U))  ); // Clear mode bits
@@ -900,6 +832,7 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		case Spi_HWUnit_SPI2:
 			if (port==PORTB){
+				GPIOB_PCLK_EN();	
 				/*===================================================================*/
 				// Set PB13, PB14, and PB15 to alternate function mode (AF5 for SPI2)
 				GPIOB->MODER &= ~( (0x3UL << (26U)) | (0x3UL << (28U)) | (0x3UL << (30U))  ); // Clear mode bits
@@ -916,6 +849,7 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 				GPIOB->PUPDR &= ~((0x3UL << (26U)) | (0x3UL << (28U)) | (0x3UL << (30U)) );
 				/*===================================================================*/
 			}else if (port==PORTC){
+				GPIOC_PCLK_EN();
 				/*===================================================================*/
 				// Set PC2, PC3, PC7 to alternate function mode (AF5 for SPI2)
 				GPIOC->MODER &= ~( (0x3UL << (4U)) | (0x3UL << (6U)) | (0x3UL << (14U))  ); // Clear mode bits
@@ -937,6 +871,7 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		case Spi_HWUnit_SPI3:
 			if (port==PORTB){
+				GPIOB_PCLK_EN();
 				/*===================================================================*/
 				// Set PB3, PB4, and PB5 to alternate function mode (AF6 for SPI3)
 				GPIOB->MODER &= ~( (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U))  ); // Clear mode bits
@@ -953,6 +888,7 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 				GPIOC->PUPDR &= ~((0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) );
 				/*===================================================================*/
 			}else if (port==PORTC){
+				GPIOC_PCLK_EN();
 				/*===================================================================*/
 				// Set PC10, PC11, PC12 to alternate function mode (AF6 for SPI3)
 				GPIOC->MODER &= ~( (0x3UL << (20U)) | (0x3UL << (22U)) | (0x3UL << (24U))  ); // Clear mode bits
@@ -974,6 +910,7 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		case Spi_HWUnit_SPI4:
 			if (port==PORTE){
+				GPIOE_PCLK_EN();
 				/*===================================================================*/
 				// Set PE2, PE5, and PE6 to alternate function mode (AF5 for SPI4)
 				GPIOE->MODER &= ~( (0x3UL << (4U)) | (0x3UL << (10U)) | (0x3UL << (12U))  ); // Clear mode bits
@@ -990,6 +927,7 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 				GPIOE->PUPDR &= ~((0x3UL << (4U)) | (0x3UL << (10U)) | (0x3UL << (12U)) );
 				/*===================================================================*/
 			}else if (port==PORTG){
+				GPIOG_PCLK_EN();
 				/*===================================================================*/
 				// Set PG11, PG12, and PG13 to alternate function mode (AF6 for SPI4)
 				GPIOG->MODER &= ~( (0x3UL << (22U)) | (0x3UL << (24U)) | (0x3UL << (26U))  ); // Clear mode bits
