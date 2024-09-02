@@ -131,31 +131,34 @@ typedef enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief  
+ * @brief   
  * 
  */
 typedef struct{
-    /* SpiPrescaller Clock Speed                SPI_SCLK_SPEED_DIV2 : SPI_SCLK_SPEED_DIV256 */
-    Spi_ClockSpeed       SpiPrescaller;         
-    /* Clock Polarity                           SPI_CPOL_LOW : SPI_CPOL_HIGH */
-	Spi_ClockPolarity    spiCPOL;
-    /* Clock Phase                              SPI_CPHA_LOW : SPI_CPHA_HIGH */               
-	Spi_ClockPhase       spiCPHA;               
-    /*Chip Select Port                          PORTA : PORTH */
-    Spi_CS_Port          spiCSPort;             
-    /*Chip Select Pin                           PIN0 : PIN15 */
-    Spi_CS_Pin           spiCSPin;              
+    Spi_DataFrameFormat  spiDFF;                /* Data Frame Format:  ( SPI_DFF_8BITS : SPI_DFF_16BITS ) */    
+
+    Spi_ClockSpeed       SpiPrescaller;         /* SpiPrescaller Clock Speed  ( SPI_SCLK_SPEED_DIV2 : SPI_SCLK_SPEED_DIV256 ) */
+
+    uint32               DefaultTransmitValue;  /* Default Transmit Value.    ( 0x0000 : 0xFFFF ) */  
+    
+	Spi_ClockPolarity    spiCPOL;               /* Clock Polarity             ( SPI_CPOL_LOW : SPI_CPOL_HIGH ) */
+                  
+	Spi_ClockPhase       spiCPHA;               /* Clock Phase                ( SPI_CPHA_LOW : SPI_CPHA_HIGH ) */ 
+
 } Spi_HWUnitConfigType;
 
 
 typedef struct
 {
     Spi_ChannelType      SpiChannelId;          /* Channel ID used with APIs */
+
     Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
-    Spi_DataFrameFormat  spiDFF;                /* Data Frame Format: SPI_DFF_8BITS : SPI_DFF_16BITS */
-    uint32               DefaultTransmitValue;  /* Default Transmit Value. */ 
-    Spi_NumberOfDataType Length;                /* size of . */
-    Spi_StatusType       Status;                /* channel internal state. */
+
+    Spi_StatusType       Status;                /* Channel internal state. */
+
+    Spi_CS_Port          spiCSPort;             /* Chip Select Port  ( PORTA : PORTH )*/
+    
+    Spi_CS_Pin           spiCSPin;              /* Chip Select Pin  ( PIN0 : PIN15 ) */
 
 } Spi_ChannelConfigType;
 
@@ -163,18 +166,26 @@ typedef struct
 typedef struct 
 {   
     Spi_JobType           SpiJobId;             /* Job ID used with APIs */
+
     Spi_HWUnitType        spiHWUint;            /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
+    
     uint8                 JobPriority;          /* Job Priority ranging from 0 (Lowest) to 3 (Highest)*/ 
+    
     Spi_ChannelType       *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
+    
     Spi_ChannelType       NoOfChannels;         /* Number of Channels configured asscociated with the job*/
+    
     Spi_HWUnitConfigType  *SpiHWUnitConfig;     /* Pointer to HW unit configuration */  
+
 }Spi_JobConfigType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 typedef struct 
 {
     Spi_JobConfigType     *JobLinkPtr;           /* Ptr to jobs IDs asscociated with the Sequence*/
+
     Spi_JobType           NoOfJobs;			     /* Number of Jobs configured */
+
     Spi_SequenceType      SpiSeqId;              /* Sequence ID used with APIs */ 
 }Spi_SeqConfigType;
 
@@ -182,6 +193,9 @@ typedef struct
 
 typedef struct Spi_ConfigType
 {
+    /* pointer to sequence configuration */
+    Spi_SeqConfigType * Spi_SeqConfigPtr;
+
     /* pointer to job configuration */
     Spi_JobConfigType * Spi_JobConfigPtr; 
    
@@ -266,10 +280,7 @@ Std_VersionInfoType Spi_VersionInfo = {
     .sw_minor_version = SPI_SW_minor_version,
     .sw_patch_version = SPI_SW_patch_version
 };
-extern Spi_HWUnitConfigType hwUnitConfig;
-extern Spi_ChannelConfigType channels[];
-extern Spi_JobConfigType jobConfig[];
-extern Spi_ConfigType spiConfig;
+
 
 /************************************* Section : Macro Functions Definations ************************************/
 
@@ -320,3 +331,17 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 
 #endif /* SPI_H */
 
+
+// typedef struct
+// {
+//     Spi_ChannelType      SpiChannelId;          /* Channel ID used with APIs */
+
+//     Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
+
+//     Spi_StatusType       Status;                /* Channel internal state. */
+
+//     Spi_CS_Port          spiCSPort;             /* Chip Select Port  ( PORTA : PORTH )*/
+    
+//     Spi_CS_Pin           spiCSPin;              /* Chip Select Pin  ( PIN0 : PIN15 ) */
+
+// } Spi_ChannelConfigType;

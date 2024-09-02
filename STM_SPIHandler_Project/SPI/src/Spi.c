@@ -45,6 +45,28 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+void Spi_Init(const Spi_ConfigType* ConfigPtr)
+{
+	if (ConfigPtr == NULL_PTR)
+	{
+		/*Det_ReportError*/
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_PARAM_POINTER);
+	}
+	else
+	{
+		for (uint8 Jobs_Index = 0; Jobs_Index < ConfigPtr->Spi_SeqConfigPtr->NoOfJobs; Jobs_Index++)
+		{
+			switch (ConfigPtr->Spi_SeqConfigPtr->JobLinkPtr[Jobs_Index].spiHWUint)
+			{
+				case Spi_HWUnit_SPI1:
+			}
+		
+		switch (ConfigPtr->Spi)
+		{
+		}
+	}
+}
+
 
 void Spi_Init(const Spi_ConfigType* ConfigPtr)
 {
@@ -220,7 +242,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 {
 	Std_ReturnType ret = E_NOT_OK;
 	
-	if (DataBufferPtr == NULL_PTR)
+	if (DataBufferPtr == (Spi_DataBufferType*)NULL_PTR)
 	{
 		/*Det_ReportError with wrong data buffer pointer */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_POINTER);
@@ -230,7 +252,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_CHANNEL);
 
-	}else if (Spi_Config_Ptr == NULL_PTR){
+	}else if (Spi_Config_Ptr == (Spi_ConfigType*)NULL_PTR){
 
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_UNINIT);

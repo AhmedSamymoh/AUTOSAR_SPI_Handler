@@ -148,11 +148,19 @@ typedef uint8 Spi_CS_Pin;
 
 /************************************ Section : Global Variables Definations ************************************/
 
-extern Spi_HWUnitConfigType hwUnitConfig;
+extern Spi_HWUnitConfigType hwUnitConfig_Job_1;
+extern Spi_HWUnitConfigType hwUnitConfig_Job_2;
+
 extern Spi_ChannelConfigType channels[];
+
 extern Spi_JobConfigType jobConfig[];
-extern Spi_ConfigType * Spi_Config_Ptr;
+
+extern Spi_SeqConfigType Spi_SeqConfig;
+
 extern Spi_ConfigType Spi_Config;
+extern Spi_ConfigType * Spi_Config_Ptr;
+
+
 
 /************************************* Section : Macro Functions Definations ************************************/
 
