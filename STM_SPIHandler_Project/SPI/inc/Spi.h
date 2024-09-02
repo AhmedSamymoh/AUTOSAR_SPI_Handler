@@ -95,6 +95,15 @@ typedef uint16       Spi_RxBufferType;
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @brief   Spi_TransmitResultType
+ * Specifies the type for the result of an SPI transmission.
+ * This type is used to define the result of a transmission process over the SPI bus.
+ * The result indicates whether the transmission was successful or if an error occurred.
+ */
+typedef uint8       Spi_TransmitResultType;
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
  * @brief Spi_StatusType
  * [SWS_Spi_00373] 
  * This type defines a range of specific status for SPI Handler/Driver.
@@ -103,6 +112,7 @@ typedef enum{
     SPI_UNINIT,         /*  not initialized or not usable      */
     SPI_IDLE,           /* not currently transmitting any Job. */
     SPI_BUSY,           /* performing a SPI Job (transmit).    */
+    
 } Spi_StatusType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +127,8 @@ typedef enum {
     SPI_JOB_PENDING,     /* The meaning of this status is equal to @SPI_BUSY. */    
     SPI_JOB_FAILED,      /* the Job has failed. */       
     SPI_JOB_QUEUED       /*  An asynchronous transmit Job has been accepted, while 
-                             actual transmission for this Job has not started yet.*/       
+                             actual transmission for this Job has not started yet.*/ 
+
 }Spi_JobResultType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +142,8 @@ typedef enum {
     SPI_SEQ_OK,                 
     SPI_SEQ_PENDING,                
     SPI_SEQ_FAILED,                 
-    SPI_SEQ_CANCELED            
+    SPI_SEQ_CANCELED
+
 }Spi_SeqResultType;            
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +156,7 @@ typedef enum
 {
     InternalBuffer = 0,     /* Configured using Internal Buffer. */
     ExternalBuffer          /* Configured using External Buffer. */
+
 } Spi_BufferType;   
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +175,8 @@ typedef struct{
     /*Chip Select Port                          PORTA : PORTH */
     Spi_CS_Port          spiCSPort;             
     /*Chip Select Pin                           PIN0 : PIN15 */
-    Spi_CS_Pin           spiCSPin;              
+    Spi_CS_Pin           spiCSPin;
+
 } Spi_HWUnitConfigType;
 
 
@@ -184,7 +198,8 @@ typedef struct
     Spi_HWUnitType        spiHWUint;            /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
     uint8                 JobPriority;          /* Job Priority ranging from 0 (Lowest) to 3 (Highest)*/ 
     Spi_ChannelConfigType *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
-    Spi_HWUnitConfigType  *SpiHWUnitConfig;     /* Pointer to HW unit configuration */  
+    Spi_HWUnitConfigType  *SpiHWUnitConfig;     /* Pointer to HW unit configuration */ 
+     
 }Spi_JobConfigType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,6 +208,7 @@ typedef struct
     Spi_JobConfigType     *JobLinkPtr;           /* Ptr to jobs IDs asscociated with the Sequence*/
     Spi_JobType           NoOfJobs;			     /* Number of Jobs configured */
     Spi_SequenceType      SpiSeqId;              /* Sequence ID used with APIs */ 
+
 }Spi_SeqConfigType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,9 +233,9 @@ typedef struct
 {
     Spi_TxBufferType *TxBuffer;                 /* Pointer to the transmit buffer */
     Spi_RxBufferType *RxBuffer;                 /* Pointer to the receive buffer */
-    Spi_DataBufferType DataSize;                  /* Size of the data to be transmitted/received */ 
-    Spi_ChannelConfigType *ChannelsPtr;         /* Ptr to channels asscociated with the job */
-    Spi_HWUnitType spiHWUint;                   /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
+    Spi_DataBufferType DataSize;                /* Size of the data to be transmitted/received */ 
+    Spi_TransmitResultType retVal;              /* Return status of the transmition */
+
 }Spi_SyncTransmit;
 
 /************************************ Section: Macro Declarations ************************************/

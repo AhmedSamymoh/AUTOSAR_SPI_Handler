@@ -189,36 +189,55 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 Std_ReturnType Spi_SyncTransmit(Spi_JobConfigType spiConfig)
 {
 
-	channel = Spi_JobConfig.ChannelsPtr[SpiChannelId];
-	txBuffer = Spi_ChannelConfigType[channel].TxBuffer;
-	rxBuffer = Spi_ChannelConfigType[channel].RxBuffer;
-	dataSize = Spi_ChannelConfigType[channel].DataSize;
+    // Get the SPI hardware unit from the job configuration
+    SpiHWUint = spiConfig.SpiHWUnitConfig->SpiHWUnit;
 
-	// Get the SPI hardware unit
-	spi_HWUint = Spi_JobConfig[job].SpiHWUnit;
-	// Transmit and receive data
-	for (i = 0; i < dataSize; i++)
-	{
-	// Wait until TXE (Transmit buffer empty)
-	while (!(spiHWUint->SR & SPI_SR_TXE));
+    // Iterate over each channel in the job
+    for (uint8_t ChannelsPtr = 0; ChannelsPtr < spiConfig.SpiHWUnitConfig->NoOfChannels; ChannelsPtr++) 
+    {
+        // Get the channel ID
+        channel = spiConfig.ChannelsPtr[SpiChannelId];
 
-	// Transmit the data
-	spiHWUint->DR = txBuffer[i];
+        // Get buffers and data size from the channel configuration
+        txBuffer = Spi_ChannelConfigType[channel].TxBuffer;
+        rxBuffer = Spi_ChannelConfigType[channel].RxBuffer;
+        dataSize = Spi_ChannelConfigType[channel].DataSize;
 
-	// Wait until RXNE (Receive buffer not empty)
-	while (!(spiHWUint->SR & SPI_SR_RXNE));
+        // Set job status to pending
+        Spi_JobResultType SpijobStatus = SPI_JOB_PENDING;
+        Spi_SetJobResult(spiConfig.SpiJobId, SpijobStatus);
 
-	// Receive the data
-	rxBuffer[i] = (uint8)(spiHWUint->DR);
+        // Transmit and receive data
+        for (int i = 0; i < dataSize; i++)
+        {
+            // Wait until TXE (Transmit buffer empty)
+            while (!(SpiHWUint->SR & SPI_SR_TXE));
 
-	// Wait until SPI is not busy (BSY flag cleared)
-	while (spiHWUint->SR & SPI_SR_BSY);
+            // Transmit the data
+            SpiHWUint->DR = txBuffer[i];
 
-        
-    
+            // Wait until RXNE (Receive buffer not empty)
+            while (!(SpiHWUint->SR & SPI_SR_RXNE));
 
-    // If everything went fine
-    retVal = E_OK;
+            // Receive the data
+            rxBuffer[i] = (uint8)(SpiHWUint->DR);
+
+            // Wait until SPI is not busy (BSY flag cleared)
+            while (SpiHWUint->SR & SPI_SR_BSY);
+        }
+    }
+
+    // Set job status to done if successful
+    if Spi_JobStatusType jobStatus = SPI_JOB_OK
+    {
+        Spi_SetJobResult(spiConfig.SpiJobId, SPI_JOB_OK);
+        retVal = E_OK;
+    }
+    else
+    {
+        Spi_SetJobResult(spiConfig.SpiJobId, SPI_JOB_FAILED);
+        retVal = E_NOT_OK;
+    }
 
     return retVal;
 }
