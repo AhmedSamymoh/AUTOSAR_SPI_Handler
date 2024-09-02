@@ -225,7 +225,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		/*Det_ReportError with wrong data buffer pointer */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_POINTER);
 
-	}else if (Channel < SPI_Channel_0 || Channel > SPI_Channel_3)
+	}else if (Channel < SPI_Channel_1 || Channel > SPI_Channel_4)
 	{
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_CHANNEL);
@@ -243,7 +243,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 	}else{
 
 		/* Set the channel status to SPI_BUSY */
-		Spi_Config_Ptr->Spi_JobConfigPtr->ChannelsPtr[Channel].Status = SPI_BUSY;
+		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Status=SPI_BUSY;
 
 		switch (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint)
 		{
@@ -275,7 +275,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		}
 
 		/* Set the channel status to SPI_IDLE */
-		Spi_Config_Ptr->Spi_JobConfigPtr->ChannelsPtr[Channel].Status = SPI_IDLE;
+		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Status=SPI_BUSY;
 
 	}
 
