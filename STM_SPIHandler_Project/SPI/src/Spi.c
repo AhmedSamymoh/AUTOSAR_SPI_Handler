@@ -186,6 +186,48 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+Std_ReturnType Spi_SyncTransmit(Spi_JobConfigType spiConfig)
+{
+
+	channel = Spi_JobConfig.ChannelsPtr[SpiChannelId];
+	txBuffer = Spi_ChannelConfigType[channel].TxBuffer;
+	rxBuffer = Spi_ChannelConfigType[channel].RxBuffer;
+	dataSize = Spi_ChannelConfigType[channel].DataSize;
+
+	// Get the SPI hardware unit
+	spi_HWUint = Spi_JobConfig[job].SpiHWUnit;
+	// Transmit and receive data
+	for (i = 0; i < dataSize; i++)
+	{
+	// Wait until TXE (Transmit buffer empty)
+	while (!(spiHWUint->SR & SPI_SR_TXE));
+
+	// Transmit the data
+	spiHWUint->DR = txBuffer[i];
+
+	// Wait until RXNE (Receive buffer not empty)
+	while (!(spiHWUint->SR & SPI_SR_RXNE));
+
+	// Receive the data
+	rxBuffer[i] = (uint8)(spiHWUint->DR);
+
+	// Wait until SPI is not busy (BSY flag cleared)
+	while (spiHWUint->SR & SPI_SR_BSY);
+
+        
+    
+
+    // If everything went fine
+    retVal = E_OK;
+
+    return retVal;
+}
+    
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 

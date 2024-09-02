@@ -74,7 +74,24 @@ typedef uint8       Spi_DataBufferType;
  * Type for defining the number of data elements to send and / or receive by Channel
  */
 typedef uint16      Spi_NumberOfDataType;     
+////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @brief   SPI_TxBufferType
+ * Specifies the type for a SPI transmit buffer.
+ * This type is used to define a pointer to the transmit buffer used in SPI communication.
+ * The buffer holds the data that needs to be transmitted over the SPI bus.
+ */
+typedef uint16       Spi_TxBufferType;
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief   SPI_RxBufferType
+ * Specifies the type for a SPI receive buffer.
+ * This type is used to define a pointer to the receive buffer used in SPI communication.
+ * The buffer holds the data that is received over the SPI bus.
+ */
+typedef uint16       Spi_RxBufferType;
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -118,6 +135,7 @@ typedef enum {
 }Spi_SeqResultType;            
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 * @brief   The enumeration containing the designated values for buffer types (internal or external).
 *
@@ -192,6 +210,18 @@ typedef struct Spi_ConfigType
 
 }Spi_ConfigType;
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+typedef struct 
+{
+    Spi_TxBufferType *TxBuffer;                 /* Pointer to the transmit buffer */
+    Spi_RxBufferType *RxBuffer;                 /* Pointer to the receive buffer */
+    Spi_DataBufferType DataSize;                  /* Size of the data to be transmitted/received */ 
+    Spi_ChannelConfigType *ChannelsPtr;         /* Ptr to channels asscociated with the job */
+    Spi_HWUnitType spiHWUint;                   /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
+}Spi_SyncTransmit;
+
 /************************************ Section: Macro Declarations ************************************/
                                                                                     
 /*
@@ -247,6 +277,15 @@ typedef struct Spi_ConfigType
 /**
  * @brief Service ID for Spi_GetHWUnitStatus 
  */
+#define SPI_SYNCTRANSMIT_ID      ((uint8) 0x0Au)
+
+/**
+* @brief API service ID for SPI get hwunit status function.
+* @details Parameters used when raising an error or exception.
+*
+*/
+/** @implements Spi_ServiceIds_define  
+*/
 #define SPI_GET_HW_UNIT_STATUS_SID      ((uint8)0x0bu)
 
 
@@ -274,6 +313,21 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
 
+/**
+ * @brief   Spi_SyncTransmit
+ * [SWS_Spi_00327] : Service to transmit data on the SPI bus.
+ * 
+ * This function is reentrant and handles the transmission of data over the SPI bus
+ * in a synchronous manner. The function takes a sequence ID as input and returns
+ * a standard return type indicating the success or failure of the transmission.
+ * 
+ * @param       Sequence    Sequence ID for the SPI transaction.
+ * @return      Std_ReturnType
+ *              - E_OK: Transmission has been successful.
+ *              - E_NOT_OK: Transmission failed.
+ */
+Std_ReturnType Spi_SyncTransmit(Spi_SequenceType Sequence);
+ 
 /**
  * @brief This service returns the status of the specified SPI Har
  * dware microcontroller 
