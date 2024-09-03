@@ -91,16 +91,16 @@ pipeline {
                             steps {
                                 echo "============================================================================================="
                                 echo "Creating code coverage..."
-                                // sh '''
-                                //     cd 
-                                //     gcc -fprofile-arcs -ftest-coverage -o coverage main.c ../../STM_SPIHandler_Project/SPI/src/Spi.c
-                                //     ./coverage
-                                //     gcov -b -o . coverage-main.gcda
-                                //     gcov -b -o . coverage-Spi.gcda
-                                //     lcov --capture --directory . --output-file coverage.info
-                                //     genhtml coverage.info --output-directory out
-                                // '''
-                              
+                                sh '''
+                                    cd 
+                                    gcc -I../../STM_SPIHandler_Project/AUTOSAR -fprofile-arcs -ftest-coverage -o coverage main.c ../../STM_SPIHandler_Project/AUTOSAR/det.c
+                                    ./coverage
+                                    gcov -b -o . coverage-main.gcda
+                                    gcov -b -o . coverage-Spi.gcda
+                                    lcov --capture --directory . --output-file coverage.info
+                                    genhtml coverage.info --output-directory out
+                                '''
+
                                 echo "============================================================================================="
                                 echo "Generating code coverage report..."
                                 echo "============================================================================================="
