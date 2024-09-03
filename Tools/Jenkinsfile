@@ -96,7 +96,7 @@ pipeline {
                                     pwd
                                     cat main.c
                                     echo "============================================================================================="
-                                    gcc -I../../STM_SPIHandler_Project/AUTOSAR -fprofile-arcs -ftest-coverage -o coverage main.c ../../STM_SPIHandler_Project/AUTOSAR/det.c
+                                    gcc -fprofile-arcs -ftest-coverage -o coverage main.c 
                                     ./coverage
                                     gcov -b -o . coverage-main.gcda
                                     gcov -b -o . coverage-Spi.gcda
