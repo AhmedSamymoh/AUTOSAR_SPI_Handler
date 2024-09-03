@@ -769,9 +769,9 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		{
 			case Spi_HWUnit_SPI1:
 				/* Write the data to the Data Register */
-				SPI1->DR = *DataBufferPtr;
-				ret = E_OK;
-				break;
+				// SPI1->DR = *DataBufferPtr;
+				// ret = E_OK;
+				// break;
 			
 			case Spi_HWUnit_SPI2:
 				/* Write the data to the Data Register */
@@ -829,11 +829,11 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 					Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_GET_HW_UNIT_STATUS_SID, SPI_E_UNINIT );
 				}else{
 					if (READ_BIT( (SPI1->CR1) , SPI_CR1_SPE) == 0){
-						Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
+						//Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
 					}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 0) {
-						Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+						//Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
 					}else if ( READ_BIT( (SPI1->SR) , SPI_SR_BSY) == 1) {	
-						Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+						//Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
 					}else {
 						/* Nothing */
 					}	
@@ -952,62 +952,62 @@ static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigTy
 			Spi_GPIO_Init(HWUnitId, SPI1_PORT);
 
 			/* Enable SPI1 Clock */
-			SPI1_PCLK_EN();
+			///SPI1_PCLK_EN();
 
 			/* Reset SPI1 Configuration */
-			SPI1->CR1 = 0;
+			//SPI1->CR1 = 0;
 
 			/* Configure SPI Device Mode SPI_CR1_MSTR = 1 for Master Mode */
-			SET_BIT(SPI1->CR1, SPI_CR1_MSTR );
+			//SET_BIT(SPI1->CR1, SPI_CR1_MSTR );
 
 			/* SSM=1, SSi=1 -> Software Slave Management Setting SSI, > to avoid MODF Error*/
-			SET_BIT( SPI1->CR1 , SPI_CR1_SSM );
-			SET_BIT( SPI1->CR1 , SPI_CR1_SSI );
+			//SET_BIT( SPI1->CR1 , SPI_CR1_SSM );
+			//SET_BIT( SPI1->CR1 , SPI_CR1_SSI );
 
 			/* Configure SPI Bus Configuration SPI_CR1_BIDIMODE = 0 for Full Duplex */
-			CLR_BIT(SPI1->CR1, SPI_CR1_BIDIMODE);
+			//CLR_BIT(SPI1->CR1, SPI_CR1_BIDIMODE);
 
 
 			/*SPI_CR1_LSBFIRST = 0 for MSB first*/
-			CLR_BIT( SPI1->CR1 , SPI_CR1_LSBF );
+			//CLR_BIT( SPI1->CR1 , SPI_CR1_LSBF );
 
 			SPI1->CR2 = 0 ;
 
 			/* Configure SPI Clock Polarity */
 			if (HWUnit->spiCPOL == SPI_CPOL_LOW){
-				CLR_BIT(SPI1->CR1, SPI_CR1_CPOL); /* 0: CK to 0 when idle */
+				//CLR_BIT(SPI1->CR1, SPI_CR1_CPOL); /* 0: CK to 0 when idle */
 			}else{
-				SET_BIT(SPI1->CR1, SPI_CR1_CPOL); /* 1: CK to 1 when idle */
+				//SET_BIT(SPI1->CR1, SPI_CR1_CPOL); /* 1: CK to 1 when idle */
 			}
 
 			/* Configure SPI Clock Phase */
 			if (HWUnit->spiCPHA == SPI_CPHA_LOW){
-				CLR_BIT(SPI1->CR1, SPI_CR1_CPHA); /* 0: The first clock transition is the first data capture edge*/
+				//CLR_BIT(SPI1->CR1, SPI_CR1_CPHA); /* 0: The first clock transition is the first data capture edge*/
 			}else{
-				SET_BIT(SPI1->CR1, SPI_CR1_CPHA); /* 1: The second clock transition is the first data capture edge */
+				//SET_BIT(SPI1->CR1, SPI_CR1_CPHA); /* 1: The second clock transition is the first data capture edge */
 			}
 
 			if (HWUnit->spiDFF == SPI_DFF_16BITS){
-				SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
+				//SET_BIT(SPI1->CR1, SPI_CR1_DFF); /* 1: 16-bit data frame format is selected for transmission/reception */
 			}else if (HWUnit->spiDFF == SPI_DFF_8BITS){
-				CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
+				//CLR_BIT(SPI1->CR1, SPI_CR1_DFF); /* 0: 8-bit data frame format is selected for transmission/reception */
 			}else{/* Nothing */}
 
 			/* Set Default Transmit Value */
-			SPI1->DR = HWUnit->DefaultTransmitValue;
+			//SPI1->DR = HWUnit->DefaultTransmitValue;
 
 			/* Configure SPI Clock Speed */
 			/* Clear the bits for clock speed <Mask bits 5:3> */
-			SPI1->CR1 &= ~(0x7U << SPI_CR1_BR0);
+			//SPI1->CR1 &= ~(0x7U << SPI_CR1_BR0);
 			/* BR[2:0] bits for Baud Rate */
-			SPI1->CR1 |= (HWUnit->SpiPrescaller << SPI_CR1_BR0);
+			//SPI1->CR1 |= (HWUnit->SpiPrescaller << SPI_CR1_BR0);
 
 			/* Enable SPI1 */
-			SET_BIT(SPI1->CR1, SPI_CR1_SPE); // SPI_CR1_SPE = 1 to enable SPI
+			//SET_BIT(SPI1->CR1, SPI_CR1_SPE); // SPI_CR1_SPE = 1 to enable SPI
 
 			/* Set SPI1 status to SPI_IDLE after initialization 
 			* for avoiding Duplecated Initialization */ 
-			Spi1_Status = SPI_IDLE;
+			//Spi1_Status = SPI_IDLE;
 
 			break;
 
@@ -1231,9 +1231,9 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
 		{
 			case PORTA:
 				if (Level == STD_HIGH){
-					GPIOA->BSRR = (1 << CS_Pin);
+					//GPIOA->BSRR = (1 << CS_Pin);
 				}else if (Level == STD_LOW){
-					GPIOA->BSRR = (1 << (CS_Pin + 16));
+					//GPIOA->BSRR = (1 << (CS_Pin + 16));
 				}else{/*Nothing*/}
 				break;
 
@@ -1314,15 +1314,14 @@ static void Spi_ChipSelect_Init(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port ){
 	switch(CS_Port){
 			case PORTA:
 				// Set PIN to  General purpose output mode
-				GPIOA->MODER &= ~( (0x3UL << ((CS_Pin*2))) | ( 0x3UL << (((CS_Pin*2)+1)) ) );
-				GPIOA->MODER |=  (1 << ((CS_Pin*2)));
-				// Set PIN to  medium speed mode
-				GPIOA->OSPEEDR |= (1<< (CS_Pin*2));
+				//GPIOA->MODER &= ~( (0x3UL << ((CS_Pin*2))) | ( 0x3UL << (((CS_Pin*2)+1)) ) );
+				//GPIOA->MODER |=  (1 << ((CS_Pin*2)));
+				/// Set PIN to  medium speed mode
+				//GPIOA->OSPEEDR |= (1<< (CS_Pin*2));
 
 				// Set PIN to  no pull or push
-				GPIOA->PUPDR &= ~( (0x3UL << ((CS_Pin*2))) );
+				//GPIOA->PUPDR &= ~( (0x3UL << ((CS_Pin*2))) );
 			break;
-
 
 			case PORTB:
 				// Set PIN to  General purpose output mode
@@ -1417,40 +1416,40 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 		case Spi_HWUnit_SPI1:
 			if (port==PORTA)
 			{
-				/* Enable GPIOA Clock */
-				GPIOA_PCLK_EN();
+				// /* Enable GPIOA Clock */
+				// GPIOA_PCLK_EN();
 
-				/*===================================================================*/
-				// Set PA5, PA6, and PA7 to alternate function mode (AF5 for SPI1)
-				GPIOA->MODER &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) ); // Clear mode bits
-				GPIOA->MODER |= ( (0x2UL << (10U)) | (0x2UL << (12U)) | (0x2UL << (14U))  ); // Set to alternate function
+				// /*===================================================================*/
+				// // Set PA5, PA6, and PA7 to alternate function mode (AF5 for SPI1)
+				// GPIOA->MODER &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)) ); // Clear mode bits
+				// GPIOA->MODER |= ( (0x2UL << (10U)) | (0x2UL << (12U)) | (0x2UL << (14U))  ); // Set to alternate function
 
-				// Set alternate function to AF5 (SPI1)
-				GPIOA->AFR[0] &= ~(  (0xF << (5 * 4)) | (0xF << (6 * 4)) | (0xF << (7 * 4))); // Clear AFR bits
-				GPIOA->AFR[0] |=  (5 << (5 * 4)) | (5 << (6 * 4)) | (5 << (7 * 4)); // Set AF5 for PA5, PA6, PA7
+				// // Set alternate function to AF5 (SPI1)
+				// GPIOA->AFR[0] &= ~(  (0xF << (5 * 4)) | (0xF << (6 * 4)) | (0xF << (7 * 4))); // Clear AFR bits
+				// GPIOA->AFR[0] |=  (5 << (5 * 4)) | (5 << (6 * 4)) | (5 << (7 * 4)); // Set AF5 for PA5, PA6, PA7
 
-				// Set PA5, PA6, and PA7 to very high speed
-				GPIOA->OSPEEDR |= (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U));
+				// // Set PA5, PA6, and PA7 to very high speed
+				// GPIOA->OSPEEDR |= (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U));
 
-				// Set PA5, PA6, and PA7 to no pull-up/pull-down
-				GPIOA->PUPDR &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)));
+				// // Set PA5, PA6, and PA7 to no pull-up/pull-down
+				// GPIOA->PUPDR &= ~( (0x3UL << (10U)) | (0x3UL << (12U)) | (0x3UL << (14U)));
 				/*===================================================================*/
 			}else if (port==PORTB){
-				GPIOB_PCLK_EN();
-				/*===================================================================*/
-				// Set PB3, PB4, and PB5 to alternate function mode (AF5 for SPI1)
-				GPIOB->MODER &= ~( (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U))  ); // Clear mode bits
-				GPIOB->MODER |= ( (0x2UL << (6U)) | (0x2UL << (8U)) | (0x2UL << (10U)) ); // Set to alternate function
+				// GPIOB_PCLK_EN();
+				// /*===================================================================*/
+				// // Set PB3, PB4, and PB5 to alternate function mode (AF5 for SPI1)
+				// GPIOB->MODER &= ~( (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U))  ); // Clear mode bits
+				// GPIOB->MODER |= ( (0x2UL << (6U)) | (0x2UL << (8U)) | (0x2UL << (10U)) ); // Set to alternate function
 
-				// Set alternate function to AF5 (SPI1)
-				GPIOB->AFR[0] &= ~( (0xF << (3 * 4)) | (0xF << (4 * 4)) | (0xF << (5 * 4))); // Clear AFR bits
-				GPIOB->AFR[0] |=  (5 << (3 * 4)) | (5 << (4 * 4)) | (5 << (5 * 4)); // Set AF5 for PB3, PB4, PB5
+				// // Set alternate function to AF5 (SPI1)
+				// GPIOB->AFR[0] &= ~( (0xF << (3 * 4)) | (0xF << (4 * 4)) | (0xF << (5 * 4))); // Clear AFR bits
+				// GPIOB->AFR[0] |=  (5 << (3 * 4)) | (5 << (4 * 4)) | (5 << (5 * 4)); // Set AF5 for PB3, PB4, PB5
 
-				// Set PB3, PB4, and PB5 to very high speed
-				GPIOB->OSPEEDR |= (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) ;
+				// // Set PB3, PB4, and PB5 to very high speed
+				// GPIOB->OSPEEDR |= (0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) ;
 
-				// Set PB3, PB4, and PB5 to no pull-up/pull-down
-				GPIOB->PUPDR &= ~((0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) );
+				// // Set PB3, PB4, and PB5 to no pull-up/pull-down
+				// GPIOB->PUPDR &= ~((0x3UL << (6U)) | (0x3UL << (8U)) | (0x3UL << (10U)) );
 				/*===================================================================*/
 			}else{/* Nothing */}
 		break;
