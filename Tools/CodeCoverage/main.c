@@ -18,7 +18,6 @@
 
 
 #include "../../STM_SPIHandler_Project/AUTOSAR/Std_Types.h"
-#include "../../STM_SPIHandler_Project/AUTOSAR/det.h"
     
 
 
@@ -404,6 +403,72 @@ Std_VersionInfoType Spi_VersionInfo = {
 
 /*************************************** Section : Functions Declarations ***************************************/
 /***************************************** Section : User Configurations **************************************/
+/*
+ * SPI Module Version Info
+ */
+#define DET_SW_vendor_ID                1u    
+#define DET_SW_moduleID                 1u
+#define DET_SW_major_version            1u
+#define DET_SW_minor_version            1u 
+#define DET_SW_patch_version            1u
+
+
+
+typedef struct det
+{
+    uint16 ModuleId;
+    uint8 InstanceId;
+    uint8 ApiId;
+    uint8 ErrorId;
+} Det_ConfigType;
+
+/**
+ * @brief Maximum Error The Buffer can handle
+ * 
+ */
+#define DET_MAX_ERROR_BUFFER            3u
+
+
+Det_ConfigType Det_Error_Buffer[DET_MAX_ERROR_BUFFER];
+
+static boolean Det_Init_Flag = FALSE;
+
+static uint8 Det_Error_Buffer_index = 0;
+
+
+/**
+ * @brief Service to report development errors.
+ * 
+ * @param ModuleId : Module ID of calling module.
+ * @param InstanceId : The identifier of the index based instance of a module
+ * @param ApiId : ID of API service in which error is detected
+ * @param ErrorId : ID of detected development error (defined in SWS of calling module).
+ * @return Std_ReturnType : never returns a value, but has a return type for compatibility with
+                            services and hooks
+ */
+Std_ReturnType Det_ReportError (uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId){
+ 
+    /* There is more space in the buffer */
+    if (Det_Error_Buffer_index < DET_MAX_ERROR_BUFFER)
+    {
+        Det_Error_Buffer->ApiId = ApiId;
+        Det_Error_Buffer->ErrorId=ErrorId;
+        Det_Error_Buffer->InstanceId=InstanceId;
+        Det_Error_Buffer->ModuleId =ModuleId;
+    }
+    else
+    {
+        /* Not enough buffer space */
+        for(;;);
+
+        return E_NOT_OK;
+    }
+
+    /* Error data stored in buffer */
+    return E_OK;
+}
+
+
 
 
 
@@ -1622,11 +1687,6 @@ void GPIO_SPI_SlaveSelect (uint8 port, uint8 pin){
 	}
 
 }
-
-
-
-
-
 
 
 
