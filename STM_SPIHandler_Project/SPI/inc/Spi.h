@@ -154,7 +154,7 @@ typedef struct
 
     Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
 
-    Spi_StatusType       Status;                /* Channel internal state. */
+    Spi_StatusType       Status;                /* Channel internal state. For First Init Config This should be SPI_UNINIT */
 
     Spi_CS_Port          spiCSPort;             /* Chip Select Port  ( PORTA : PORTH )*/
     
@@ -296,7 +296,7 @@ Std_VersionInfoType Spi_VersionInfo = {
  * reports errors if there are issues with re-initialization or invalid pointers.
  * 
  * @param ConfigPtr Pointer to the SPI configuration structure.
- *                  If NULL, an error is reported.
+ *                  If NULL , an error is reported.
  *
  * @return None.
  *
@@ -340,18 +340,3 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 
 
 #endif /* SPI_H */
-
-
-// typedef struct
-// {
-//     Spi_ChannelType      SpiChannelId;          /* Channel ID used with APIs */
-
-//     Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
-
-//     Spi_StatusType       Status;                /* Channel internal state. */
-
-//     Spi_CS_Port          spiCSPort;             /* Chip Select Port  ( PORTA : PORTH )*/
-    
-//     Spi_CS_Pin           spiCSPin;              /* Chip Select Pin  ( PIN0 : PIN15 ) */
-
-// } Spi_ChannelConfigType;

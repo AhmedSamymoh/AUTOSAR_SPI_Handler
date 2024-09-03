@@ -13,10 +13,7 @@
 #include "../inc/Spi.h"
 #include "../inc/Spi_Cfg.h"  
 
-extern Spi_HWUnitConfigType hwUnitConfig;
-extern Spi_ChannelConfigType channels[];
-extern Spi_JobConfigType jobConfig[];
-extern Spi_ConfigType Spi_ConfigPtr;
+
 
 /**************************************** Section: Data Type Declarations **************************************/
 
@@ -74,7 +71,7 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 		{
 			for (uint8 channels_index = 0; channels_index < (ConfigPtr->Spi_JobConfigPtr->NoOfChannels) ; channels_index++)
 			{
-				if (Spi1_Status == SPI_UNINIT)
+				if (ConfigPtr->Spi_ChannelConfigPtr[channels_index].Status == SPI_UNINIT)
 				{
 					/* Initialization of the Chip Select Pin */
 					Spi_ChipSelect_Init(ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiCSPort, ConfigPtr->Spi_ChannelConfigPtr[channels_index].spiCSPort);
@@ -93,7 +90,7 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 			}
 
 			/* Initialize the SPI Hardware Unit */
-			Spi_lhw_Init(Spi_HWUnit_SPI1, (ConfigPtr->Spi_JobConfigPtr[Jobs_Index].SpiHWUnitConfig) );
+			Spi_lhw_Init((ConfigPtr->Spi_JobConfigPtr[Jobs_Index].spiHWUint), (ConfigPtr->Spi_JobConfigPtr[Jobs_Index].SpiHWUnitConfig) );
 			
 		}
 	}
@@ -260,9 +257,9 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 					if (READ_BIT( (SPI4->CR1) , SPI_CR1_SPE) == 0){
 						Spi_Status = SPI_UNINIT; /* Bit 6 SPE: SPI enable 0: Peripheral disabled */ 
 					}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 0) {
-						Spi_Status = SPI_IDLE; /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
+						Spi_Status = SPI_IDLE;   /* 0: SPI (or I2S) not busy <Bit 7 BSY: Busy flag> */ 
 					}else if ( READ_BIT( (SPI4->SR) , SPI_SR_BSY) == 1) {	
-						Spi_Status = SPI_BUSY; /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
+						Spi_Status = SPI_BUSY;   /* 1: SPI (or I2S) is busy in communication or Tx buffer is not empty <Bit 7 BSY: Busy flag> */
 					}else {
 						/* Nothing */
 					}
@@ -296,11 +293,11 @@ void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo)
     }
     else
     {
-        VersionInfo->moduleID = SPI_SW_moduleID;
-        VersionInfo->sw_major_version = SPI_SW_major_version;
-        VersionInfo->sw_minor_version = SPI_SW_minor_version;
-        VersionInfo->sw_patch_version = SPI_SW_patch_version;
-        VersionInfo->vendorID = SPI_SW_vendor_ID;
+		VersionInfo->moduleID = SPI_SW_moduleID;
+		VersionInfo->sw_major_version = SPI_SW_major_version;
+		VersionInfo->sw_minor_version = SPI_SW_minor_version;
+		VersionInfo->sw_patch_version = SPI_SW_patch_version;
+		VersionInfo->vendorID = SPI_SW_vendor_ID;
     }
 }
 

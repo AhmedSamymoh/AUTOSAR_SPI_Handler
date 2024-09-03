@@ -20,8 +20,6 @@
 #include "../SPI/inc/Spi.h"
 
 
-
-
 extern Spi_ConfigType Spi_Config;
 int main(void)
 {

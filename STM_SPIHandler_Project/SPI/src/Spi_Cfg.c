@@ -44,28 +44,28 @@ Spi_ChannelConfigType channels[]= {
     {
         .SpiChannelId = SPI_Channel_1,
         .BufferType = InternalBuffer,
-        .Status = SPI_IDLE,
+        .Status = SPI_UNINIT,
 		.spiCSPort = PORTA,       
     	.spiCSPin = PIN10     
     },
     {
         .SpiChannelId = SPI_Channel_2,
         .BufferType = InternalBuffer,
-        .Status = SPI_IDLE,
+        .Status = SPI_UNINIT,
 		.spiCSPort = PORTA,       
     	.spiCSPin = PIN11   
     },
 	{
 		.SpiChannelId = SPI_Channel_3,
 		.BufferType = InternalBuffer,
-		.Status = SPI_IDLE,
+		.Status = SPI_UNINIT,
 		.spiCSPort = PORTA,       
 		.spiCSPin = PIN12
 	},
 	{
 		.SpiChannelId = SPI_Channel_4,
 		.BufferType = InternalBuffer,
-		.Status = SPI_IDLE,
+		.Status = SPI_UNINIT,
 		.spiCSPort = PORTA,       
 		.spiCSPin = PIN13
 	}
@@ -92,8 +92,8 @@ Spi_JobConfigType jobConfig[] = {
 Spi_SeqConfigType Spi_SeqConfig = {
 	
 	.SpiSeqId = 0,
-	.JobLinkPtr = jobConfig,
-	.NoOfJobs = sizeof(jobConfig)/sizeof(Spi_JobConfigType)
+    .JobLinkPtr = jobConfig,
+	.NoOfJobs = 2
 
 };
 
@@ -105,6 +105,8 @@ Spi_ConfigType Spi_Config = {
 
 
 Spi_ConfigType * Spi_Config_Ptr = &Spi_Config;
+
+
 
 /**
  * @brief system initialization for mcu clock
