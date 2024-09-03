@@ -92,7 +92,10 @@ pipeline {
                                 echo "============================================================================================="
                                 echo "Creating code coverage..."
                                 sh '''
-                                    cd 
+                                    cd Tools/CodeCoverage
+                                    pwd
+                                    cat main.c
+                                    echo "============================================================================================="
                                     gcc -I../../STM_SPIHandler_Project/AUTOSAR -fprofile-arcs -ftest-coverage -o coverage main.c ../../STM_SPIHandler_Project/AUTOSAR/det.c
                                     ./coverage
                                     gcov -b -o . coverage-main.gcda
