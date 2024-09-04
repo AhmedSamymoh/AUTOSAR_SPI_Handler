@@ -118,8 +118,6 @@ pipeline {
                         }
                     }
                 }   
-            }      
-        }
 
         stage('Release Notes') {
             parallel {
