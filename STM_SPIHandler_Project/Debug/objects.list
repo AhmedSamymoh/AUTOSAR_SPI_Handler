@@ -1,0 +1,7 @@
+"./AUTOSAR/det.o"
+"./SPI/src/Spi.o"
+"./SPI/src/Spi_Cfg.o"
+"./Src/main.o"
+"./Src/syscalls.o"
+"./Src/sysmem.o"
+"./Startup/startup_stm32f446retx.o"
