@@ -154,7 +154,7 @@ typedef struct
 
     Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
 
-    Spi_StatusType       Status;                /* Channel internal state. For First Init Config This should be SPI_UNINIT */
+    Spi_StatusType       Channel_Status;        /* Channel internal state. For First Init Config This should be SPI_UNINIT */
 
     Spi_CS_Port          spiCSPort;             /* Chip Select Port  ( PORTA : PORTH )*/
     

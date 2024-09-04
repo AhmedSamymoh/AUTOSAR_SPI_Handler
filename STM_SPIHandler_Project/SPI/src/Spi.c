@@ -75,13 +75,13 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 		        Spi_ChannelType channelId = jobConfig->ChannelsPtr[channels_index]; // Access channel ID
 		        Spi_ChannelConfigType *channelConfig = &(ConfigPtr->Spi_ChannelConfigPtr[channelId]);
 
-		        if (channelConfig->Status == SPI_UNINIT)
+		        if (channelConfig->Channel_Status == SPI_UNINIT)
 		        {
 		            /* Initialization of the Chip Select Pin */
 		            Spi_ChipSelect_Init(channelConfig->spiCSPort, channelConfig->spiCSPin);
 
 		            /* Set SPI status to SPI_IDLE after initialization */
-		            channelConfig->Status = SPI_IDLE;
+		            channelConfig->Channel_Status = SPI_IDLE;
 		        }
 		        else
 		        {
@@ -143,7 +143,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 	}else{
 
 		/* Set the channel status to SPI_BUSY */
-		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Status=SPI_BUSY;
+		Spi_Config.Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
 
 		switch (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint)
 		{
@@ -175,7 +175,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		}
 
 		/* Set the channel status to SPI_IDLE */
-		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Status=SPI_BUSY;
+		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
 
 	}
 
