@@ -128,7 +128,9 @@ pipeline {
                                 sh '''
                                 cd $PWD/UnitTesting/Gtest/
                                 g++ -O0 -fprofile-arcs -ftest-coverage Spi_tests.cpp -L/path/to/gtest/libs -lgtest -lgtest_main -pthread -o Spi_tests
-                                gcov -b -o . Spi_tests.gcda
+                                gcov Spi_tests.cpp || true
+                                gcov Spi.cpp || true
+                                gcov Spi.hpp || true
                                 lcov --capture --directory . --output-file coverage.info
                                 genhtml coverage.info --output-directory out
                                 '''
@@ -139,6 +141,8 @@ pipeline {
                                 //     cd Tools/CodeCoverage
                                 //     pwd
                                 //     cat main.c
+                                //     gcov -b -o . Spi_tests.gcda
+
                                 //     echo "============================================================================================="
                                 //     gcc -fprofile-arcs -ftest-coverage -o coverage main.c 
                                 //     ./coverage
