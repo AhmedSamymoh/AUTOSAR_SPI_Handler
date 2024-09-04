@@ -1,4 +1,4 @@
-#include "spi.cpp"
+#include "Spi.cpp"
 #include <gtest/gtest.h>
 
 // Reset the SPI1 register before each test
