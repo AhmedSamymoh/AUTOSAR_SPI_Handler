@@ -8,4 +8,4 @@ include_directories(${GTEST_INCLUDE_DIRS})
 # Add your source files
 
 add_executable(Spi Spi_tests.cpp)
-target_link_libraries(runTests ${GTEST_LIBRARIES} pthread)
+target_link_libraries(Spi ${GTEST_LIBRARIES} pthread)
