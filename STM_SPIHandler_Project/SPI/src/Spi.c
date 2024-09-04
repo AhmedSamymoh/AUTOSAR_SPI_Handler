@@ -119,6 +119,15 @@ static Spi_StatusType Spi3_Status = SPI_UNINIT;
 static Spi_StatusType Spi4_Status = SPI_UNINIT;
 
 
+Std_VersionInfoType Spi_VersionInfo = {
+    .vendorID = SPI_SW_vendor_ID,
+    .moduleID = SPI_SW_moduleID,
+    .sw_major_version = SPI_SW_major_version,
+    .sw_minor_version = SPI_SW_minor_version,
+    .sw_patch_version = SPI_SW_patch_version
+};
+
+
 /**************************************** Section : Functions Definations ***************************************/
 
 
