@@ -99,13 +99,21 @@ pipeline {
                                     pwd
                                     cmake CMakeLists.txt
                                     
-                                    make
+                                    cmake --build .
                                 
                                 '''
 
 
                                 echo "============================================================================================="
                                 echo "Running unit tests with Google Test..."
+                                echo "============================================================================================="
+
+                                sh '''
+                                    cd $PWD/UnitTesting/Gtest/
+                                    ./Spi
+                                    
+                                
+                                '''
                                 echo "============================================================================================="
 
 
@@ -118,17 +126,27 @@ pipeline {
                                 echo "============================================================================================="
                                 echo "Creating code coverage..."
                                 sh '''
-                                    cd Tools/CodeCoverage
-                                    pwd
-                                    cat main.c
-                                    echo "============================================================================================="
-                                    gcc -fprofile-arcs -ftest-coverage -o coverage main.c 
-                                    ./coverage
-                                    gcov -b -o . coverage-main.gcda
-                                    gcov -b -o . coverage-Spi.gcda
-                                    lcov --capture --directory . --output-file coverage.info
-                                    genhtml coverage.info --output-directory out
+                                cd $PWD/UnitTesting/Gtest/
+                                g++ -O0 -fprofile-arcs -ftest-coverage Spi_tests.cpp -L/path/to/gtest/libs -lgtest -lgtest_main -pthread -o Spi_tests
+                                gcov -b -o . Spi_tests.gcda
+                                lcov --capture --directory . --output-file coverage.info
+                                genhtml coverage.info --output-directory out
                                 '''
+
+                                // ./Spi_tests
+                                // gcov Spi_tests.cpp
+
+                                //     cd Tools/CodeCoverage
+                                //     pwd
+                                //     cat main.c
+                                //     echo "============================================================================================="
+                                //     gcc -fprofile-arcs -ftest-coverage -o coverage main.c 
+                                //     ./coverage
+                                    
+                                //     gcov -b -o . coverage-Spi.gcda
+                                //     lcov --capture --directory . --output-file coverage.info
+                                //     genhtml coverage.info --output-directory out
+                                // '''
 
                                 echo "============================================================================================="
                                 echo "Generating code coverage report..."
