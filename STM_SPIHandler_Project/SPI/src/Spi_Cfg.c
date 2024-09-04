@@ -99,8 +99,8 @@ Spi_SeqConfigType Spi_SeqConfig = {
 
 Spi_ConfigType Spi_Config = {
 	.Spi_SeqConfigPtr = &Spi_SeqConfig,
-    .Spi_JobConfigPtr = &jobConfig[0],
-    .Spi_ChannelConfigPtr = &channels[0]
+    .Spi_JobConfigPtr = jobConfig,
+    .Spi_ChannelConfigPtr = &channels
 };
 
 
