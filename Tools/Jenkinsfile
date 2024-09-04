@@ -32,7 +32,7 @@ pipeline {
                             steps {
                                 echo "Building the project ..."
                                 bat '''
-                                cd PWD\\STM_SPIHandler_Project\\SPI\\ 
+                                cd %WORKSPACE%\\STM_SPIHandler_Project\\SPI\\
                                 make clean
                                 make -j16 all
                                 '''
