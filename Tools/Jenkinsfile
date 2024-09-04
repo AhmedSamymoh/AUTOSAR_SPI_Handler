@@ -1,27 +1,20 @@
-/*********************************************
-**********************************************
-* Jenkinsfile for CI Multibranch Pipeline
-* Project: AUTOSAR_SPIHandler_CI
-* Brightskies ©
-**********************************************
-**********************************************/
 pipeline {
     agent { label 'Master' }
     tools {
-        allure ('allure')
+        allure 'allure'
     }
 
     environment {
-        INTEGRATOR_EMAIL = 'ahmeds.elnozahy@gmail.com'  // Set your integrator's email here
+        INTEGRATOR_EMAIL = 'ahmeds.elnozahy@gmail.com'
     }
 
     stages {
         stage('Identify Git Event') {
             steps {
                 script {
-                    if (env.ghprbPullId) { // Use ghprbPullId for PR number
+                    if (env.ghprbPullId) {
                         echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
-                        currentBuild.displayName = "PR-${env.ghprbSourceBranch}-${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"  
+                        currentBuild.displayName = "PR-${env.ghprbSourceBranch}-${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
                     } else {
                         echo "Push Event detected for Build #${env.BUILD_NUMBER}"
                         currentBuild.displayName = "Push - Build #${env.BUILD_NUMBER}"
@@ -29,221 +22,140 @@ pipeline {
                 }
             }
         }
+
         stage('Push Pipeline') {
             parallel {
                 stage('SWE 4') {
                     stages {
-
-                        /*******************************************************Build Stage***********************************************************/
                         stage('Build') {
                             agent { label 'Windows' }
-
                             steps {
-                                    echo "============================================================================================="
-                                    echo "Building the project ..."
-                                    bat """
-                                        ls
-                                    """
-
-                                    echo "============================================================================================="
-                                }
+                                echo "Building the project ..."
+                                bat "ls"
+                            }
                         }
-                        
-                        /************************************************ Static Code Analysis Stage*************************************************/
+
                         stage('Static Code Analysis') {
                             steps {
                                 echo "Running Static Code Analysis..."
-                                echo "============================================================================================="
-                                    echo "Running Static Code Analysis..."
-                                    sh'''
-                                    /var/jenkins_home/MisraC/Misra_src_check.sh STM_SPIHandler_Project/SPI/src/Spi.c
-                                    '''
-                                
-                                echo "============================================================================================="
-                            }
-                        }
-                        
-
-                        
-                        /*************************************************** Unit Testing Stage *******************************************************/
-                        stage('Unit Testing ') {
-                            steps {
-
-                                echo "============================================================================================="
-                                echo "building the Gtest project"
-                                
                                 sh '''
-                                    cd $PWD/UnitTesting/Gtest/
-                                    pwd
-                                    cmake CMakeLists.txt
-                                    
-                                    cmake --build .
-                                
+                                /var/jenkins_home/MisraC/Misra_src_check.sh STM_SPIHandler_Project/SPI/src/Spi.c
                                 '''
-
-
-                                echo "============================================================================================="
-                                echo "Running unit tests with Google Test..."
-                                echo "============================================================================================="
-
-                                sh '''
-                                    cd $PWD/UnitTesting/Gtest/
-                                    ./Spi
-                                    
-                                
-                                '''
-                                echo "============================================================================================="
-
-
                             }
                         }
 
-                         /********************************************* Code Coverage Analysis Stage ****************************************************/
-                        stage('Code Coverage Analysis ') {
+                        stage('Unit Testing') {
                             steps {
-                                echo "============================================================================================="
+                                echo "Building and running unit tests..."
+                                sh '''
+                                cd $PWD/UnitTesting/Gtest/
+                                cmake CMakeLists.txt
+                                cmake --build .
+                                ./Spi
+                                '''
+                            }
+                        }
+
+                        stage('Code Coverage Analysis') {
+                            steps {
                                 echo "Creating code coverage..."
                                 sh '''
                                 cd $PWD/UnitTesting/Gtest/
-
                                 g++ -O0 -fprofile-arcs -ftest-coverage Spi_tests.cpp -L/path/to/gtest/libs -lgtest -lgtest_main -pthread -o Spi_tests
                                 ./Spi_tests
                                 gcov Spi_tests.cpp
-
                                 lcov --capture --directory . --output-file coverage.info
                                 genhtml coverage.info --output-directory out
                                 '''
-
-                                // ./Spi_tests
-                                // gcov Spi_tests.cpp
-                                // rm -f *.gcda *.gcno *.gcov Spi_tests
-
-                                //     cd Tools/CodeCoverage
-                                //     pwd
-                                //     cat main.c
-                                //     gcov -b -o . Spi_tests.gcda
-
-                                //     echo "============================================================================================="
-                                //     gcc -fprofile-arcs -ftest-coverage -o coverage main.c 
-                                //     ./coverage
-                                    
-                                //     gcov -b -o . coverage-Spi.gcda
-                                //     lcov --capture --directory . --output-file coverage.info
-                                //     genhtml coverage.info --output-directory out
-                                // '''
-
-                                echo "============================================================================================="
-                                echo "Generating code coverage report..."
-                                echo "============================================================================================="
                             }
                         }
-                        /******************************************************************************************************************************/   
+
                         stage('Allure Report SUT') {
                             steps {
-                                echo "============================================================================================="
                                 script {
-                                    // if the test fails, the build will not fail
                                     def testResult = sh(script: './UnitTesting/Gtest/Spi --gtest_output=xml:report.xml', returnStatus: true)
                                     sh '''
                                     mkdir -p allure-results
                                     mv report.xml allure-results
-
                                     '''
-                                    
                                     if (testResult != 0) {
                                         echo "Some tests failed. Check the Allure report for details."
                                     }
                                     sh 'allure generate allure-results --clean -o ALLURE_REPORT'
-                                    allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
+                                    allure includeProperties: true, jdk: '', results: [[path: 'ALLURE_REPORT']]
                                 }
-                                echo "============================================================================================="
                             }
                         }
                     }
                 }
             }
-        
+        }
+
         stage('Pull Request Pipeline') {
+            when {
+                expression { env.ghprbPullId }
+            }
             parallel {
                 stage('SWE 5') {
-                    when {
-                        expression { env.ghprbPullId } // Run only for pull request events
-                    }
                     stages {
                         stage('Checkout PR') {
                             steps {
                                 echo 'Checking out the PR branch...'
-                                // Add your checkout or PR-specific steps here
                             }
                         }
+
                         stage('Integration Tests') {
                             steps {
                                 echo 'Running Code Inspection tests...'
-                                // Add your test steps here
                             }
                         }
-                        
                     }
                 }
             }
         }
+
         stage('Release Notes') {
-            parallel {
-                stage('Jira Release Notes') {
-                    when {
-                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }// Run only if the branch is 'master' and it's a pull request event
-                    }
-                    steps {
-                            script {
-                                echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
-                                currentBuild.displayName = "Release Notes v.${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"  
-                            }
-                        echo "Generating Jira release notes..."
-                        dir('/Tools/Jira') {
-                            sh 'apt-get install jq -y'
-                            sh 'chmod 777 ./jira.sh'
-                            sh './jira.sh'
-                            echo "============================================================================================="
-                            echo "Jira Release Notes:"
-                            sh 'cat jira_sprint_issues.txt'
-                            echo "============================================================================================="
-                        }
-                    }
-                } 
+            when {
+                expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+            }
+            steps {
+                script {
+                    echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
+                    currentBuild.displayName = "Release Notes v.${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
+                }
+                echo "Generating Jira release notes..."
+                dir('/Tools/Jira') {
+                    sh 'apt-get install jq -y'
+                    sh 'chmod 777 ./jira.sh'
+                    sh './jira.sh'
+                    echo "Jira Release Notes:"
+                    sh 'cat jira_sprint_issues.txt'
+                }
             }
         }
 
         stage('Email notification') {
-            parallel {
-                stage('Email notification') {
-                    when {
-                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }// Run only if the branch is 'master' and it's a pull request event
-                    }
-
-                    steps {
-                        
-                        script{
-                            def recipientEmails = "${env.INTEGRATOR_EMAIL},${env.COMMITTER_EMAIL}"
-                            // Get the committer's email from the latest commit
-                            def committerEmail = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
-                            env.COMMITTER_EMAIL = committerEmail
-
-                        mail(
-                            to: recipientEmails,
-                            subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                            body: """
-                                <p>Build ${env.BUILD_NUMBER} for job <b>${env.JOB_NAME}</b> finished with status: ${currentBuild.currentResult}</p>
-                                <p>Branch: ${env.BRANCH_NAME}</p>
-                                <p>Commit: ${env.GIT_COMMIT}</p>
-                                <p>Check console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                            """,
-                            mimeType: 'text/html'
-                            )
-                        }
-                    }
-                }       
+            when {
+                expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+            }
+            steps {
+                script {
+                    def committerEmail = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
+                    env.COMMITTER_EMAIL = committerEmail
+                    def recipientEmails = "${env.INTEGRATOR_EMAIL},${env.COMMITTER_EMAIL}"
+                    mail(
+                        to: recipientEmails,
+                        subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                        body: """
+                            <p>Build ${env.BUILD_NUMBER} for job <b>${env.JOB_NAME}</b> finished with status: ${currentBuild.currentResult}</p>
+                            <p>Branch: ${env.BRANCH_NAME}</p>
+                            <p>Commit: ${env.GIT_COMMIT}</p>
+                            <p>Check console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                        """,
+                        mimeType: 'text/html'
+                    )
+                }
             }
         }
     }
-}
 }
