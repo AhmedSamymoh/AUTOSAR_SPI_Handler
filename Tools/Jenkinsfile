@@ -127,9 +127,9 @@ pipeline {
                                 echo "Creating code coverage..."
                                 sh '''
                                 cd $PWD/UnitTesting/Gtest/
-                                rm -f *.gcda *.gcno *.gcov Spi_tests
 
                                 g++ -O0 -fprofile-arcs -ftest-coverage Spi_tests.cpp -L/path/to/gtest/libs -lgtest -lgtest_main -pthread -o Spi_tests
+                                ./Spi_tests
                                 gcov Spi_tests.cpp
 
                                 lcov --capture --directory . --output-file coverage.info
@@ -138,6 +138,7 @@ pipeline {
 
                                 // ./Spi_tests
                                 // gcov Spi_tests.cpp
+//                                 rm -f *.gcda *.gcno *.gcov Spi_tests
 
                                 //     cd Tools/CodeCoverage
                                 //     pwd
