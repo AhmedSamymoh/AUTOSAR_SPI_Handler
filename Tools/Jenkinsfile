@@ -36,26 +36,16 @@ pipeline {
 
                         /*******************************************************Build Stage***********************************************************/
                         stage('Build') {
+                            agent { label 'Windows' }
+
                             steps {
-                                script {
-                                    if (env.BRANCH_NAME == 'Feature1') {
-                                        /*Developer1*/
+                                    echo "============================================================================================="
+                                    echo "Building the project ..."
+                                    bat """
+                                        ls
+                                    """
 
-                                    } else if (env.BRANCH_NAME == 'Feature2') {
-                                        /*Developer2*/
-
-                                    } else if (env.BRANCH_NAME == 'Feature3') {
-                                        /*Developer3*/
-
-
-                                    }else if(env.BRANCH_NAME == 'main') {
-
-                                        echo "============================================================================================="
-                                        echo "Building source code..."
-                                        echo "============================================================================================="
-                                    }else{
-                                        /*Nothing*/
-                                    }
+                                    echo "============================================================================================="
                                 }
                             }
                         }
@@ -64,26 +54,10 @@ pipeline {
                             steps {
                                 echo "Running Static Code Analysis..."
                                 echo "============================================================================================="
-                                script {
-                                    if (env.BRANCH_NAME == 'Feature1') {
-                                        /*Developer1*/  
-                                        
-                                    } else if (env.BRANCH_NAME == 'Feature2') {
-                                        /*Developer2*/  
-                                        
-                                    } else if (env.BRANCH_NAME == 'Feature3') {
-                                        /*Developer3*/  
-                                        
-
-                                    }else if(env.BRANCH_NAME == 'main') {
-                                        echo "Running Static Code Analysis..."
-                                        sh'''
-                                        /var/jenkins_home/MisraC/Misra_src_check.sh STM_SPIHandler_Project/SPI/src/Spi.c
-                                        '''
-
-                                    }else{
-                                        /*Nothing*/
-                                    }
+                                    echo "Running Static Code Analysis..."
+                                    sh'''
+                                    /var/jenkins_home/MisraC/Misra_src_check.sh STM_SPIHandler_Project/SPI/src/Spi.c
+                                    '''
                                 }
                                 echo "============================================================================================="
                             }
