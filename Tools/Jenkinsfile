@@ -13,7 +13,7 @@ pipeline {
 
     environment {
         INTEGRATOR_EMAIL = 'ahmeds.elnozahy@gmail.com'  // Set your integrator's email here
-        }
+    }
 
     stages {
         stage('Identify Git Event') {
@@ -47,8 +47,8 @@ pipeline {
 
                                     echo "============================================================================================="
                                 }
-                            }
                         }
+                        
                         /************************************************ Static Code Analysis Stage*************************************************/
                         stage('Static Code Analysis') {
                             steps {
@@ -58,10 +58,11 @@ pipeline {
                                     sh'''
                                     /var/jenkins_home/MisraC/Misra_src_check.sh STM_SPIHandler_Project/SPI/src/Spi.c
                                     '''
-                                }
+                                
                                 echo "============================================================================================="
                             }
                         }
+                        
 
                         
                         /*************************************************** Unit Testing Stage *******************************************************/
@@ -115,7 +116,7 @@ pipeline {
 
                                 // ./Spi_tests
                                 // gcov Spi_tests.cpp
-//                                 rm -f *.gcda *.gcno *.gcov Spi_tests
+                                // rm -f *.gcda *.gcno *.gcov Spi_tests
 
                                 //     cd Tools/CodeCoverage
                                 //     pwd
@@ -161,7 +162,7 @@ pipeline {
                     }
                 }
             }
-        }
+        
         stage('Pull Request Pipeline') {
             parallel {
                 stage('SWE 5') {
