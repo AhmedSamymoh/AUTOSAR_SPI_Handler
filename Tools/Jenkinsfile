@@ -7,6 +7,9 @@
 **********************************************/
 pipeline {
     agent { label 'Master' }
+    tools {
+        allure ('allure')
+    }
 
     environment {
         INTEGRATOR_EMAIL = 'ahmeds.elnozahy@gmail.com'  // Set your integrator's email here
