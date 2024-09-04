@@ -10,14 +10,17 @@
  */
 
 /********************************************** Section : Includes ********************************************/
-#include "../inc/Spi.h"
 #include "../inc/Spi_Cfg.h"  
+#include "../inc/Spi.h"
 
 
 
 /**************************************** Section: Data Type Declarations **************************************/
 
 /***************************************** Section : User Configurations **************************************/
+
+
+
 Spi_ChannelType SPI_job1_channels[] = {SPI_Channel_1, SPI_Channel_2};
 Spi_ChannelType SPI_job2_channels[] = {SPI_Channel_3, SPI_Channel_4};
 
@@ -103,8 +106,6 @@ Spi_ConfigType Spi_Config = {
 
 
 Spi_ConfigType * Spi_Config_Ptr = &Spi_Config;
-
-
 
 /************************************* Section : Global Variables Definations **********************************/
 

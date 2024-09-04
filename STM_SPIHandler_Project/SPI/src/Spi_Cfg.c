@@ -14,7 +14,8 @@
 /********************************************** Section : Includes ********************************************/
 
 #include "../../AUTOSAR/Std_Types.h"
-#include "../inc/Spi_Cfg.h"      
+#include "../inc/Spi_Cfg.h"     
+#include "../inc/Spi.h" 
 
 #include <stdint.h>
 

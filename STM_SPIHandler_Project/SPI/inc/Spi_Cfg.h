@@ -14,7 +14,6 @@
 
 /********************************************** Section : Includes ********************************************/
 #include "../../AUTOSAR/Std_Types.h"
-#include "Spi.h"
 
 
 
@@ -152,7 +151,7 @@ typedef uint8 Spi_CS_Pin;
 
 /************************************ Section : Global Variables Definations ************************************/
 
-//extern Spi_HWUnitConfigType hwUnitConfig_Job_1;
+// extern Spi_HWUnitConfigType hwUnitConfig_Job_1;
 // extern Spi_HWUnitConfigType hwUnitConfig_Job_2;
 
 // extern Spi_ChannelConfigType channels[];
