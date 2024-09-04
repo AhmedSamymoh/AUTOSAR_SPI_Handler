@@ -31,7 +31,11 @@ pipeline {
                             agent { label 'Windows' }
                             steps {
                                 echo "Building the project ..."
-                                bat "ls"
+                                bat '''
+                                cd PWD\\STM_SPIHandler_Project\\SPI\\ 
+                                make clean
+                                make -j16 all
+                                '''
                             }
                         }
 
@@ -92,68 +96,79 @@ pipeline {
         }
 
         stage('Pull Request Pipeline') {
-            when {
-                expression { env.ghprbPullId }
-            }
             parallel {
-                stage('SWE 5') {
-                    stages {
-                        stage('Checkout PR') {
-                            steps {
-                                echo 'Checking out the PR branch...'
+            stage('SWE 5') {
+                    when {
+                        expression { env.ghprbPullId }
+                    }
+
+                            stages {
+                                stage('Checkout PR') {
+                                    steps {
+                                        echo 'Checking out the PR branch...'
+                                    }
+                                }
+
+                                stage('Integration Tests') {
+                                    steps {
+                                        echo 'Running Code Inspection tests...'
+                                    }
+                                }
                             }
                         }
+                    }
+                }   
+            }      
+        }
 
-                        stage('Integration Tests') {
-                            steps {
-                                echo 'Running Code Inspection tests...'
-                            }
+        stage('Release Notes') {
+            parallel {
+                stage('Jira Release Notes') {
+                    when {
+                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                    }
+                    steps {
+                        script {
+                            echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
+                            currentBuild.displayName = "Release Notes v.${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
+                        }
+                        echo "Generating Jira release notes..."
+                        dir('/Tools/Jira') {
+                            sh 'apt-get install jq -y'
+                            sh 'chmod 777 ./jira.sh'
+                            sh './jira.sh'
+                            echo "Jira Release Notes:"
+                            sh 'cat jira_sprint_issues.txt'
                         }
                     }
                 }
             }
         }
 
-        stage('Release Notes') {
-            when {
-                expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
-            }
-            steps {
-                script {
-                    echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
-                    currentBuild.displayName = "Release Notes v.${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
-                }
-                echo "Generating Jira release notes..."
-                dir('/Tools/Jira') {
-                    sh 'apt-get install jq -y'
-                    sh 'chmod 777 ./jira.sh'
-                    sh './jira.sh'
-                    echo "Jira Release Notes:"
-                    sh 'cat jira_sprint_issues.txt'
-                }
-            }
-        }
-
         stage('Email notification') {
-            when {
-                expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
-            }
-            steps {
-                script {
-                    def committerEmail = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
-                    env.COMMITTER_EMAIL = committerEmail
-                    def recipientEmails = "${env.INTEGRATOR_EMAIL},${env.COMMITTER_EMAIL}"
-                    mail(
-                        to: recipientEmails,
-                        subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                        body: """
-                            <p>Build ${env.BUILD_NUMBER} for job <b>${env.JOB_NAME}</b> finished with status: ${currentBuild.currentResult}</p>
-                            <p>Branch: ${env.BRANCH_NAME}</p>
-                            <p>Commit: ${env.GIT_COMMIT}</p>
-                            <p>Check console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        """,
-                        mimeType: 'text/html'
-                    )
+            parallel {
+            stage('Email notification') {
+                    when {
+                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                    }
+                    steps {
+                        script {
+                            def committerEmail = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
+                            env.COMMITTER_EMAIL = committerEmail
+                            def recipientEmails = "${env.INTEGRATOR_EMAIL},${env.COMMITTER_EMAIL}"
+                            mail(
+                                to: recipientEmails,
+                                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                                body: """
+                                    <p>Build ${env.BUILD_NUMBER} for job <b>${env.JOB_NAME}</b> finished with status: ${currentBuild.currentResult}</p>
+                                    <p>Branch: ${env.BRANCH_NAME}</p>
+                                    <p>Commit: ${env.GIT_COMMIT}</p>
+                                    <p>Check console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                                """,
+                                mimeType: 'text/html'
+                            )
+                        }
+                    }
                 }
             }
         }
