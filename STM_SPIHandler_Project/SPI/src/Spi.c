@@ -277,6 +277,19 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 	return ret;
 }
 
+/**
+ * @brief 
+ * 
+ * This function initializes the SPI driver according `Spi_ConfigType` structure.
+ *  -> Disable the SPI Peripheral Clocks: For each SPI hardware unit (e.g., SPI1, SPI2, etc.)
+ *  -> Reset SPI Control Registers: Reset the control registers (e.g., CR1, CR2, etc.)
+ *  -> Clear the Driver Status: to indicate that the SPI peripheral is no longer initialized or in use.
+ *       
+ * 
+ * @return Std_ReturnType 
+ *
+ * @note De-initialization requires prior Initialization.
+ */
 Std_ReturnType Spi_DeInit (void){
 
 	Std_ReturnType retVar = E_NOT_OK;
@@ -356,6 +369,7 @@ Std_ReturnType Spi_DeInit (void){
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief This service returns the status of the specified SPI Hardware microcontroller 
@@ -456,6 +470,8 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 	
 	return Spi_Status;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /**
