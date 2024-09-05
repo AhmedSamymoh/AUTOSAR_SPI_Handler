@@ -207,63 +207,75 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /**
- * @brief  [SWS_Spi_00179] Spi_ReadIB : Service for reading synchronously one or more data 
- * 		   from an IB SPI Handler/Driver Channel specified by parameter.
- *         
+ * @brief  Service for writing one or more data to an IB SPI Handler/Driver Channel specified by parameter
+ *         [SWS_Spi_00177]  
  * @param  Channel Channel ID.
  * @param  DataBufferPtr Pointer to source data buffer.
  * @return Std_ReturnType :
  * 	          E_OK: Spi_WriteIB command has been accepted 
  *            E_NOT_OK: Spi_WriteIB command has not been accepted
  */
-Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBufferPointer ){
-
-    Std_ReturnType retVar = E_NOT_OK;
-
-    if (Spi_Config_Ptr == NULL_PTR || (Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].BufferType != InternalBuffer) )
-    {
-        Det_ReportError(SPI_SW_moduleID, 0, SPI_READ_IB_SID, SPI_E_UNINIT);
-		retVar = E_NOT_OK;
-    }
-    else if (DataBufferPointer == (Spi_DataBufferType*)NULL_PTR)
+Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* DataBufferPtr)
+{
+	Std_ReturnType ret = E_NOT_OK;
+	
+	if (DataBufferPtr == (Spi_DataBufferType*)NULL_PTR)
 	{
 		/*Det_ReportError with wrong data buffer pointer */
-		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_READ_IB_SID, SPI_E_PARAM_POINTER);
-		retVar = E_NOT_OK;
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_POINTER);
 
+	}else if (Channel < SPI_Channel_1 || Channel > SPI_Channel_4){
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_CHANNEL);
+
+	}else if (Spi_Config_Ptr == (Spi_ConfigType*)NULL_PTR){
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_UNINIT);
+	
+	}else if (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_UNIT);
+	
 	}else{
-				/* Set the channel status to SPI_BUSY */
+
+		/* Set the channel status to SPI_BUSY */
 		Spi_Config.Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
 
 		switch (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint)
 		{
 			case Spi_HWUnit_SPI1:
-				* DataBufferPointer = SPI1->DR;
-				retVar = E_OK; break;
+				/* Write the data to the Data Register */
+				SPI1->DR = *DataBufferPtr;
+				ret = E_OK;
+				break;
 			
 			case Spi_HWUnit_SPI2:
-				* DataBufferPointer = SPI2->DR;
-				retVar = E_OK; break;
+				/* Write the data to the Data Register */
+				SPI2->DR = *DataBufferPtr;
+				ret = E_OK;
+				break;
 
 			case Spi_HWUnit_SPI3:
-				* DataBufferPointer = SPI3->DR;
-				retVar = E_OK; break;
+				/* Write the data to the Data Register */
+				SPI3->DR = *DataBufferPtr;
+				ret = E_OK;
+				break;
 
 			case Spi_HWUnit_SPI4:
-				* DataBufferPointer = SPI4->DR;
-				retVar = E_OK; break;
+				/* Write the data to the Data Register */
+				SPI4->DR = *DataBufferPtr;
+				ret = E_OK;
+				break;
 				
 			default: break;
 		}
-    }
-    return retVar;
-}
 
-////////////////////////////////////////////////////////////////////////////////////////////
+		/* Set the channel status to SPI_IDLE */
+		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
+
+	}
+
+	return ret;
+}
 
 /**
  * @brief 
