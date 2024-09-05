@@ -15,7 +15,7 @@
 /********************************************** Section : Includes ********************************************/
 
 #include "../../AUTOSAR/Std_Types.h"
-#include "Spi_Cfg.h"  
+//#include "Spi_Cfg.h"  
 #include "../../AUTOSAR/det.h"      
 
 
@@ -130,6 +130,67 @@ typedef enum
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
+ * Data Frame Format
+ */
+typedef enum {
+    SPI_DFF_8BITS,
+    SPI_DFF_16BITS
+}Spi_DataFrameFormat;
+
+/*
+ * Clock Speed
+ */
+typedef enum {
+    SPI_SCLK_SPEED_DIV2,
+    SPI_SCLK_SPEED_DIV4,
+    SPI_SCLK_SPEED_DIV8,
+    SPI_SCLK_SPEED_DIV16,
+    SPI_SCLK_SPEED_DIV32,
+    SPI_SCLK_SPEED_DIV64,
+    SPI_SCLK_SPEED_DIV128,
+    SPI_SCLK_SPEED_DIV256
+}Spi_ClockSpeed;
+
+
+
+
+/*
+ * Clock Polarity
+ */
+
+typedef enum {
+   SPI_CPOL_LOW, 
+   SPI_CPOL_HIGH
+}Spi_ClockPolarity;
+
+/*
+ * Clock Phase
+ */
+typedef enum {
+   SPI_CPHA_LOW	, 
+   SPI_CPHA_HIGH
+}Spi_ClockPhase;
+
+
+/*
+ * Async Mode
+ */
+typedef enum {
+    SPI_POLLING_MODE,
+    SPI_INTERRUPT_MODE
+}Spi_AsyncModeType;
+
+/*
+ * CS Port
+ */
+typedef uint8 Spi_CS_Port;
+
+
+/*
+ * CS Pin
+ */
+typedef uint8 Spi_CS_Pin;
 /**
  * @brief   
  * 

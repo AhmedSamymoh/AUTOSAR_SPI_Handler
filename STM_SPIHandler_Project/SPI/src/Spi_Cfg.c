@@ -21,6 +21,92 @@
 
 
 
+Spi_ChannelType SPI_job1_channels[] = {SPI_Channel_1, SPI_Channel_2};
+Spi_ChannelType SPI_job2_channels[] = {SPI_Channel_3, SPI_Channel_4};
+
+
+Spi_HWUnitConfigType hwUnitConfig_Job_1 = {
+    .SpiPrescaller = SPI_SCLK_SPEED_DIV256,   
+    .spiCPOL = SPI_CPOL_LOW,       
+    .spiCPHA = SPI_CPHA_LOW, 
+	.spiDFF = SPI_DFF_16BITS,
+	.DefaultTransmitValue = 0xAAAA 
+};
+
+Spi_HWUnitConfigType hwUnitConfig_Job_2 = {
+    .SpiPrescaller = SPI_SCLK_SPEED_DIV32,   
+    .spiCPOL = SPI_CPOL_HIGH,       
+    .spiCPHA = SPI_CPHA_HIGH, 
+	.spiDFF = SPI_DFF_8BITS,
+	.DefaultTransmitValue = 0xFF
+};
+
+Spi_ChannelConfigType channels[4]= {
+    {
+        .SpiChannelId = SPI_Channel_1,
+        .BufferType = InternalBuffer,
+        .Channel_Status = SPI_UNINIT,
+		.spiCSPort = PORTA,       
+    	.spiCSPin = PIN10     
+    },
+    {
+        .SpiChannelId = SPI_Channel_2,
+        .BufferType = InternalBuffer,
+        .Channel_Status = SPI_UNINIT,
+		.spiCSPort = PORTA,       
+    	.spiCSPin = PIN11   
+    },
+	{
+		.SpiChannelId = SPI_Channel_3,
+		.BufferType = InternalBuffer,
+		.Channel_Status = SPI_UNINIT,
+		.spiCSPort = PORTA,       
+		.spiCSPin = PIN12
+	},
+	{
+		.SpiChannelId = SPI_Channel_4,
+		.BufferType = InternalBuffer,
+		.Channel_Status = SPI_UNINIT,
+		.spiCSPort = PORTA,       
+		.spiCSPin = PIN13
+	}
+};
+
+Spi_JobConfigType jobConfig[2] = {
+    {
+        .SpiJobId = 0,
+        .JobPriority = 0,
+        .ChannelsPtr = SPI_job1_channels,
+		.NoOfChannels = sizeof(SPI_job1_channels)/sizeof(Spi_ChannelType),
+        .spiHWUint = Spi_HWUnit_SPI1,
+        .SpiHWUnitConfig = &hwUnitConfig_Job_1
+    },
+	{
+		.SpiJobId = 1,
+		.JobPriority = 1,
+		.ChannelsPtr = SPI_job2_channels,
+		.NoOfChannels = sizeof(SPI_job2_channels)/sizeof(Spi_ChannelType),
+		.spiHWUint = Spi_HWUnit_SPI2,
+		.SpiHWUnitConfig = &hwUnitConfig_Job_2
+	}
+};
+Spi_SeqConfigType Spi_SeqConfig = {
+	
+	.SpiSeqId = 0,
+    .JobLinkPtr = &jobConfig,
+	.NoOfJobs = 2
+
+};
+
+Spi_ConfigType Spi_Config = {
+	.Spi_SeqConfigPtr = &Spi_SeqConfig,
+    .Spi_JobConfigPtr = &jobConfig,
+    .Spi_ChannelConfigPtr = &channels
+};
+
+
+Spi_ConfigType * Spi_Config_Ptr = &Spi_Config;
+
 
 /**
  * @brief system initialization for mcu clock
