@@ -9,6 +9,11 @@ typedef uint8       Spi_ChannelType;
 typedef uint8       Spi_HWUnitType; 
 #define BIT_MASK            0x01
 
+#define SPI_Channel_1               0u
+#define SPI_Channel_2               1u
+#define SPI_Channel_3               2u
+#define SPI_Channel_4               3u
+
 
 
 /* APIs called with an unexpected value for the pointer */
@@ -275,7 +280,9 @@ typedef struct{
 } SPI_Registers;
 
 SPI_Registers SPI1={0};
-
+SPI_Registers SPI2={0};
+SPI_Registers SPI3={0};
+SPI_Registers SPI4={0};
 
 #define Spi_HWUnit_SPI1                 (Spi_HWUnitType)1u
 #define Spi_HWUnit_SPI2                 (Spi_HWUnitType)2u
@@ -283,3 +290,117 @@ SPI_Registers SPI1={0};
 #define Spi_HWUnit_SPI4                 (Spi_HWUnitType)4u
 
 //////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*
+ * Device Modes
+ * [SWS_Spi_00040] The SPI Handler/Driver handles only the Master mode.
+ */
+#define SPI_DEVICE_MODE_MASTER         1u
+
+/*
+ * Bus Configuration
+ * [SWS_Spi_00050] ⌈The SPI Handler/Driver only supports full-duplex mode.
+ */
+#define SPI_BUS_CONFIG_FULL_DUPLEX     1u
+
+#define SPI1_PORT PORTA
+#define SPI2_PORT PORTB
+#define SPI3_PORT PORTC
+#define SPI4_PORT PORTE
+
+
+#define PORTA 0
+#define PORTB 1
+#define PORTC 2
+#define PORTD 3
+#define PORTE 4 
+#define PORTF 5
+#define PORTG 6
+#define PORTH 7
+
+
+#define PIN0 0
+#define PIN1 1
+#define PIN2 2
+#define PIN3 3
+#define PIN4 4
+#define PIN5 5
+#define PIN6 6
+#define PIN7 7
+#define PIN8 8
+#define PIN9 9
+#define PIN10 10
+#define PIN11 11
+#define PIN12 12
+#define PIN13 13
+/**
+ * nOT USED, BUT hw PIN AND SHOULD BE HERE
+ * 
+ */
+#define PIN14 14
+#define PIN15 15
+
+
+#define E_OK            ((Std_ReturnType)0x00U)      /* Function Return OK */
+#define E_NOT_OK        ((Std_ReturnType)0x01U)      /* Function Return NOT OK */
+
+
+#define STD_ON              0x01u
+#define STD_OFF             0x00u
+
+
+
+
+
+
+
+/*
+ * Spi_ErrorCodes_define
+ * [SWS_Spi_91001]
+ */
+/* APIs called with an unexpected value for the pointer */
+#define SPI_E_PARAM_POINTER             ((uint8)0x10u)
+/* API service called with wrong hardware unit */
+#define SPI_E_PARAM_UNIT                ((uint8)0x0Eu)
+/* API SPI_Init service called while the SPI driver has been already initialized */
+#define SPI_E_ALREADY_INITIALIZED       ((uint8)0x4Au)
+/* API service used without module initialization */
+#define SPI_E_UNINIT                    ((uint8)0x1Au)
+/* API service called with wrong lenghth for EB */
+#define SPI_E_PARAM_LENGTH              ((uint8)0x0Du)
+/* API service called with wrong channel */
+#define SPI_E_PARAM_CHANNEL             ((uint8)0x0Fu)
+
+
+/**
+ * @brief Service ID for Spi_Init 
+ */
+#define SPI_INIT_SID                    ((uint8)0x00u)
+
+/**
+ * @brief Service ID for Spi_DeInit 
+ */
+#define SPI_DEINIT_SID                  ((uint8)0x01u)
+
+/**
+ * @brief Service ID for Spi_WriteIB 
+ */
+#define SPI_WRITE_IB_SID                ((uint8)0x02u)
+
+/**
+ * @brief Service ID for Spi_GetVersionInfo 
+ */
+#define SPI_GET_VERSION_INFO_SID        ((uint8)0x09u)
+
+/**
+ * @brief Service ID for Spi_GetHWUnitStatus 
+ */
+#define SPI_GET_HW_UNIT_STATUS_SID      ((uint8)0x0bu)
+
+
+extern Spi_ConfigType* Spi_Config_Ptr;
+
+
+
