@@ -261,6 +261,11 @@ typedef struct Spi_ConfigType
 #define SPI_WRITE_IB_SID                ((uint8)0x02u)
 
 /**
+ * @brief Service ID for Spi_ReadIB 
+ */
+#define SPI_READ_IB_SID                 ((uint8)0x04u)
+
+/**
  * @brief Service ID for Spi_GetVersionInfo 
  */
 #define SPI_GET_VERSION_INFO_SID        ((uint8)0x09u)
