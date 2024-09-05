@@ -50,13 +50,22 @@ pipeline {
 
                         stage('Unit Testing') {
                             steps {
-                                echo "Building and running unit tests..."
+                                echo "============================================================================================="
+                                echo "building the Gtest project"
                                 sh '''
-                                cd $PWD/UnitTesting/Gtest/
-                                cmake CMakeLists.txt
-                                cmake --build .
-                                ./Spi
+                                    cd $PWD/UnitTesting/Gtest/
+                                    pwd
+                                    cmake CMakeLists.txt
+                                    cmake --build .
                                 '''
+                                echo "============================================================================================="
+                                echo "Running unit tests with Google Test..."
+                                echo "============================================================================================="
+                                sh '''
+                                    cd $PWD/UnitTesting/Gtest/
+                                    ./Spi
+                                '''
+                                echo "============================================================================================="
                             }
                         }
 
@@ -76,18 +85,24 @@ pipeline {
 
                         stage('Allure Report SUT') {
                             steps {
+                                echo "============================================================================================="
                                 script {
+                                    // if the test fails, the build will not fail
                                     def testResult = sh(script: './UnitTesting/Gtest/Spi --gtest_output=xml:report.xml', returnStatus: true)
                                     sh '''
                                     mkdir -p allure-results
                                     mv report.xml allure-results
+
                                     '''
+                                    
                                     if (testResult != 0) {
                                         echo "Some tests failed. Check the Allure report for details."
                                     }
                                     sh 'allure generate allure-results --clean -o ALLURE_REPORT'
-                                    allure includeProperties: true, jdk: '', results: [[path: 'ALLURE_REPORT']]
+                                    allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
                                 }
+                                echo "============================================================================================="
+                                cleanWs()
                             }
                         }
                     }
