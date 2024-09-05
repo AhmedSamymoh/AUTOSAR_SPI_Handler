@@ -226,19 +226,13 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		/*Det_ReportError with wrong data buffer pointer */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_POINTER);
 
-	}else if (Channel < SPI_Channel_1 || Channel > SPI_Channel_4)
-	{
-		/*Det_ReportError with wrong channel ID */
+	}else if (Channel < SPI_Channel_1 || Channel > SPI_Channel_4){
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_CHANNEL);
 
 	}else if (Spi_Config_Ptr == (Spi_ConfigType*)NULL_PTR){
-
-		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_UNINIT);
 	
 	}else if (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
-
-		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_UNIT);
 	
 	}else{
@@ -278,129 +272,89 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		/* Set the channel status to SPI_IDLE */
 		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
 
-
-
-
-/**
- * @brief 
- * 
- *
- *      -> Disable the SPI Peripheral Clocks:
- *       For each SPI hardware unit (e.g., SPI1, SPI2, etc.), you should disable the peripheral clock.
- *       
- *       -> Reset SPI Control Registers:
- *       Reset the control registers (e.g., CR1, CR2, etc.) to their default values.
- *       
- *       
- *       -> Clear the Driver Status:
- *       Update the status of the SPI driver to indicate that the SPI peripheral is no longer initialized or in use.
- *       
- *       
- *       -> Return the Appropriate Status:
- *       If the de-initialization process is successful, return E_OK.
- *       If the de-initialization cannot be completed (e.g., if the SPI was not initialized), return E_NOT_OK.
- * 
- * @return Std_ReturnType 
- */
-
-Std_ReturnType Spi_DeInit (void){
-
-	Std_ReturnType retStatus = E_OK;
-
-
-	#if Spi1_Status == SPI_IDLE
-		/* Disable SPI1 Clock */
-		SPI1_PCLK_DI();
-		/* Reset SPI1 Control Registers */
-		SPI1->CR1 = 0;
-		SPI1->CR2 = 0;
-		SPI1->SR = 0;
-		/* Set the status to uninitialized */
-		Spi1_Status = SPI_UNINIT;
-
-	#else 
-	retStatus == E_NOT_OK
-	#endif
-
-
-
-
-
-	#if Spi2_Status == SPI_IDLE
-		/* Disable SPI2 Clock */
-		SPI2_PCLK_DI();
-		/* Reset SPI2 Control Registers */
-		SPI2->CR1 = 0;
-		SPI2->CR2 = 0;
-		SPI2->SR = 0;
-		/* Set the status to uninitialized */
-		Spi2_Status = SPI_UNINIT;
-
-	#else
-	retStatus == E_NOT_OK
-	#endif
-
-
-
-
-	#if Spi3_Status == SPI_IDLE
-		/* Disable SPI3 Clock */
-		SPI3_PCLK_DI();
-		/* Reset SPI3 Control Registers */
-		SPI3->CR1 = 0;
-		SPI3->CR2 = 0;
-		SPI3->SR = 0;
-		/* Set the status to uninitialized */
-		Spi3_Status = SPI_UNINIT;
-	#else
-	retStatus == E_NOT_OK
-	#endif
-
-
-
-
-	#if Spi4_Status == SPI_IDLE
-		/* Disable SPI4 Clock */
-		SPI4_PCLK_DI();
-		/* Reset SPI4 Control Registers */
-		SPI4->CR1 = 0;
-		SPI4->CR2 = 0;
-		SPI4->SR = 0;
-		/* Set the status to uninitialized */
-		Spi4_Status = SPI_UNINIT;
-	#else
-	retStatus == E_NOT_OK
-	#endif
-
-
-
- 	return retStatus;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 	return ret;
 }
+
+Std_ReturnType Spi_DeInit (void){
+
+	Std_ReturnType retVar = E_NOT_OK;
+
+	if (Spi_Config_Ptr == (Spi_ConfigType*)NULL_PTR){
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_DEINIT_SID, SPI_E_UNINIT);
+		retVar = E_NOT_OK;
+	
+	}else{
+		for (uint8 Jobs_Index = 0; Jobs_Index < Spi_Config.Spi_SeqConfigPtr->NoOfJobs; Jobs_Index++)
+		{
+			Spi_JobConfigType *jobConfig = &(Spi_Config.Spi_JobConfigPtr[Jobs_Index]);
+			switch (jobConfig->spiHWUint){
+				case Spi_HWUnit_SPI1:
+					/* Disable SPI1 Clock */
+					SPI1_PCLK_DI();
+					/* Reset SPI1 Control Registers */
+					SPI1->CR1 = 0;
+					SPI1->CR2 = 0;
+					SPI1->SR = 0;
+					/* Set the status to uninitialized */
+					Spi1_Status = SPI_UNINIT;
+
+					break;
+				case Spi_HWUnit_SPI2:
+					/* Disable SPI2 Clock */
+					SPI2_PCLK_DI();
+					/* Reset SPI2 Control Registers */
+					SPI2->CR1 = 0;
+					SPI2->CR2 = 0;
+					SPI2->SR = 0;
+					/* Set the status to uninitialized */
+					Spi2_Status = SPI_UNINIT;
+
+					break;
+				case Spi_HWUnit_SPI3:
+					/* Disable SPI3 Clock */
+					SPI3_PCLK_DI();
+					/* Reset SPI3 Control Registers */
+					SPI3->CR1 = 0;
+					SPI3->CR2 = 0;
+					SPI3->SR = 0;
+					/* Set the status to uninitialized */
+					Spi3_Status = SPI_UNINIT;
+
+					break;
+				case Spi_HWUnit_SPI4:
+					/* Disable SPI4 Clock */
+					SPI4_PCLK_DI();
+					/* Reset SPI4 Control Registers */
+					SPI4->CR1 = 0;
+					SPI4->CR2 = 0;
+					SPI4->SR = 0;
+					/* Set the status to uninitialized */
+					Spi4_Status = SPI_UNINIT;
+
+					break;	
+				
+				default:
+					break;
+				}
+			for (uint8 channels_index = 0; channels_index < jobConfig->NoOfChannels; channels_index++)
+			{
+				Spi_ChannelType channelId = jobConfig->ChannelsPtr[channels_index]; // Access channel ID
+				Spi_ChannelConfigType *channelConfig = &(Spi_Config.Spi_ChannelConfigPtr[channelId]);
+
+				if (channelConfig->Channel_Status == SPI_IDLE )
+				{
+					channelConfig->Channel_Status = SPI_UNINIT;
+				}
+			}
+			retVar = E_OK;
+		}
+	}
+ 	return retVar;
+}
+
+
 
 
 /**
@@ -507,8 +461,7 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 /**
  * @brief This service returns the version information of this module.
  *  - Service ID [hex] 0x09
- *  - 
- * 
+ *  - Spi_GetVersionInfo
  *  - [SWS_Spi_00184]
  * @param VersionInfo 
  */
@@ -1174,5 +1127,3 @@ void Spi_GPIO_Init(Spi_HWUnitType Spi_select ,uint8 port){
 		break;
 	}
 }
-
-

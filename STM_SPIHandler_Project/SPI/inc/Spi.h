@@ -330,36 +330,20 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit);
 void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 
 
-
-
-
-
-
-
 /**
  * @brief 
  * 
- *
- *      -> Disable the SPI Peripheral Clocks:
- *       For each SPI hardware unit (e.g., SPI1, SPI2, etc.), you should disable the peripheral clock.
+ * This function initializes the SPI driver according `Spi_ConfigType` structure.
+ *  -> Disable the SPI Peripheral Clocks: For each SPI hardware unit (e.g., SPI1, SPI2, etc.)
+ *  -> Reset SPI Control Registers: Reset the control registers (e.g., CR1, CR2, etc.)
+ *  -> Clear the Driver Status: to indicate that the SPI peripheral is no longer initialized or in use.
  *       
- *       -> Reset SPI Control Registers:
- *       Reset the control registers (e.g., CR1, CR2, etc.) to their default values.
- *       
- *       
- *       -> Clear the Driver Status:
- *       Update the status of the SPI driver to indicate that the SPI peripheral is no longer initialized or in use.
- *       
- *       
- *       -> Return the Appropriate Status:
- *       If the de-initialization process is successful, return E_OK.
- *       If the de-initialization cannot be completed (e.g., if the SPI was not initialized), return E_NOT_OK.
  * 
  * @return Std_ReturnType 
+ *
+ * @note De-initialization requires prior Initialization.
  */
 Std_ReturnType Spi_DeInit (void);
-
-
 
 
 #endif /* SPI_H */

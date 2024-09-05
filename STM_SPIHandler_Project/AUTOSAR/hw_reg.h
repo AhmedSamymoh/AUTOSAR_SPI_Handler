@@ -199,10 +199,17 @@ typedef struct{
 #define GPIOG_PCLK_EN()		( RCC->AHB1ENR |= (1 << 6) ) /* GPIOG peripheral clock enabled */
 #define GPIOH_PCLK_EN()		( RCC->AHB1ENR |= (1 << 7) ) /* GPIOH peripheral clock enabled */
 
+
+/* ============ SPIx peripherals  ============ */
 #define SPI1_PCLK_EN()      ( RCC->APB2ENR |= (1 << RCC_APB2ENR_SPI1EN))
 #define SPI4_PCLK_EN()      ( RCC->APB2ENR |= (1 << RCC_APB2ENR_SPI4EN))
 #define SPI2_PCLK_EN()      ( RCC->APB1ENR |= (1 << RCC_APB1ENR_SPI2EN))
 #define SPI3_PCLK_EN()      ( RCC->APB1ENR |= (1 << RCC_APB1ENR_SPI3EN))
+
+#define SPI1_PCLK_DI()      ( RCC->APB2ENR &= ~(1 << RCC_APB2ENR_SPI1EN))
+#define SPI4_PCLK_DI()      ( RCC->APB2ENR &= ~(1 << RCC_APB2ENR_SPI4EN))
+#define SPI2_PCLK_DI()      ( RCC->APB1ENR &= ~(1 << RCC_APB1ENR_SPI2EN))
+#define SPI3_PCLK_DI()      ( RCC->APB1ENR &= ~(1 << RCC_APB1ENR_SPI3EN))
 
 
 
