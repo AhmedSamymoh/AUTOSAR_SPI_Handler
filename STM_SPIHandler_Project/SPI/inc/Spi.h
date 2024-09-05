@@ -15,7 +15,8 @@
 /********************************************** Section : Includes ********************************************/
 
 #include "../../AUTOSAR/Std_Types.h"
-#include "Spi_Cfg.h"        
+#include "Spi_Cfg.h"  
+#include "../../AUTOSAR/det.h"      
 
 
 /**************************************** Section: Data Type Declarations **************************************/
@@ -130,31 +131,34 @@ typedef enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief  
+ * @brief   
  * 
  */
 typedef struct{
-    /* SpiPrescaller Clock Speed                SPI_SCLK_SPEED_DIV2 : SPI_SCLK_SPEED_DIV256 */
-    Spi_ClockSpeed       SpiPrescaller;         
-    /* Clock Polarity                           SPI_CPOL_LOW : SPI_CPOL_HIGH */
-	Spi_ClockPolarity    spiCPOL;
-    /* Clock Phase                              SPI_CPHA_LOW : SPI_CPHA_HIGH */               
-	Spi_ClockPhase       spiCPHA;               
-    /*Chip Select Port                          PORTA : PORTH */
-    Spi_CS_Port          spiCSPort;             
-    /*Chip Select Pin                           PIN0 : PIN15 */
-    Spi_CS_Pin           spiCSPin;              
+    Spi_DataFrameFormat  spiDFF;                /* Data Frame Format:  ( SPI_DFF_8BITS : SPI_DFF_16BITS ) */    
+
+    Spi_ClockSpeed       SpiPrescaller;         /* SpiPrescaller Clock Speed  ( SPI_SCLK_SPEED_DIV2 : SPI_SCLK_SPEED_DIV256 ) */
+
+    uint32               DefaultTransmitValue;  /* Default Transmit Value.    ( 0x0000 : 0xFFFF ) */  
+    
+	Spi_ClockPolarity    spiCPOL;               /* Clock Polarity             ( SPI_CPOL_LOW : SPI_CPOL_HIGH ) */
+                  
+	Spi_ClockPhase       spiCPHA;               /* Clock Phase                ( SPI_CPHA_LOW : SPI_CPHA_HIGH ) */ 
+
 } Spi_HWUnitConfigType;
 
 
 typedef struct
 {
     Spi_ChannelType      SpiChannelId;          /* Channel ID used with APIs */
+
     Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
-    Spi_DataFrameFormat  spiDFF;                /* Data Frame Format: SPI_DFF_8BITS : SPI_DFF_16BITS */
-    uint32               DefaultTransmitValue; /* Default Transmit Value. */ 
-    Spi_NumberOfDataType Length;                /* size of . */
-    Spi_StatusType       Status;                /* channel internal state. */
+
+    Spi_StatusType       Channel_Status;        /* Channel internal state. For First Init Config This should be SPI_UNINIT */
+
+    Spi_CS_Port          spiCSPort;             /* Chip Select Port  ( PORTA : PORTH )*/
+    
+    Spi_CS_Pin           spiCSPin;              /* Chip Select Pin  ( PIN0 : PIN15 ) */
 
 } Spi_ChannelConfigType;
 
@@ -162,17 +166,26 @@ typedef struct
 typedef struct 
 {   
     Spi_JobType           SpiJobId;             /* Job ID used with APIs */
+
     Spi_HWUnitType        spiHWUint;            /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
+    
     uint8                 JobPriority;          /* Job Priority ranging from 0 (Lowest) to 3 (Highest)*/ 
-    Spi_ChannelConfigType *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
+    
+    Spi_ChannelType       *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
+    
+    Spi_ChannelType       NoOfChannels;         /* Number of Channels configured asscociated with the job*/
+    
     Spi_HWUnitConfigType  *SpiHWUnitConfig;     /* Pointer to HW unit configuration */  
+
 }Spi_JobConfigType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 typedef struct 
 {
     Spi_JobConfigType     *JobLinkPtr;           /* Ptr to jobs IDs asscociated with the Sequence*/
+
     Spi_JobType           NoOfJobs;			     /* Number of Jobs configured */
+
     Spi_SequenceType      SpiSeqId;              /* Sequence ID used with APIs */ 
 }Spi_SeqConfigType;
 
@@ -180,22 +193,19 @@ typedef struct
 
 typedef struct Spi_ConfigType
 {
-    /* Number of Channels configured */
-    Spi_ChannelType NoOfChannels;
-    
+    /* pointer to sequence configuration */
+    Spi_SeqConfigType * Spi_SeqConfigPtr;
+
     /* pointer to job configuration */
     Spi_JobConfigType * Spi_JobConfigPtr; 
    
     /* Pointer to channel configuration  */
     Spi_ChannelConfigType * Spi_ChannelConfigPtr ;   
 
-}Spi_ConfigType;
-
-
-
+} Spi_ConfigType;
 
 /************************************ Section: Macro Declarations ************************************/
-
+                                                                                    
 /*
  * SPI Module Version Info
  */
@@ -217,29 +227,87 @@ typedef struct Spi_ConfigType
 
 
 
+/*
+ * Spi_ErrorCodes_define
+ * [SWS_Spi_91001]
+ */
+/* APIs called with an unexpected value for the pointer */
+#define SPI_E_PARAM_POINTER             ((uint8)0x10u)
+/* API service called with wrong hardware unit */
+#define SPI_E_PARAM_UNIT                ((uint8)0x0Eu)
+/* API SPI_Init service called while the SPI driver has been already initialized */
+#define SPI_E_ALREADY_INITIALIZED       ((uint8)0x4Au)
+/* API service used without module initialization */
+#define SPI_E_UNINIT                    ((uint8)0x1Au)
+/* API service called with wrong lenghth for EB */
+#define SPI_E_PARAM_LENGTH              ((uint8)0x0Du)
+/* API service called with wrong channel */
+#define SPI_E_PARAM_CHANNEL             ((uint8)0x0Fu)
+
+
+/**
+ * @brief Service ID for Spi_Init 
+ */
+#define SPI_INIT_SID                    ((uint8)0x00u)
+
+/**
+ * @brief Service ID for Spi_DeInit 
+ */
+#define SPI_DEINIT_SID                  ((uint8)0x01u)
+
+/**
+ * @brief Service ID for Spi_WriteIB 
+ */
+#define SPI_WRITE_IB_SID                ((uint8)0x02u)
+
+/**
+ * @brief Service ID for Spi_GetVersionInfo 
+ */
+#define SPI_GET_VERSION_INFO_SID        ((uint8)0x09u)
+
+/**
+ * @brief Service ID for Spi_GetHWUnitStatus 
+ */
+#define SPI_GET_HW_UNIT_STATUS_SID      ((uint8)0x0bu)
+
+
 /************************************ Section : Global Variables Definations ************************************/
 
-Std_VersionInfoType Spi_VersionInfo = {
-    .vendorID = SPI_SW_vendor_ID,
-    .moduleID = SPI_SW_moduleID,
-    .sw_major_version = SPI_SW_major_version,
-    .sw_minor_version = SPI_SW_minor_version,
-    .sw_patch_version = SPI_SW_patch_version
-};
+
 
 /************************************* Section : Macro Functions Definations ************************************/
 
 /*************************************** Section : Functions Declarations ***************************************/
 
+
 /**
- * @brief 
- * Spi_Init : [SWS_Spi_00184]
+ * @brief Initializes the SPI driver. [SWS_Spi_00184]
+ *
+ * This function initializes the SPI driver according `Spi_ConfigType` structure. It is 
+ * responsible for setting up the SPI channels, jobs, and hardware units as specified in the 
+ * configuration. The function checks whether the driver has already been initialized and 
+ * reports errors if there are issues with re-initialization or invalid pointers.
  * 
- * @param ConfigPtr 
+ * @param ConfigPtr Pointer to the SPI configuration structure.
+ *                  If NULL , an error is reported.
+ *
+ * @return None.
+ *
+ * @note Re-initialization requires prior de-initialization.
  */
 void Spi_Init(const Spi_ConfigType* ConfigPtr);
 
 
+/**
+ * @brief  Service for writing one or more data to an IB SPI Handler/Driver Channel specified by parameter
+ *         [SWS_Spi_00177]  
+ * @param  Channel Channel ID.
+ * @param  DataBufferPtr Pointer to source data buffer.
+ * @return Std_ReturnType :
+ * 	          E_OK: Spi_WriteIB command has been accepted 
+ *            E_NOT_OK: Spi_WriteIB command has not been accepted
+ */
+Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* DataBufferPtr);
 
 /**
  * @brief This service returns the status of the specified SPI Har
@@ -295,4 +363,3 @@ Std_ReturnType Spi_DeInit (void);
 
 
 #endif /* SPI_H */
-

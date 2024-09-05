@@ -20,10 +20,10 @@
 /**************************************************************************************************************/
 /***************************************** Section : User Configurations **************************************/
 /**************************************************************************************************************/
-#define SPI_Channel_1               1u
-#define SPI_Channel_2               2u
-#define SPI_Channel_3               3u
-
+#define SPI_Channel_1               0u
+#define SPI_Channel_2               1u
+#define SPI_Channel_3               2u
+#define SPI_Channel_4               3u
 
 /**************************************** Section: Data Type Declarations **************************************/
 
@@ -110,6 +110,10 @@ typedef uint8 Spi_CS_Pin;
  */
 #define SPI_BUS_CONFIG_FULL_DUPLEX     1u
 
+#define SPI1_PORT PORTA
+#define SPI2_PORT PORTB
+#define SPI3_PORT PORTC
+#define SPI4_PORT PORTE
 
 
 #define PORTA 0
@@ -136,12 +140,30 @@ typedef uint8 Spi_CS_Pin;
 #define PIN11 11
 #define PIN12 12
 #define PIN13 13
+/**
+ * nOT USED, BUT hw PIN AND SHOULD BE HERE
+ * 
+ */
 #define PIN14 14
 #define PIN15 15
 
 
 
 /************************************ Section : Global Variables Definations ************************************/
+
+// extern Spi_HWUnitConfigType hwUnitConfig_Job_1;
+// extern Spi_HWUnitConfigType hwUnitConfig_Job_2;
+
+// extern Spi_ChannelConfigType channels[];
+
+// extern Spi_JobConfigType jobConfig[];
+
+// extern Spi_SeqConfigType Spi_SeqConfig;
+
+// extern Spi_ConfigType Spi_Config;
+// extern Spi_ConfigType * Spi_Config_Ptr;
+
+
 
 /************************************* Section : Macro Functions Definations ************************************/
 

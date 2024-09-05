@@ -49,31 +49,23 @@ void Det_Init (const Det_ConfigType* ConfigPtr){
  */
 Std_ReturnType Det_ReportError( uint16 ModuleId, uint8 InstanceId, uint8 ApiId, uint8 ErrorId)
 {
-    /* Det initialization */
-    if (Det_Init_Flag)
-    {   
-        /* There is more space in the buffer */
-        if (Det_Error_Buffer_index < DET_MAX_ERROR_BUFFER)
-        {
-            Det_Error_Buffer->ApiId = ApiId;
-            Det_Error_Buffer->ErrorId=ErrorId;
-            Det_Error_Buffer->InstanceId=InstanceId;
-            Det_Error_Buffer->ModuleId =ModuleId;
-        }
-        else
-        {
-            /* Not enough buffer space */
-            for(;;);
-
-            return E_NOT_OK;
-        }
-
-    }
-    else 
+ 
+    /* There is more space in the buffer */
+    if (Det_Error_Buffer_index < DET_MAX_ERROR_BUFFER)
     {
-        /* DET not initialized */
+        Det_Error_Buffer->ApiId = ApiId;
+        Det_Error_Buffer->ErrorId=ErrorId;
+        Det_Error_Buffer->InstanceId=InstanceId;
+        Det_Error_Buffer->ModuleId =ModuleId;
+    }
+    else
+    {
+        /* Not enough buffer space */
+        for(;;);
+
         return E_NOT_OK;
-    }    
+    }
+
     /* Error data stored in buffer */
     return E_OK;
 }

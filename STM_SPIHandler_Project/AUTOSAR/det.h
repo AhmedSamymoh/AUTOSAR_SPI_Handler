@@ -55,13 +55,13 @@ typedef struct det
 
 /************************************ Section : Global Variables Definations ************************************/
 
-Std_VersionInfoType Det_VersionInfo = {
-    .vendorID = DET_SW_vendor_ID,
-    .moduleID = DET_SW_moduleID,
-    .sw_major_version = DET_SW_major_version,
-    .sw_minor_version = DET_SW_minor_version,
-    .sw_patch_version = DET_SW_patch_version
-};
+// Std_VersionInfoType Det_VersionInfo = {
+//     .vendorID = DET_SW_vendor_ID,
+//     .moduleID = DET_SW_moduleID,
+//     .sw_major_version = DET_SW_major_version,
+//     .sw_minor_version = DET_SW_minor_version,
+//     .sw_patch_version = DET_SW_patch_version
+// };
 
 /************************************* Section : Macro Functions Definations ************************************/
 
@@ -96,12 +96,12 @@ Std_ReturnType Det_ReportError (uint16 ModuleId, uint8 InstanceId, uint8 ApiId, 
 
 
 
-/**
- * @brief Returns the version information of this module
- * 
- * @param versioninfo : Pointer to where to store the version information of this module.
- */
-void Det_GetVersionInfo (Std_VersionInfoType* versioninfo);
+// /**
+//  * @brief Returns the version information of this module
+//  * 
+//  * @param versioninfo : Pointer to where to store the version information of this module.
+//  */
+// void Det_GetVersionInfo (Std_VersionInfoType* versioninfo);
 
 
 
