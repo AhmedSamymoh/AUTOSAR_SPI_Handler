@@ -288,67 +288,42 @@ typedef struct Spi_ConfigType
 /**
  * @brief Initializes the SPI driver. [SWS_Spi_00184]
  *
- * This function initializes the SPI driver according `Spi_ConfigType` structure. It is 
- * responsible for setting up the SPI channels, jobs, and hardware units as specified in the 
- * configuration. The function checks whether the driver has already been initialized and 
- * reports errors if there are issues with re-initialization or invalid pointers.
- * 
- * @param ConfigPtr Pointer to the SPI configuration structure.
- *                  If NULL , an error is reported.
- *
- * @return None.
- *
- * @note Re-initialization requires prior de-initialization.
  */
 void Spi_Init(const Spi_ConfigType* ConfigPtr);
+
+/**
+ * @brief This function initializes the SPI driver according `Spi_ConfigType` structure.
+ */
+Std_ReturnType Spi_DeInit (void);
 
 
 /**
  * @brief  Service for writing one or more data to an IB SPI Handler/Driver Channel specified by parameter
  *         [SWS_Spi_00177]  
- * @param  Channel Channel ID.
- * @param  DataBufferPtr Pointer to source data buffer.
- * @return Std_ReturnType :
- * 	          E_OK: Spi_WriteIB command has been accepted 
- *            E_NOT_OK: Spi_WriteIB command has not been accepted
- */
+*/
 Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* DataBufferPtr);
 
 /**
- * @brief This service returns the status of the specified SPI Har
- * dware microcontroller 
- * peripheral.
- * Spi_GetHWUnitStatus : [SWS_Spi_00186]
- * 
- * @param HWUnit 
- * @return Spi_StatusType : SPI_UNINIT, SPI_IDLE, SPI_BUSY
+ * @brief  [SWS_Spi_00179] Spi_ReadIB : Service for reading synchronously one or more data 
+ * 		   from an IB SPI Handler/Driver Channel specified by parameter.
  */
+Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBufferPointer );
+
+/**
+ * @brief This service returns the status of the specified SPI Har
+ * dware microcontroller peripheral.
+*/
 Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit);
 
 
 /**
  * @brief This service returns the version information of this module.
  * Spi_GetVersionInfo : [SWS_Spi_00184]
- * 
- * @param VersionInfo 
  */
 void Spi_GetVersionInfo(Std_VersionInfoType *VersionInfo);
 
 
-/**
- * @brief 
- * 
- * This function initializes the SPI driver according `Spi_ConfigType` structure.
- *  -> Disable the SPI Peripheral Clocks: For each SPI hardware unit (e.g., SPI1, SPI2, etc.)
- *  -> Reset SPI Control Registers: Reset the control registers (e.g., CR1, CR2, etc.)
- *  -> Clear the Driver Status: to indicate that the SPI peripheral is no longer initialized or in use.
- *       
- * 
- * @return Std_ReturnType 
- *
- * @note De-initialization requires prior Initialization.
- */
-Std_ReturnType Spi_DeInit (void);
+
 
 
 #endif /* SPI_H */
