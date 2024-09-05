@@ -11,9 +11,6 @@ void SetUp() {
 
 }
 
-
-
-
 Spi_ChannelType SPI_job1_channels[] = {0, 1};
 Spi_ChannelType SPI_job2_channels[] = {2, 3};
 
@@ -107,7 +104,8 @@ Spi_ConfigType Spi_Config = {
 ////////////////////////////////////////
 //Spi_Config_Ptr = &Spi_Config;
 //Spi_DataBufferType* DataBufferPtr = &channels;
-Spi_DataBufferType* DataBufferPtr = (Spi_DataBufferType*)channels;
+Spi_DataBufferType data =9;
+Spi_DataBufferType* DataBufferPtr = &data;
 Spi_ConfigType*  Spi_Config_Ptr = (Spi_ConfigType* )NULL_PTR;
 //extern 
 ///////////////////////////////////////
@@ -196,23 +194,7 @@ SetUp_test3(&Spi_Config);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_INIT_SID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_ALREADY_INITIALIZED);
 }
-/*
-// Test Case
-TEST(Spi_Init, Config_Nulll) {
-    // Arrange
-    SetUp();
 
-    // Act
-    Spi_Init(&Spi_Conf);
-
-    // Assert
-    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
-    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
-    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_INIT_SID);
-    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_POINTER);
-}
-
-*/
 
 // Test Case
 TEST(Spi_WriteIB,NULL_PTRrr) {
@@ -329,6 +311,94 @@ Spi_WriteIB ( 3 , DataBufferPtr);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_WRITE_IB_SID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_UNIT);
 }
+
+
+////////////////////////////////////////////////////////////////////
+
+
+
+TEST(Spi_WriteIBBB_job,SPIs_if_much) {
+   
+    // Arrange
+    SetUp();
+    //static Spi_StatusType Spi1_Status = SPI_UNINIT;
+//SetUp_test3(&Spi_Config);
+
+    // // Act
+    // Spi_Init(&Spi_Config);
+Spi_Config_Ptr = &Spi_Config;
+  Spi_JobConfigType *jobConfig = &( Spi_Config_Ptr->Spi_JobConfigPtr[1]);
+  jobConfig-> spiHWUint = 7; 
+Spi_WriteIB ( 3 , DataBufferPtr);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+    // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
+
+
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_WRITE_IB_SID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_UNIT);
+}
+
+
+
+
+
+TEST(SpiS_LESS_MINI_hw,SPIs_tooo_LOW) {
+   
+    // Arrange
+    SetUp();
+    //static Spi_StatusType Spi1_Status = SPI_UNINIT;
+//SetUp_test3(&Spi_Config);
+
+    // // Act
+    // Spi_Init(&Spi_Config);
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_JobConfigType *jobConfig = &( Spi_Config_Ptr->Spi_JobConfigPtr[1]);
+jobConfig->spiHWUint = -7; 
+
+Spi_WriteIB ( 2 , DataBufferPtr);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+    // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
+
+
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_WRITE_IB_SID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_UNIT);
+}
+
+
+
+TEST(Spi_WriteIB_ELSE,RIGHT) {
+   
+    // Arrange
+    SetUp();
+    //static Spi_StatusType Spi1_Status = SPI_UNINIT;
+//SetUp_test3(&Spi_Config);
+
+    // // Act
+    // Spi_Init(&Spi_Config);
+
+Spi_Config_Ptr = &Spi_Config;
+// Spi_JobConfigType *jobConfig = &( Spi_Config_Ptr->Spi_JobConfigPtr[1]);
+// jobConfig->spiHWUint = -7; 
+
+Spi_WriteIB ( 2 , DataBufferPtr);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+    // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
+
+
+    EXPECT_EQ(SPI1.DR, 9);
+    EXPECT_EQ(SPI2.DR, 9);
+
+}
+
+
 
 
 int main(int argc, char **argv) {

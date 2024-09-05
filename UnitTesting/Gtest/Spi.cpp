@@ -77,8 +77,6 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
  * 	          E_OK: Spi_WriteIB command has been accepted 
  *            E_NOT_OK: Spi_WriteIB command has not been accepted
  */
-
-
 Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* DataBufferPtr)
 {
 	Std_ReturnType ret = E_NOT_OK;
@@ -99,7 +97,8 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_UNINIT);
 	
-	}else if (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
+	}
+	else if (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
 
 		/*Det_ReportError with wrong channel ID */
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_UNIT);
@@ -107,7 +106,6 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 	}
     
     else{
-        
 
 		/* Set the channel status to SPI_BUSY */
 		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Status=SPI_BUSY;
