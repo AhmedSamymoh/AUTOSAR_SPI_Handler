@@ -23,7 +23,7 @@
 extern Spi_ConfigType Spi_Config;
 int main(void)
 {
-    System_Init();
+    //System_Init();
 	Spi_Init(&Spi_Config);
     /* Loop forever */
 	for(;;);

@@ -75,6 +75,7 @@ Spi_ChannelConfigType channels[SPI_Channels]= {
 Spi_JobConfigType jobConfig[SPI_Jobs] = {
     {
         .SpiJobId = 0,
+		.Job_Status = SPI_JOB_PENDING,
         .JobPriority = 0,
         .ChannelsPtr = SPI_job1_channels,
 		.NoOfChannels = sizeof(SPI_job1_channels)/sizeof(Spi_ChannelType),
@@ -83,6 +84,7 @@ Spi_JobConfigType jobConfig[SPI_Jobs] = {
     },
 	{
 		.SpiJobId = 1,
+		.Job_Status = SPI_JOB_PENDING,
 		.JobPriority = 1,
 		.ChannelsPtr = SPI_job2_channels,
 		.NoOfChannels = sizeof(SPI_job2_channels)/sizeof(Spi_ChannelType),
@@ -91,8 +93,9 @@ Spi_JobConfigType jobConfig[SPI_Jobs] = {
 	}
 };
 Spi_SeqConfigType Spi_SeqConfig = {
-	
+
 	.SpiSeqId = 0,
+	.Seq_Status = SPI_SEQ_PENDING,
     .JobLinkPtr = &jobConfig,
 	.NoOfJobs = 2
 

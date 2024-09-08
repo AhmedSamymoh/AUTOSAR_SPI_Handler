@@ -153,8 +153,6 @@ typedef enum {
 }Spi_ClockSpeed;
 
 
-
-
 /*
  * Clock Polarity
  */
@@ -213,9 +211,9 @@ typedef struct
 {
     Spi_ChannelType      SpiChannelId;          /* Channel ID used with APIs */
 
-    Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
-
     Spi_StatusType       Channel_Status;        /* Channel internal state. For First Init Config This should be SPI_UNINIT */
+
+    Spi_BufferType       BufferType;            /* Buffer Type InternalBuffer/ExternalBuffer. */
 
     Spi_CS_Port          spiCSPort;             /* Chip Select Port  ( PORTA : PORTH )*/
     
@@ -228,6 +226,8 @@ typedef struct
 {   
     Spi_JobType           SpiJobId;             /* Job ID used with APIs */
 
+    Spi_JobResultType     Job_Status;           /* Job internal state. */
+
     Spi_HWUnitType        spiHWUint;            /*SPI Hardware Unit: SPI1/SPI4/SPI3/SPI4 */
     
     uint8                 JobPriority;          /* Job Priority ranging from 0 (Lowest) to 3 (Highest)*/ 
@@ -235,7 +235,7 @@ typedef struct
     Spi_ChannelType       *ChannelsPtr;         /* Ptr to channels asscociated with the job */ 
     
     Spi_ChannelType       NoOfChannels;         /* Number of Channels configured asscociated with the job*/
-    
+
     Spi_HWUnitConfigType  *SpiHWUnitConfig;     /* Pointer to HW unit configuration */  
 
 }Spi_JobConfigType;
@@ -243,12 +243,15 @@ typedef struct
 ////////////////////////////////////////////////////////////////////////////////////////////
 typedef struct 
 {
+    Spi_SequenceType      SpiSeqId;              /* Sequence ID used with APIs */ 
+
+    Spi_SeqResultType     Seq_Status;            /* Sequence internal state. */
+
     Spi_JobConfigType     *JobLinkPtr;           /* Ptr to jobs IDs asscociated with the Sequence*/
 
     Spi_JobType           NoOfJobs;			     /* Number of Jobs configured */
 
-    Spi_SequenceType      SpiSeqId;              /* Sequence ID used with APIs */ 
-}Spi_SeqConfigType;
+} Spi_SeqConfigType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -357,7 +360,6 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr);
  */
 Std_ReturnType Spi_DeInit (void);
 
-
 /**
  * @brief  Service for writing one or more data to an IB SPI Handler/Driver Channel specified by parameter
  *         [SWS_Spi_00177]  
@@ -371,8 +373,19 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBufferPointer );
 
 /**
- * @brief This service returns the status of the specified SPI Har
- * dware microcontroller peripheral.
+* @brief : Spi_GetJobResult [SWS_Spi_00182] : This service returns the last transmission
+*          result of the specified Job.
+**/
+Spi_JobResultType Spi_GetJobResult(Spi_JobType Job);
+
+/**
+* @brief : Spi_GetSequenceResult [SWS_Spi_00183]:  This service returns the last transmission 
+*	  	  result of the specified Sequence.
+**/
+Spi_SeqResultType Spi_GetSequenceResult(Spi_SequenceType Sequence);
+
+/**
+ * @brief This service returns the status of the specified SPI Hardware microcontroller peripheral.
 */
 Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit);
 

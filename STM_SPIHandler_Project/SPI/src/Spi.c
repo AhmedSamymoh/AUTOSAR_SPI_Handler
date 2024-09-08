@@ -82,6 +82,9 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 	}
 	else
 	{
+		
+		ConfigPtr->Spi_SeqConfigPtr->Seq_Status = SPI_SEQ_PENDING;
+
 		for (uint8 Jobs_Index = 0; Jobs_Index < ConfigPtr->Spi_SeqConfigPtr->NoOfJobs; Jobs_Index++)
 		{
 		    Spi_JobConfigType *jobConfig = &(ConfigPtr->Spi_JobConfigPtr[Jobs_Index]);
@@ -97,6 +100,7 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 		            /* Set SPI status to SPI_IDLE after initialization */
 		            channelConfig->Channel_Status = SPI_IDLE;
+
 		        }
 		        else
 		        {
@@ -108,12 +112,19 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 					/*Det_ReportError with SPI_Init service called while the SPI driver has been already initialized */
 
 		            Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_INIT_SID, SPI_E_ALREADY_INITIALIZED );
+					 
+					ConfigPtr->Spi_SeqConfigPtr->Seq_Status = SPI_SEQ_FAILED;
+					ConfigPtr->Spi_JobConfigPtr[Jobs_Index].Job_Status = SPI_JOB_FAILED;
 		        }
+				
 		    }
 
 		    /* Initialize the SPI Hardware Unit */
 		    Spi_lhw_Init(jobConfig->spiHWUint, jobConfig->SpiHWUnitConfig);
+			ConfigPtr->Spi_JobConfigPtr[Jobs_Index].Job_Status = SPI_JOB_OK;
+			
 		}
+		ConfigPtr->Spi_SeqConfigPtr->Seq_Status = SPI_SEQ_OK;
 
 	}
 }
@@ -195,7 +206,9 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 		}
 
 		/* Set the channel status to SPI_IDLE */
-		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
+		Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_IDLE;
+		jobConfig->Job_Status = SPI_JOB_OK;
+		Spi_Config.Spi_SeqConfigPtr->Seq_Status = SPI_JOB_OK;
 
 	}
 
@@ -218,6 +231,7 @@ Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBuf
 
     Std_ReturnType retVar = E_NOT_OK;
 	Spi_JobConfigType * jobConfig ;
+
 
     if (Spi_Config_Ptr == NULL_PTR || (Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].BufferType != InternalBuffer) )
     {
@@ -243,6 +257,8 @@ Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBuf
 		
 		/* Set the channel status to SPI_BUSY */
 		Spi_Config.Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
+		jobConfig->Job_Status = SPI_JOB_PENDING;
+		Spi_Config.Spi_SeqConfigPtr->Seq_Status = SPI_SEQ_PENDING;
 
 		switch (jobConfig->spiHWUint)
 		{
@@ -271,6 +287,8 @@ Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBuf
 		}
 
 		Spi_Config.Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_IDLE;
+		jobConfig->Job_Status = SPI_JOB_OK;
+		Spi_Config.Spi_SeqConfigPtr->Seq_Status = SPI_JOB_OK;
     }
     return retVar;
 }
@@ -472,6 +490,34 @@ Spi_StatusType Spi_GetHWUnitStatus (Spi_HWUnitType HWUnit){
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+* @brief : Spi_GetJobResult [SWS_Spi_00182] : This service returns the last transmission
+		  result of the specified Job.
+*
+* @param: Job: Job ID
+* @return : Spi_JobResultType: SPI_JOB_OK - SPI_JOB_PENDING - SPI_JOB_FAILED - SPI_JOB_QUEUED
+* 
+* @Description: 
+**/
+Spi_JobResultType Spi_GetJobResult(Spi_JobType Job)
+{
+    return Spi_Config.Spi_JobConfigPtr[Job].Job_Status;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+* @brief : Spi_GetSequenceResult [SWS_Spi_00183]:  This service returns the last transmission 
+		  result of the specified Sequence.
+*
+* @param : Sequence: Sequence ID. 
+* @return : Spi_SeqResultType: SPI_SEQ_OK - SPI_SEQ_PENDING - SPI_SEQ_FAILED - SPI_SEQ_QUEUED
+* 
+**/
+Spi_SeqResultType Spi_GetSequenceResult(Spi_SequenceType Sequence)
+{
+    return Spi_Config.Spi_SeqConfigPtr[Sequence].Seq_Status;
+}
 
 /**
  * @brief This service returns the version information of this module.

@@ -1,0 +1,30 @@
+GNU gdb (GNU Tools for STM32 12.3.rel1.20240612-1315) 13.2.90.20230627-git
+Copyright (C) 2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "--host=x86_64-w64-mingw32 --target=arm-none-eabi".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+Spi_lhw_Init (HWUnitId=1 '\001', HWUnit=0x20000008 <hwUnitConfig_Job_1>)
+    at ../SPI/src/Spi.c:625
+625				Spi1_Status = SPI_IDLE;
+Unable to match requested speed 2000 kHz, using 1800 kHz
+Unable to match requested speed 2000 kHz, using 1800 kHz
+[STM32F446RETx.cpu] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x08000e88 msp: 0x20020000
+Breakpoint 1 at 0x8000484: file ../SPI/src/Spi.c, line 625.
+Note: automatically using hardware breakpoints for read-only addresses.
+
+Breakpoint 1, Spi_lhw_Init (HWUnitId=1 '\001', 
+    HWUnit=0x20000008 <hwUnitConfig_Job_1>) at ../SPI/src/Spi.c:625
+625				Spi1_Status = SPI_IDLE;
+$1 = 1
+(gdb) 
