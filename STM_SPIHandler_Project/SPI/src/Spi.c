@@ -133,7 +133,9 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
  */
 Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* DataBufferPtr)
 {
-	Std_ReturnType ret = E_NOT_OK;
+    Std_ReturnType retVar = E_NOT_OK;
+	Spi_JobConfigType * jobConfig ;
+
 	
 	if (DataBufferPtr == (Spi_DataBufferType*)NULL_PTR)
 	{
@@ -151,33 +153,42 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 	
 	}else{
 
+		/* Search for the job that contains the given channel */
+		for (uint8 Jobs_Index = 0; Jobs_Index < Spi_Config.Spi_SeqConfigPtr->NoOfJobs; Jobs_Index++)
+		{
+			* jobConfig = (Spi_Config.Spi_JobConfigPtr[Jobs_Index]);
+			if (jobConfig->ChannelsPtr[Channel] == Channel){
+				break;
+			}
+		}
+
 		/* Set the channel status to SPI_BUSY */
 		Spi_Config.Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
 
-		switch (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint)
+		switch (jobConfig->spiHWUint)
 		{
 			case Spi_HWUnit_SPI1:
 				/* Write the data to the Data Register */
 				SPI1->DR = *DataBufferPtr;
-				ret = E_OK;
+				retVar = E_OK;
 				break;
 			
 			case Spi_HWUnit_SPI2:
 				/* Write the data to the Data Register */
 				SPI2->DR = *DataBufferPtr;
-				ret = E_OK;
+				retVar = E_OK;
 				break;
 
 			case Spi_HWUnit_SPI3:
 				/* Write the data to the Data Register */
 				SPI3->DR = *DataBufferPtr;
-				ret = E_OK;
+				retVar = E_OK;
 				break;
 
 			case Spi_HWUnit_SPI4:
 				/* Write the data to the Data Register */
 				SPI4->DR = *DataBufferPtr;
-				ret = E_OK;
+				retVar = E_OK;
 				break;
 				
 			default: break;
@@ -188,7 +199,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 
 	}
 
-	return ret;
+	return retVar;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -206,6 +217,7 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBufferPointer ){
 
     Std_ReturnType retVar = E_NOT_OK;
+	Spi_JobConfigType * jobConfig ;
 
     if (Spi_Config_Ptr == NULL_PTR || (Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].BufferType != InternalBuffer) )
     {
@@ -219,10 +231,20 @@ Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBuf
 		retVar = E_NOT_OK;
 
 	}else{
-				/* Set the channel status to SPI_BUSY */
+		/* Search for the job that contains the given channel */
+		for (uint8 Jobs_Index = 0; Jobs_Index < Spi_Config.Spi_SeqConfigPtr->NoOfJobs; Jobs_Index++)
+		{
+			* jobConfig = (Spi_Config.Spi_JobConfigPtr[Jobs_Index]);
+			if (jobConfig->ChannelsPtr[Channel] == Channel){
+				break;
+			}
+		}
+		
+		
+		/* Set the channel status to SPI_BUSY */
 		Spi_Config.Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_BUSY;
 
-		switch (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint)
+		switch (jobConfig->spiHWUint)
 		{
 			case Spi_HWUnit_SPI1:
 				* DataBufferPointer = SPI1->DR;
@@ -240,8 +262,15 @@ Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBuf
 				* DataBufferPointer = SPI4->DR;
 				retVar = E_OK; break;
 				
-			default: break;
+			default:
+				/* Handle unknown SPI hardware unit */
+				Det_ReportError(SPI_SW_moduleID, 0, SPI_READ_IB_SID, SPI_E_UNINIT);
+				retVar = E_NOT_OK;
+
+			break;
 		}
+
+		Spi_Config.Spi_ChannelConfigPtr[Channel].Channel_Status=SPI_IDLE;
     }
     return retVar;
 }

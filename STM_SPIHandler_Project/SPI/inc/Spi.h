@@ -196,7 +196,7 @@ typedef uint8 Spi_CS_Pin;
  * 
  */
 typedef struct{
-    Spi_DataFrameFormat  spiDFF;                /* Data Frame Format:  ( SPI_DFF_8BITS : SPI_DFF_16BITS ) */    
+    Spi_DataFrameFormat  spiDFF;                /* Data Frame Format:         ( SPI_DFF_8BITS : SPI_DFF_16BITS ) */    
 
     Spi_ClockSpeed       SpiPrescaller;         /* SpiPrescaller Clock Speed  ( SPI_SCLK_SPEED_DIV2 : SPI_SCLK_SPEED_DIV256 ) */
 

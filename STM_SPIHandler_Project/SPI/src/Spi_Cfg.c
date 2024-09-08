@@ -41,7 +41,7 @@ Spi_HWUnitConfigType hwUnitConfig_Job_2 = {
 	.DefaultTransmitValue = 0xFF
 };
 
-Spi_ChannelConfigType channels[4]= {
+Spi_ChannelConfigType channels[SPI_Channels]= {
     {
         .SpiChannelId = SPI_Channel_1,
         .BufferType = InternalBuffer,
@@ -72,7 +72,7 @@ Spi_ChannelConfigType channels[4]= {
 	}
 };
 
-Spi_JobConfigType jobConfig[2] = {
+Spi_JobConfigType jobConfig[SPI_Jobs] = {
     {
         .SpiJobId = 0,
         .JobPriority = 0,

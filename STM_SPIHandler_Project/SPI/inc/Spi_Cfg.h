@@ -25,6 +25,10 @@
 #define SPI_Channel_3               2u
 #define SPI_Channel_4               3u
 
+#define SPI_Channels                4u
+#define SPI_Jobs                    2u
+
+
 /**************************************** Section: Data Type Declarations **************************************/
 
 
