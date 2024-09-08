@@ -122,7 +122,7 @@ pipeline {
                                     steps {
                                         bat '''
                                         cd %WORKSPACE%\\Tools\\IntegrationTesting\\
-                                        start /B openocd.exe -f .\Nucleo_F446NE_Debug.cfg
+                                        start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
                                         .\\batch.bat
                                         py.test.exe .\\Debbugging.py  
                                         '''
