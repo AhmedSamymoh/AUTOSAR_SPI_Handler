@@ -117,16 +117,15 @@ pipeline {
                         expression { env.ghprbPullId }
                     }
 
-                            stages {
-                                stage('Checkout PR') {
-                                    steps {
-                                        echo 'Checking out the PR branch...'
-                                    }
-                                }
-
                                 stage('Integration Tests') {
+                                    agent { label 'Windows' }
                                     steps {
-                                        echo 'Running Code Inspection tests...'
+                                        bat '''
+                                        cd %WORKSPACE%\\Tools\\IntegrationTesting\\
+                                        start /B openocd.exe -f .\Nucleo_F446NE_Debug.cfg
+                                        .\\batch.bat
+                                        py.test.exe .\\Debbugging.py  
+                                        '''
                                     }
                                 }
                             }
