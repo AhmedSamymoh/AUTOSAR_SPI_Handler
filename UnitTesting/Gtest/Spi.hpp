@@ -1,3 +1,7 @@
+
+#ifndef SPI_HPP /* File guard */
+#define SPI_HPP
+
 typedef unsigned char       uint8;
 typedef unsigned long       uint32;
 typedef uint8               Std_ReturnType;
@@ -8,11 +12,14 @@ typedef uint16      Spi_JobType;
 typedef uint8       Spi_ChannelType;   
 typedef uint8       Spi_HWUnitType; 
 #define BIT_MASK            0x01
-
 #define SPI_Channel_1               0u
 #define SPI_Channel_2               1u
 #define SPI_Channel_3               2u
 #define SPI_Channel_4               3u
+
+
+// Spi_ChannelType SPI_job1_channels[] = {0, 1};
+// Spi_ChannelType SPI_job2_channels[] = {2, 3};
 
 
 
@@ -400,7 +407,14 @@ SPI_Registers SPI4={0};
 #define SPI_GET_HW_UNIT_STATUS_SID      ((uint8)0x0bu)
 
 
+#define SPI_READ_IB_SID                 ((uint8)0x04u)
+
 extern Spi_ConfigType* Spi_Config_Ptr;
 
+extern Spi_JobConfigType *jobCConfig ;
+extern Spi_ConfigType Spi_Config;
 
+extern Spi_ChannelType SPI_job1_channels[2] ;
+extern Spi_ChannelType SPI_job2_channels[2] ;
 
+#endif
