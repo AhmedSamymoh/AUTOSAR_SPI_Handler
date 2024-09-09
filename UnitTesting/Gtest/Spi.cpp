@@ -1,6 +1,5 @@
+
 #include "Spi.hpp"
-
-
 
 uint8 ChipSelect_count =0; 
 uint8  Spi_lhw_count=0;
@@ -8,6 +7,7 @@ uint8 CHECK_LIMITS=0;
 uint8 check =0;
 uint8 CHECK_SPI_VAL1=0;
 uint8 check_status=0;
+uint8 check_read=0;
 // Spi_ChannelType SPI_job1_channels[] = {0, 1};
 // Spi_ChannelType SPI_job2_channels[] = {2, 3};
 
@@ -22,6 +22,16 @@ return;
 static void Spi_lhw_Init(const Spi_HWUnitType HWUnitId, const Spi_HWUnitConfigType * HWUnit ){
  Spi_lhw_count++;
 return;
+}
+
+// Reset the SPI1 register before each test
+void SetUp() {
+    SPI1.CR1 = 0x00000800;  // Clear the CR1 register
+    Det_Error_Buffer[Det_Error_Buffer_index] = {0}; 
+	Spi_ConfigType*  Spi_Config_Ptr = (Spi_ConfigType* )NULL_PTR;
+ ChipSelect_count =0; 
+  Spi_lhw_count=0;
+
 }
 
 
@@ -102,7 +112,8 @@ Std_ReturnType Spi_WriteIB (Spi_ChannelType Channel, const Spi_DataBufferType* D
 	}else if (Spi_Config_Ptr == (Spi_ConfigType*)NULL_PTR){
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_UNINIT);
 	
-	}else if (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
+	}
+	else if (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4 || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_WRITE_IB_SID, SPI_E_PARAM_UNIT);
 	CHECK_SPI_VAL1=Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint;
 	}
@@ -190,38 +201,64 @@ Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBuf
 
     Std_ReturnType retVar = E_NOT_OK;
 
-    if (Spi_Config_Ptr == NULL_PTR || (Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].BufferType != InternalBuffer) )
+	check_read=9;
+	// Spi_ConfigType*  Spi_Config_Ptr = (Spi_ConfigType* )NULL_PTR;
+// if (Spi_Config_Ptr == (Spi_ConfigType*)NULL_PTR){
+// 		Det_ReportError(SPI_SW_moduleID, (uint8) 0,  SPI_READ_IB_SID, SPI_E_UNINIT);
+// 		check_read=91;
+	
+// 	}
+//  else 
+if ( (Spi_Config_Ptr == (Spi_ConfigType*)NULL_PTR) || (Spi_Config_Ptr->Spi_ChannelConfigPtr[Channel].BufferType != InternalBuffer) )
     {
         Det_ReportError(SPI_SW_moduleID, 0, SPI_READ_IB_SID, SPI_E_UNINIT);
 		retVar = E_NOT_OK;
+		check_read=70;
     }
+	
     else if (DataBufferPointer == (Spi_DataBufferType*)NULL_PTR)
 	{
 		/*Det_ReportError with wrong data buffer pointer */
 		
 		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_READ_IB_SID, SPI_E_PARAM_POINTER);
 		retVar = E_NOT_OK;
+		check_read=80;
+		
 
-	}else{
+	}
+	else if ( (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint > Spi_HWUnit_SPI4) || Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint < Spi_HWUnit_SPI1){
+		Det_ReportError(SPI_SW_moduleID, (uint8) 0, SPI_READ_IB_SID, SPI_E_PARAM_UNIT);
+		check_read=85;
+	}
+	
+	else{
+		check_read=90;
+
 				/* Set the channel status to SPI_BUSY */
 	Spi_Config.Spi_ChannelConfigPtr[Channel].Status=SPI_BUSY;
 
 		switch (Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint)
 		{
+			
 			case Spi_HWUnit_SPI1:
 				* DataBufferPointer = SPI1.DR;
-				retVar = E_OK; break;
+				retVar = E_OK; 
+				check_read=1;
+				break;
 			
 			case Spi_HWUnit_SPI2:
 				* DataBufferPointer = SPI2.DR;
+				check_read=2;
 				retVar = E_OK; break;
 
 			case Spi_HWUnit_SPI3:
 				* DataBufferPointer = SPI3.DR;
+				check_read=3;
 				retVar = E_OK; break;
 
 			case Spi_HWUnit_SPI4:
 				* DataBufferPointer = SPI4.DR;
+				check_read=4;
 				retVar = E_OK; break;
 				
 			default: break;
@@ -229,8 +266,5 @@ Std_ReturnType Spi_ReadIB ( Spi_ChannelType Channel, Spi_DataBufferType* DataBuf
     }
     return retVar;
 }
-
-
-
 
 
