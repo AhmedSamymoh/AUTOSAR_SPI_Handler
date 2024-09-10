@@ -22,8 +22,8 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-AUTOSAR \
-SPI/src \
+COM/MCAL/SPI/src \
+Common \
 Src \
 Startup \
 

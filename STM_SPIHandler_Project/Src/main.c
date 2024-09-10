@@ -17,7 +17,7 @@
  */
 
 #include <stdint.h>
-#include "../SPI/inc/Spi.h"
+#include "../COM/MCAL/SPI/inc/Spi.h"
 
 
 extern Spi_ConfigType Spi_Config;

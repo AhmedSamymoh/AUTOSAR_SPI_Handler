@@ -13,7 +13,7 @@
 #define SPI_CFG_H
 
 /********************************************** Section : Includes ********************************************/
-#include "../../AUTOSAR/Std_Types.h"
+#include "../../../../Common/Std_Types.h"
 #include "Spi.h"
 
 
