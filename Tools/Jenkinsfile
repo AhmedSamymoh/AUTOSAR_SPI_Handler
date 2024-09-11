@@ -103,6 +103,11 @@ pipeline {
                                     allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
                                 }
                                 echo "============================================================================================="
+
+                                bat '''
+                                cd %WORKSPACE%\\Tools\\IntegrationTesting\\
+                                start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
+                                '''
                             }
                         }
                     }
@@ -122,13 +127,14 @@ pipeline {
                             steps {
                                 bat '''
                                 cd %WORKSPACE%\\Tools\\IntegrationTesting\\
+                                start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
+                                .\\batch.bat
                                 py.test.exe .\\Debbugging.py  
                                 '''
                             }
 
                                 // 
-                                // start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
-                                // .\\batch.bat
+
                         }
                     }
                 }
