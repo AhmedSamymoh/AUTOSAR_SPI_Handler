@@ -12,7 +12,7 @@ pipeline {
         stage('Identify Git Event') {
             steps {
                 script {
-                    if (env.    ) {
+                    if (env.ghprbPullId) {
                         echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
                         currentBuild.displayName = "PR-${env.ghprbSourceBranch}-${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
                     } else {
