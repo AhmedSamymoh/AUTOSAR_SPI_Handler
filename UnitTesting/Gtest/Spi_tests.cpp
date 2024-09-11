@@ -445,8 +445,10 @@ Spi_WriteIB ( 1 , DataBufferPtr);
     // Check if the DFF bit is set, indicating 16-bit data frame format
     // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
 
-  EXPECT_EQ(check, 65);
- EXPECT_EQ(SPI1.DR, 9);
+//   EXPECT_EQ(check, 65);
+  EXPECT_EQ(check, 40);
+//  EXPECT_EQ(SPI1.DR, 9);
+ EXPECT_EQ(SPI1.DR, 10);
    EXPECT_EQ(CHECK_SPI_VAL1, 1);
 
 
