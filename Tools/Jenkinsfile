@@ -123,21 +123,9 @@ pipeline {
                                 bat '''
                                 cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
-                                
-                                '''
-                                bat '''
-                                
-                                cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 .\\batch.bat
+                                py.test.exe .\\Debbugging.py  
                                 '''
-                                bat '''
-                                
-                                cd %WORKSPACE%\\Tools\\IntegrationTesting\\
-                                py.test.exe .\\Debbugging.py
-                                '''
-
-                                cleanWs()
-
                             }
                         }
                     }
