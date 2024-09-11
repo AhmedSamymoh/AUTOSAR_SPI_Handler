@@ -103,7 +103,6 @@ pipeline {
                                     allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
                                 }
                                 echo "============================================================================================="
-                                cleanWs()
                             }
                         }
                     }
@@ -131,6 +130,9 @@ pipeline {
                                 cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 py.test.exe .\\Debbugging.py
                                 '''
+
+                                cleanWs()
+
                             }
                         }
                     }
