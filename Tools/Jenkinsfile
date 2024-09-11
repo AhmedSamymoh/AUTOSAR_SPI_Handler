@@ -127,6 +127,10 @@ pipeline {
                                 .\\batch.bat
                                 py.test.exe .\\Debbugging.py
                                 '''
+                                bat '''
+                                cd %WORKSPACE%\\Tools\\IntegrationTesting\\
+                                py.test.exe .\\Debbugging.py
+                                '''
                             }
                         }
                     }
