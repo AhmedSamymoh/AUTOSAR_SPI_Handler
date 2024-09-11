@@ -8,7 +8,7 @@ set GDB_SCRIPT=O:\Jenkins\workspace\_SPIH-CI_Brightskies_main\Tools\IntegrationT
 set OUTPUT_FILE=O:\Jenkins\workspace\_SPIH-CI_Brightskies_main\Tools\IntegrationTesting\out.txt
 
 :: Define the timeout in seconds (e.g., 30 seconds)
-set TIMEOUT=3
+set TIMEOUT=2
 
 :: Start GDB and run the script, redirecting output to the file
 arm-none-eabi-gdb -x "%GDB_SCRIPT%" > "%OUTPUT_FILE%" 2>&1
