@@ -52,8 +52,10 @@ void SPI_TransmitReceive(uint8 *txData, uint8 *rxData, int size)
     temp = SPI1->SR;
 }
 
-uint8 Data = 0xAA;
-uint8 * Data_rx = &Data;
+uint8 rxData = 0;
+uint8 txData = 0xAA;
+uint8 * Data_tx = &txData;
+uint8 * Data_rx = &rxData;
 extern Spi_ConfigType Spi_Config;
 
 int main(void)
@@ -64,6 +66,6 @@ int main(void)
 	//Spi_WriteIB(SPI_Channel_0, (uint16)Data_rx);
     /* Loop forever */
 	while(1){
-		SPI_TransmitReceive(0xFF, Data_rx, 20);
+		SPI_TransmitReceive(Data_tx, Data_rx, 20);
 	}
 }

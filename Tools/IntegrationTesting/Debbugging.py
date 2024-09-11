@@ -1,7 +1,7 @@
 import pytest
 
 def test_spi_init():
-    output_file = 'O:\\Jenkins\\workspace\\_SPIH-CI_Brightskies_main\\Tools\\IntegrationTesting\\out.txt'
+    output_file = 'C:\\Users\\ahmed\\Desktop\\AUTOSAR\\SPIHandler\\AUTOSAR_SPI_Handler\\Tools\\IntegrationTesting\\out.txt'
 
     # Read the output file
     with open(output_file, 'r') as file:

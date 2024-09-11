@@ -129,7 +129,6 @@ pipeline {
                                 cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 py.test.exe .\\Debbugging.py  
                                 '''
-                                // cleanWs()
                             }
                         }
                     }
