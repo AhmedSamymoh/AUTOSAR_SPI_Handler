@@ -5,7 +5,7 @@ setlocal
 set GDB_SCRIPT=C:\Users\ahmed\Desktop\AUTOSAR\SPIHandler\AUTOSAR_SPI_Handler\Tools\IntegrationTesting\script.gdb
 
 :: Define the output file
-set OUTPUT_FILE=C:\Users\ahmed\Desktop\AUTOSAR\SPIHandler\AUTOSAR_SPI_Handler\Tools\IntegrationTesting\out.txt
+set OUTPUT_FILE=O:\Jenkins\workspace\_SPIH-CI_Brightskies_main\Tools\IntegrationTesting\out.txt
 
 :: Define the timeout in seconds (e.g., 30 seconds)
 set TIMEOUT=5
