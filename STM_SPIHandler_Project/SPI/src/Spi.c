@@ -75,7 +75,7 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
  *
  * @note Re-initialization requires prior de-initialization.
  */ 
-// adding new commentt
+// adding new comment for testing
 void Spi_Init(const Spi_ConfigType* ConfigPtr)
 {
 	if (ConfigPtr == NULL_PTR)
