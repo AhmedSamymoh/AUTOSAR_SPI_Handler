@@ -12,7 +12,7 @@ pipeline {
         stage('Identify Git Event') {
             steps {
                 script {
-                    if (env.ghprbPullId) {
+                    if (env.    ) {
                         echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
                         currentBuild.displayName = "PR-${env.ghprbSourceBranch}-${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
                     } else {
@@ -44,7 +44,8 @@ pipeline {
                             steps {
                                 echo "Running Static Code Analysis..."
                                 sh '''
-                                /var/jenkins_home/MisraC/Misra_src_check.sh STM_SPIHandler_Project/COM/MCAL/SPI/src/Spi.c
+                                cd $PWD/STM_SPIHandler_Project/COM/MCAL/SPI/src/
+                                /var/jenkins_home/MisraC/Misra_src_check.sh Spi.c
                                 '''
                             }
                         }
