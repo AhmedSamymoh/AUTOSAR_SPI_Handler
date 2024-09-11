@@ -20,7 +20,6 @@ pipeline {
                         currentBuild.displayName = "Push - Build #${env.BUILD_NUMBER}"
                     }
                 }
-                cleanWs()
             }
         }
 
