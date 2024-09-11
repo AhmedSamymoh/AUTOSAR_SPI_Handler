@@ -58,6 +58,8 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
 
 ////////////////////////////////////////////////////////////////////////////////////////////.
 
+
+
 /**
  * @brief Initializes the SPI driver. [SWS_Spi_00184]
  *
@@ -72,7 +74,8 @@ static void Spi_ChipSelect_Write(Spi_CS_Pin CS_Pin ,Spi_CS_Port CS_Port , Std_Re
  * @return None.
  *
  * @note Re-initialization requires prior de-initialization.
- */
+ */ 
+// adding new test
 void Spi_Init(const Spi_ConfigType* ConfigPtr)
 {
 	if (ConfigPtr == NULL_PTR)
