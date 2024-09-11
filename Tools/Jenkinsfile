@@ -44,7 +44,7 @@ pipeline {
                             steps {
                                 echo "Running Static Code Analysis..."
                                 sh '''
-                                cd $PWD/STM_SPIHandler_Project/COM/MCAL/SPI/src/
+                                cd ${WORKSPACE}/STM_SPIHandler_Project/COM/MCAL/SPI/src/
                                 /var/jenkins_home/MisraC/Misra_src_check.sh Spi.c
                                 '''
                             }
