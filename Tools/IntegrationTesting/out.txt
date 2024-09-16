@@ -17,12 +17,12 @@ Type "apropos word" to search for commands related to "word".
 Unable to match requested speed 2000 kHz, using 1800 kHz
 Unable to match requested speed 2000 kHz, using 1800 kHz
 [STM32F446RETx.cpu] halted due to debug-request, current mode: Thread 
-xPSR: 0x01000000 pc: 0x08000e88 msp: 0x20020000
-Breakpoint 1 at 0x8000484: file ../SPI/src/Spi.c, line 625.
+xPSR: 0x01000000 pc: 0x08000f24 msp: 0x20020000
+Breakpoint 1 at 0x800042c: file ../COM/MCAL/SPI/src/Spi.c, line 625.
 Note: automatically using hardware breakpoints for read-only addresses.
 
 Breakpoint 1, Spi_lhw_Init (HWUnitId=1 '\001', 
-    HWUnit=0x20000008 <hwUnitConfig_Job_1>) at ../SPI/src/Spi.c:625
+    HWUnit=0x20000008 <hwUnitConfig_Job_1>) at ../COM/MCAL/SPI/src/Spi.c:625
 625				Spi1_Status = SPI_IDLE;
-$1 = 0
+$1 = 1
 (gdb) 

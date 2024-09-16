@@ -12,7 +12,7 @@ pipeline {
         stage('Identify Git Event') {
             steps {
                 script {
-                    if (env.    ) {
+                    if (env.ghprbPullId) {
                         echo "This is a pull request from branch: ${env.ghprbSourceBranch}"
                         currentBuild.displayName = "PR-${env.ghprbSourceBranch}-${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
                     } else {
@@ -20,7 +20,6 @@ pipeline {
                         currentBuild.displayName = "Push - Build #${env.BUILD_NUMBER}"
                     }
                 }
-                cleanWs()
             }
         }
 
@@ -44,7 +43,7 @@ pipeline {
                             steps {
                                 echo "Running Static Code Analysis..."
                                 sh '''
-                                cd $PWD/STM_SPIHandler_Project/COM/MCAL/SPI/src/
+                                cd ${WORKSPACE}/STM_SPIHandler_Project/COM/MCAL/SPI/src/
                                 /var/jenkins_home/MisraC/Misra_src_check.sh Spi.c
                                 '''
                             }
@@ -104,7 +103,8 @@ pipeline {
                                     allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
                                 }
                                 echo "============================================================================================="
-                                cleanWs()
+
+
                             }
                         }
                     }
@@ -125,9 +125,16 @@ pipeline {
                                 bat '''
                                 cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
+                                '''
+                                bat '''
+                                cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 .\\batch.bat
+                                py.test.exe .\\Debbugging.py  
                                 '''
                             }
+
+                                // 
+
                         }
                     }
                 }
