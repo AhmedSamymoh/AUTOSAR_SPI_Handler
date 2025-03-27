@@ -122,6 +122,8 @@ pipeline {
                         stage('Integration Tests') {
                             agent { label 'Windows' }
                             steps {
+
+                                echo "Running Debugging scripts"
                                 // bat '''
                                 // cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 // start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
