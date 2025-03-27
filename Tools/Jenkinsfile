@@ -115,8 +115,9 @@ pipeline {
         stage('Pull Request Pipeline') {
             parallel {
                 stage('SWE 5') {
-                    expression { 
-                        return env.CHANGE_ID != null  // Runs only if triggered by a PR
+                    when {
+                        expression { return env.CHANGE_ID != null}
+                        //expression { env.ghprbPullId }
                     }
                     stages {
                         stage('Integration Tests') {
@@ -148,10 +149,8 @@ pipeline {
             parallel {
                 stage('Jira Release Notes') {
                     when {
-                        expression { 
-                            return env.CHANGE_ID != null  // Runs only if triggered by a PR
-                        }
-                        // expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                        expression { return env.CHANGE_ID != null}
+                        //expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
                     }
                     steps {
                         script {
@@ -174,9 +173,10 @@ pipeline {
         stage('Email notification') {
             parallel {
             stage('Email notification') {
-                    expression { 
-                        return env.CHANGE_ID != null  // Runs only if triggered by a PR
-                    }
+                    when {
+                        expression { return env.CHANGE_ID != null}
+                        //expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                    }                    
                     steps {
                         script {
                             def committerEmail = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
