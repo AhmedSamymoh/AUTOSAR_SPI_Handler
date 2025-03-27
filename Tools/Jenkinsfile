@@ -115,9 +115,9 @@ pipeline {
         stage('Pull Request Pipeline') {
             parallel {
                 stage('SWE 5') {
-                    // when {
-                    //     expression { env.ghprbPullId }
-                    // }
+                    when {
+                        expression { env.ghprbPullId }
+                    }
                     stages {
                         stage('Integration Tests') {
                             agent { label 'Windows' }
