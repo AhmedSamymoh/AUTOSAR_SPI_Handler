@@ -4,6 +4,7 @@ pipeline {
         allure 'allure'
     }
 
+    
     environment {
         INTEGRATOR_EMAIL = 'ahmeds.elnozahy@gmail.com'
     }
@@ -176,8 +177,7 @@ pipeline {
                     when {
                         expression { return env.CHANGE_ID != null}
                         //expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
-                    }      
-                
+                    }                    
                     steps {
                         script {
                             def committerEmail = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
