@@ -44,7 +44,7 @@ pipeline {
                                 echo "Running Static Code Analysis..."
                                 sh '''
                                 cd ${WORKSPACE}/STM_SPIHandler_Project/COM/MCAL/SPI/src/
-                                /var/jenkins_home/MisraC/Misra_src_check.sh Spi.c
+                                /var/jenkins_home/CI-CD-Jenkins/Static_Code_Analysis/Misra_src_chech.sh Spi.c
                                 '''
                             }
                         }
@@ -100,7 +100,7 @@ pipeline {
                                         echo "Some tests failed. Check the Allure report for details."
                                     }
                                     sh 'allure generate allure-results --clean -o ALLURE_REPORT'
-                                    allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
+                                    //allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
                                 }
                                 echo "============================================================================================="
 
@@ -154,13 +154,13 @@ pipeline {
                             currentBuild.displayName = "Release Notes v.${env.ghprbPullId} - Build #${env.BUILD_NUMBER}"
                         }
                         echo "Generating Jira release notes..."
-                        dir('/Tools/Jira') {
-                            sh 'apt-get install jq -y'
-                            sh 'chmod 777 ./jira.sh'
-                            sh './jira.sh'
-                            echo "Jira Release Notes:"
-                            sh 'cat jira_sprint_issues.txt'
-                        }
+                        // dir('/Tools/Jira') {
+                        //     sh 'apt-get install jq -y'
+                        //     sh 'chmod 777 ./jira.sh'
+                        //     sh './jira.sh'
+                        //     echo "Jira Release Notes:"
+                        //     sh 'cat jira_sprint_issues.txt'
+                        // }
                     }
                 }
             }
