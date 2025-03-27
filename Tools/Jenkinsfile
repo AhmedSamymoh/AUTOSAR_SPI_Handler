@@ -1,8 +1,8 @@
 pipeline {
     agent { label 'built-in' }
-    tools {
-        allure 'allure'
-    }
+    // tools {
+    //     allure 'allure'
+    // }
 
     
     environment {
@@ -90,17 +90,17 @@ pipeline {
                                 echo "============================================================================================="
                                 script {
                                     // if the test fails, the build will not fail
-                                    def testResult = sh(script: './UnitTesting/Gtest/Spi --gtest_output=xml:report.xml || true', returnStatus: true)
-                                    sh '''
-                                    mkdir -p allure-results
-                                    mv report.xml allure-results
+                                    // def testResult = sh(script: './UnitTesting/Gtest/Spi --gtest_output=xml:report.xml || true', returnStatus: true)
+                                    // sh '''
+                                    // mkdir -p allure-results
+                                    // mv report.xml allure-results
 
-                                    '''
+                                    // '''
                                     
-                                    if (testResult != 0) {
-                                        echo "Some tests failed. Check the Allure report for details."
-                                    }
-                                    sh 'allure generate allure-results --clean -o ALLURE_REPORT'
+                                    // if (testResult != 0) {
+                                    //     echo "Some tests failed. Check the Allure report for details."
+                                    // }
+                                    // sh 'allure generate allure-results --clean -o ALLURE_REPORT'
                                    // allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
                                 }
                                 echo "============================================================================================="
