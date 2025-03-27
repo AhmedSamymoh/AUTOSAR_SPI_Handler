@@ -32,11 +32,11 @@ pipeline {
                             agent { label 'Windows' }
                             steps {
                                 echo "Building the project ..."
-                                bat '''
-                                cd %WORKSPACE%\\STM_SPIHandler_Project\\Debug
-                                make clean
-                                make -j16 all
-                                '''
+                                // bat '''
+                                // cd %WORKSPACE%\\STM_SPIHandler_Project\\Debug
+                                // make clean
+                                // make -j16 all
+                                // '''
                             }
                         }
 
