@@ -3,15 +3,6 @@
 
 
 
-// Reset the SPI1 register before each test
-void SetUp() {
-    SPI1.CR1 = 0x00000800;  // Clear the CR1 register
-    Det_Error_Buffer[Det_Error_Buffer_index] = {0}; 
- ChipSelect_count =0; 
-  Spi_lhw_count=0;
-
-}
-
 
 Spi_ChannelType SPI_job1_channels[2] = {0, 1};
 Spi_ChannelType SPI_job2_channels[2] = {2, 3};
@@ -134,12 +125,24 @@ for (uint8 Jobs_Index = 0; Jobs_Index < ConfigPtr->Spi_SeqConfigPtr->NoOfJobs; J
 }
 }
 
+
+
+
+
+
+/*************************************************************************************************************************/
+/*************************************************** SPI_INIT TEST CASES *************************************************/
+/*************************************************************************************************************************/
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Test Case
 TEST(Spi_Init, Config_Null) {
     // Arrange
     SetUp();
+
+    
+
     // Act
     Spi_Init(NULL_PTR);
     // Assert
@@ -150,59 +153,46 @@ TEST(Spi_Init, Config_Null) {
 }
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Test Case
 TEST(Spi_Init,SPI_STATUS_SPI_UNINIT) {
-   
     // Arrange
     SetUp();
     //static Spi_StatusType Spi1_Status = SPI_UNINIT;
-
-
     // Act
     Spi_Init(&Spi_Config);
-
-
     // Assert
     // Check if the DFF bit is set, indicating 16-bit data frame format
 EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
 EXPECT_EQ(Spi_lhw_count,2); // Expect CR1 to have 16-bit data frame format bit set
 
-
-    // EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
-    // EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
-    // EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_INIT_SID);
-    // EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_POINTER);
 }
 
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 // Test Case
 TEST(Spi_Init,SPI_STATUS_SPI_IDLE) {
-   
     // Arrange
     SetUp();
     //static Spi_StatusType Spi1_Status = SPI_UNINIT;
 SetUp_test3(&Spi_Config);
-
     // Act
     Spi_Init(&Spi_Config);
-
-
     // Assert
     // Check if the DFF bit is set, indicating 16-bit data frame format
     // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
-
 
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_INIT_SID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_ALREADY_INITIALIZED);
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*************************************************************************************************************************/
+/*************************************************** Spi_WriteIB TEST CASES *************************************************/
+/*************************************************************************************************************************/
 
 
 // Test Case
@@ -210,40 +200,30 @@ TEST(Spi_WriteIB,NULL_PTRrr) {
    
     // Arrange
     SetUp();
-    //static Spi_StatusType Spi1_Status = SPI_UNINIT;
-//SetUp_test3(&Spi_Config);
-
-    // // Act
-    // Spi_Init(&Spi_Config);
-
+ 
 Spi_WriteIB ( SPI_Channel_1 ,( Spi_DataBufferType* ) NULL_PTR);
     // Assert
     // Check if the DFF bit is set, indicating 16-bit data frame format
-    // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
-
-
+    
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_WRITE_IB_SID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_POINTER);
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Test Case
-TEST(Spi_WriteIBB,channels_too_much) {
+TEST(Spi_WriteIB,channels_too_much) {
    
     // Arrange
     SetUp();
-    //static Spi_StatusType Spi1_Status = SPI_UNINIT;
-//SetUp_test3(&Spi_Config);
 
-    // // Act
-    // Spi_Init(&Spi_Config);
-
+    // // Act  
 Spi_WriteIB ( 8 , DataBufferPtr);
     // Assert
     // Check if the DFF bit is set, indicating 16-bit data frame format
-    // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
-
 
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
@@ -251,8 +231,9 @@ Spi_WriteIB ( 8 , DataBufferPtr);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId,  SPI_E_PARAM_CHANNEL);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST(Spi_WriteIBBB,Spi_Config_Ptr_null) {
+TEST(Spi_WriteIB,Spi_Config_Ptr_null) {
    
     // Arrange
     SetUp();
@@ -265,8 +246,6 @@ TEST(Spi_WriteIBBB,Spi_Config_Ptr_null) {
 Spi_WriteIB ( 3 , DataBufferPtr);
     // Assert
     // Check if the DFF bit is set, indicating 16-bit data frame format
-    // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
-
 
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
@@ -274,7 +253,9 @@ Spi_WriteIB ( 3 , DataBufferPtr);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId,  SPI_E_UNINIT);
 }
 
-TEST(Spi_WriteIBBB,SPIs_too_much) {
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(Spi_WriteIB,SPIs_too_much) {
    
     // Arrange
     SetUp();
@@ -301,7 +282,8 @@ EXPECT_EQ(CHECK_SPI_VAL1, 256-9);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_WRITE_IB_SID);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_UNIT);
 }
-TEST(SpiS_LESS_MINI,SPIs_too_LOW) {
+
+TEST(Spi_WriteIB,SPIs_too_LOW) {
    
     // Arrange
     SetUp();
@@ -331,9 +313,7 @@ EXPECT_EQ(CHECK_SPI_VAL1, 5);
 
 ////////////////////////////////////////////////////////////////////
 
-
-
-TEST(Spi_WriteIBBB_job,SPIs_if_much) {
+TEST(Spi_WriteIB,SPIs_if_much) {
    
     // Arrange
     SetUp();
@@ -358,11 +338,9 @@ EXPECT_EQ(CHECK_SPI_VAL1, 7);
     EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_UNIT);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-TEST(SpiS_LESS_MINI_hw,SPIs_tooo_LOW) {
+TEST(Spi_WriteIB,SPIs_tooo_LOW) {
    
     // Arrange
     SetUp();
@@ -389,8 +367,9 @@ EXPECT_EQ(CHECK_SPI_VAL1, 7);
 }
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST(Spi_WriteIB_ELSE,RIGHT) {
+TEST(Spi_WriteIB,Else_direction) {
    
     // Arrange
     SetUp();
@@ -412,19 +391,14 @@ Spi_WriteIB ( 0 , DataBufferPtr);
     // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
 
   EXPECT_EQ(check, 65);
-
    EXPECT_EQ(CHECK_SPI_VAL1, 1);
     EXPECT_EQ(SPI1.DR, 9);
-
-/*
-
-    EXPECT_EQ(SPI1.DR, 9);
-    EXPECT_EQ(SPI2.DR, 9);*/
-
 }
 
 
-TEST(Spi1_WriteIB_ELSE,RIGHT) {
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(Spi1_WriteIB,else1_condition_direction) {
    
     // Arrange
     SetUp();
@@ -450,16 +424,11 @@ Spi_WriteIB ( 1 , DataBufferPtr);
    EXPECT_EQ(CHECK_SPI_VAL1, 1);
 
 
-
-/*
-
-    EXPECT_EQ(SPI1.DR, 9);
-    EXPECT_EQ(SPI2.DR, 9);*/
-
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST(Spi1_overflow,RIGHT) {
+TEST(Spi1_WriteIB,else2_condition_direction) {
    
     // Arrange
     SetUp();
@@ -482,25 +451,16 @@ Spi_WriteIB ( 2 , DataBufferPtr);
   EXPECT_EQ(CHECK_LIMITS, 8);
   EXPECT_EQ(check, 65);
  EXPECT_EQ(check_status, 2);
-  // EXPECT_EQ(CHECK_SPI_VAL1, 2);
-
-
-    // EXPECT_EQ(SPI1.DR, 9);
-    // EXPECT_EQ(SPI2.DR, 9);
-
 }
 
 
-TEST(Spi2_else,RIGHT) {
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(SPI_WriteIB,else2_condition_direction) {
    
     // Arrange
     SetUp();
-    //static Spi_StatusType Spi1_Status = SPI_UNINIT;
-//SetUp_test3(&Spi_Config);
-
     // // Act
-    // Spi_Init(&Spi_Config);
-
 Spi_Config_Ptr = &Spi_Config;
 // Spi_JobConfigType *jobConfig = &( Spi_Config_Ptr->Spi_JobConfigPtr[1]);
 // Spi_JobConfigType *jobConfig = &( Spi_Config_Ptr->Spi_JobConfigPtr[1]);
@@ -516,52 +476,255 @@ Spi_WriteIB ( 2 , DataBufferPtr);
 
    EXPECT_EQ(CHECK_SPI_VAL1, 2);
  EXPECT_EQ(SPI2.DR, 9);
-/*
-    EXPECT_EQ(SPI1.DR, 9);
-    EXPECT_EQ(SPI2.DR, 9);*/
 
 }
 
-TEST(Spi2_else2,RIGHT) {
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST(Spi1_WriteIB,CHANNEL_SPI2) {
    
     // Arrange
     SetUp();
-    //static Spi_StatusType Spi1_Status = SPI_UNINIT;
-//SetUp_test3(&Spi_Config);
-
     // // Act
-    // Spi_Init(&Spi_Config);
-
 Spi_Config_Ptr = &Spi_Config;
-// Spi_JobConfigType *jobConfig = &( Spi_Config_Ptr->Spi_JobConfigPtr[1]);
-// Spi_JobConfigType *jobConfig = &( Spi_Config_Ptr->Spi_JobConfigPtr[1]);
-// jobConfig->spiHWUint = 1;
 Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = 2;
 
 Spi_WriteIB ( 3 , DataBufferPtr);
 EXPECT_EQ(SPI2.DR, 9);
     // Assert
-    // Check if the DFF bit is set, indicating 16-bit data frame format
-    // EXPECT_EQ(ChipSelect_count,4); // Expect CR1 to have 16-bit data frame format bit set
-
   EXPECT_EQ(check, 65);
 
    EXPECT_EQ(CHECK_SPI_VAL1, 2);
 
-/*
+}
 
-    EXPECT_EQ(SPI1.DR, 9);
-    EXPECT_EQ(SPI2.DR, 9);*/
+
+
+/*************************************************************************************************************************/
+/*************************************************** SPI_READIB TEST CASES *************************************************/
+/*************************************************************************************************************************/
+
+
+
+// Test Case
+TEST(SPI_READIB, Config_Null) {
+// Arrange
+    SetUp();
+
+
+  Det_Error_Buffer[Det_Error_Buffer_index] = {0}; 
+
+  Spi_Config_Ptr = (Spi_ConfigType* )NULL_PTR;
+    // // Act
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_READ_IB_SID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId,  SPI_E_UNINIT);
+
+EXPECT_EQ(check_read, 70);
+}
+
+
+
+
+// Test Case
+TEST(SPI_READIB, BufferType_1) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+  //Det_Error_Buffer[Det_Error_Buffer_index] = {0}; 
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)1;
+    // // Act
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_READ_IB_SID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId,  SPI_E_UNINIT);
+
+EXPECT_EQ(check_read, 70);
 
 }
+
+
+
+
+// Test Case
+TEST(SPI_READIB, Buffer_NULL) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+  //Det_Error_Buffer[Det_Error_Buffer_index] = {0}; 
+
+    // // Act
+Spi_ReadIB ( SPI_Channel_1 ,( Spi_DataBufferType* ) NULL_PTR);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_READ_IB_SID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_POINTER);
+
+EXPECT_EQ(check_read, 80);
+
+}
+
+
+
+// Test Case
+TEST(SPI_READIB,too_much_spis) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)0;
+    // // Act
+Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = 17;
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+
+  EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_READ_IB_SID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_UNIT);
+
+EXPECT_EQ(check_read, 85);
+
+}
+
+
+
+
+
+// Test Case
+TEST(SPI_READIB,too_LOW_spis) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)0;
+    // // Act
+Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = -7;
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+    // Check if the DFF bit is set, indicating 16-bit data frame format
+
+  EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ModuleId, SPI_SW_moduleID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].InstanceId, 0);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ApiId, SPI_READ_IB_SID);
+    EXPECT_EQ(Det_Error_Buffer[Det_Error_Buffer_index].ErrorId, SPI_E_PARAM_UNIT);
+
+EXPECT_EQ(check_read, 85);
+
+}
+
+
+
+// Test Case
+TEST(SPI_READIB,else1_spi_busy) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)0;
+    // // Act
+Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = 1;
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+    EXPECT_EQ(check_read, 1);
+EXPECT_EQ((Spi_Config.Spi_ChannelConfigPtr[1].Status), 2);
+
+
+}
+
+
+// Test Case
+TEST(SPI_READIB,else2_spi_busy) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)0;
+    // // Act
+Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = 2;
+
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+
+    EXPECT_EQ((Spi_Config.Spi_ChannelConfigPtr[1].Status), 2);
+EXPECT_EQ(check_read, 2);
+
+}
+
+// Test Case
+TEST(SPI_READIB,else3_spi_busy) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)0;
+    // // Act
+Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = 3;
+
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+
+    EXPECT_EQ((Spi_Config.Spi_ChannelConfigPtr[1].Status), 2);
+EXPECT_EQ(check_read, 3);
+
+}
+
+// Test Case
+TEST(SPI_READIB,else4_spi_busy) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)0;
+    // // Act
+Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = 4;
+
+Spi_ReadIB( 1 ,DataBufferPtr);
+    // Assert
+
+    EXPECT_EQ((Spi_Config.Spi_ChannelConfigPtr[1].Status), 2);
+EXPECT_EQ(check_read, 4);
+
+}
+
+
+
+// Test Case
+TEST(SPI_READIB,HANDLES_MUCH_CHANNELS) {
+// Arrange
+    SetUp();
+
+Spi_Config_Ptr = &Spi_Config;
+Spi_Config_Ptr->Spi_ChannelConfigPtr[1].BufferType = (Spi_BufferType)0;
+    // // Act
+Spi_Config_Ptr->Spi_JobConfigPtr->spiHWUint = 4;
+
+Spi_ReadIB( 10 ,DataBufferPtr);
+    // Assert
+
+    EXPECT_EQ((Spi_Config.Spi_ChannelConfigPtr[1].Status), 2);
+EXPECT_EQ(check_read, 70);
+
+}
+
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
-
-
-
-
-
-

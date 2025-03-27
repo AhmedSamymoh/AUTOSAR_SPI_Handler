@@ -24,6 +24,11 @@ if %ERRORLEVEL% neq 0 (
     echo Error: GDB execution failed or was terminated.
     exit /b 1
 )
+:: Check if GDB is still running and kill it if necessary
+tasklist /FI "IMAGENAME eq arm-none-eabi-gdb.exe" | find /I "arm-none-eabi-gdb.exe" >nul
+if %ERRORLEVEL% equ 0 (
+    taskkill /F /IM arm-none-eabi-gdb.exe >nul 2>&1
+)
 
 :: Display the output file path
 echo GDB output saved to %OUTPUT_FILE%

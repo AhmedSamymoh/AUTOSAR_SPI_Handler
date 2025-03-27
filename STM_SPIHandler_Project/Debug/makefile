@@ -11,8 +11,8 @@ RM := rm -rf
 -include sources.mk
 -include Startup/subdir.mk
 -include Src/subdir.mk
--include SPI/src/subdir.mk
--include AUTOSAR/subdir.mk
+-include Common/subdir.mk
+-include COM/MCAL/SPI/src/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
