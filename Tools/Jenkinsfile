@@ -96,6 +96,8 @@ pipeline {
                                     // mv report.xml allure-results
 
                                     // '''
+                                     echo "Running Allure..."
+                                    
                                     
                                     // if (testResult != 0) {
                                     //     echo "Some tests failed. Check the Allure report for details."
