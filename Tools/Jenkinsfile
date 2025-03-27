@@ -4,6 +4,7 @@ pipeline {
         allure 'allure'
     }
 
+    
     environment {
         INTEGRATOR_EMAIL = 'ahmeds.elnozahy@gmail.com'
     }
@@ -116,12 +117,15 @@ pipeline {
             parallel {
                 stage('SWE 5') {
                     when {
-                        expression { env.ghprbPullId }
+                        expression { return env.CHANGE_ID != null}
+                        //expression { env.ghprbPullId }
                     }
                     stages {
                         stage('Integration Tests') {
                             agent { label 'Windows' }
                             steps {
+
+                                echo "Running Debugging scripts"
                                 // bat '''
                                 // cd %WORKSPACE%\\Tools\\IntegrationTesting\\
                                 // start /B openocd.exe -f .\\Nucleo_F446NE_Debug.cfg
@@ -146,7 +150,8 @@ pipeline {
             parallel {
                 stage('Jira Release Notes') {
                     when {
-                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                        expression { return env.CHANGE_ID != null}
+                        //expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
                     }
                     steps {
                         script {
@@ -170,8 +175,9 @@ pipeline {
             parallel {
             stage('Email notification') {
                     when {
-                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
-                    }
+                        expression { return env.CHANGE_ID != null}
+                        //expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                    }                    
                     steps {
                         script {
                             def committerEmail = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
