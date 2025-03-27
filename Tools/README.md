@@ -50,11 +50,11 @@ This guide provides detailed steps to configure CI/CD pipelines for the AUTOSAR_
 
    - Remote root: Should be a path to run into the machine
 
-    ![alt text](/AUTOSAR_SPI_Handler/Tools/CodeCoverage/3.png)
+    ![alt t](CodeCoverage/3.png)
 
    - Launch method: "Launch agent via Java Web Start"
  
-    ![alt text](/AUTOSAR_SPI_Handler/Tools/CodeCoverage/2.png)
+    ![altxt](CodeCoverage/2.png)
 
 4. Save and use secret from node configuration page
 
