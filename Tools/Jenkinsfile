@@ -115,8 +115,8 @@ pipeline {
         stage('Pull Request Pipeline') {
             parallel {
                 stage('SWE 5') {
-                    when {
-                        expression { env.ghprbPullId }
+                    expression { 
+                        return env.CHANGE_ID != null  // Runs only if triggered by a PR
                     }
                     stages {
                         stage('Integration Tests') {
@@ -148,7 +148,10 @@ pipeline {
             parallel {
                 stage('Jira Release Notes') {
                     when {
-                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                        expression { 
+                            return env.CHANGE_ID != null  // Runs only if triggered by a PR
+                        }
+                        // expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
                     }
                     steps {
                         script {
@@ -171,8 +174,8 @@ pipeline {
         stage('Email notification') {
             parallel {
             stage('Email notification') {
-                    when {
-                        expression { env.ghprbSourceBranch == 'master' && env.ghprbPullId }
+                    expression { 
+                        return env.CHANGE_ID != null  // Runs only if triggered by a PR
                     }
                     steps {
                         script {
