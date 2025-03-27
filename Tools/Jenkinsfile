@@ -4,6 +4,7 @@ pipeline {
         allure 'allure'
     }
 
+    
     environment {
         INTEGRATOR_EMAIL = 'ahmeds.elnozahy@gmail.com'
     }
