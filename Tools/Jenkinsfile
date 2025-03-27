@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'Master' }
+    agent { label 'built-in' }
     tools {
         allure 'allure'
     }
