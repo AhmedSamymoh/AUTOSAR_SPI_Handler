@@ -101,7 +101,7 @@ pipeline {
                                         echo "Some tests failed. Check the Allure report for details."
                                     }
                                     sh 'allure generate allure-results --clean -o ALLURE_REPORT'
-                                    allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
+                                   // allure includeProperties: true, jdk: '', results: [[path: '/ALLURE_REPORT']]
                                 }
                                 echo "============================================================================================="
 
